@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進階單字卡翻牌 Week 11-18</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .week-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .week-btn {
+            padding: 12px 25px;
+            border: 3px solid #f093fb;
+            border-radius: 15px;
+            background: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .week-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .week-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: #f8f9fa;
+            align-items: center;
+        }
+
+        .card-counter {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f093fb;
+        }
+
+        .shuffle-btn {
+            padding: 10px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .shuffle-btn:hover {
+            background: #218838;
+        }
+
+        .card-area {
+            padding: 40px;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 3/4;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .flashcard-front .word {
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-front .hint {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .flashcard-back {
+            background: white;
+            border: 5px solid #f093fb;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-back .emoji {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-back .word-en {
+            font-size: 40px;
+            font-weight: bold;
+            color: #f093fb;
+            margin-bottom: 15px;
+        }
+
+        .flashcard-back .word-zh {
+            font-size: 50px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .audio-btn {
+            padding: 15px 40px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .audio-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .prev-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .prev-btn:hover {
+            background: #5a6268;
+        }
+
+        .next-btn {
+            background: #f093fb;
+            color: white;
+        }
+
+        .next-btn:hover {
+            background: #f5576c;
+        }
+
+        .instruction {
+            text-align: center;
+            padding: 20px;
+            background: #fff3cd;
+            margin: 0 40px 20px;
+            border-radius: 10px;
+            color: #856404;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .flashcard-front .word {
+                font-size: 40px;
+            }
+
+            .flashcard-back .emoji {
+                font-size: 60px;
+            }
+
+            .flashcard-back .word-en {
+                font-size: 30px;
+            }
+
+            .flashcard-back .word-zh {
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📇 進階單字卡翻牌</h1>
+            <p>點卡片翻面看答案!</p>
+        </div>
+
+        <div class="week-selector">
+            <button class="week-btn active" onclick="selectWeek(11)">Week 11</button>
+            <button class="week-btn" onclick="selectWeek(12)">Week 12</button>
+            <button class="week-btn" onclick="selectWeek(13)">Week 13</button>
+            <button class="week-btn" onclick="selectWeek(14)">Week 14</button>
+            <button class="week-btn" onclick="selectWeek(15)">Week 15</button>
+            <button class="week-btn" onclick="selectWeek(16)">Week 16</button>
+            <button class="week-btn" onclick="selectWeek(17)">Week 17</button>
+            <button class="week-btn" onclick="selectWeek(18)">Week 18</button>
+        </div>
+
+        <div class="controls">
+            <div class="card-counter" id="counter">1 / 10</div>
+            <button class="shuffle-btn" onclick="shuffleCards()">🔀 洗牌</button>
+        </div>
+
+        <div class="instruction">
+            💡 點擊卡片可以翻面 → 正面看英文 / 背面看中文+圖片
+        </div>
+
+        <div class="card-area">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="word" id="wordFront">now</div>
+                        <div class="hint">點我翻面!</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="emoji" id="emoji">⏰</div>
+                        <div class="word-en" id="wordBack">now</div>
+                        <div class="word-zh" id="meaning">現在</div>
+                        <button class="audio-btn" onclick="speakWord(event)">🔊 聽發音</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn prev-btn" onclick="prevCard()">⬅️ 上一張</button>
+            <button class="nav-btn next-btn" onclick="nextCard()">下一張 ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = {
+            week11: [
+                { en: "now", zh: "現在", emoji: "⏰" },
+                { en: "today", zh: "今天", emoji: "📅" },
+                { en: "tonight", zh: "今晚", emoji: "🌙" },
+                { en: "yesterday", zh: "昨天", emoji: "📆" },
+                { en: "tomorrow", zh: "明天", emoji: "🗓️" },
+                { en: "often", zh: "經常", emoji: "🔁" },
+                { en: "always", zh: "總是", emoji: "💯" },
+                { en: "sometimes", zh: "有時候", emoji: "🤷" },
+                { en: "usually", zh: "通常", emoji: "📊" },
+                { en: "never", zh: "從不", emoji: "🚫" }
+            ],
+            week12: [
+                { en: "morning", zh: "早上", emoji: "🌅" },
+                { en: "afternoon", zh: "下午", emoji: "☀️" },
+                { en: "evening", zh: "傍晚", emoji: "🌆" },
+                { en: "night", zh: "晚上", emoji: "🌃" },
+                { en: "weekend", zh: "週末", emoji: "🎉" },
+                { en: "Monday", zh: "星期一", emoji: "1️⃣" },
+                { en: "Tuesday", zh: "星期二", emoji: "2️⃣" },
+                { en: "Wednesday", zh: "星期三", emoji: "3️⃣" },
+                { en: "Thursday", zh: "星期四", emoji: "4️⃣" },
+                { en: "Friday", zh: "星期五", emoji: "5️⃣" }
+            ],
+            week13: [
+                { en: "January", zh: "一月", emoji: "❄️" },
+                { en: "February", zh: "二月", emoji: "💝" },
+                { en: "March", zh: "三月", emoji: "🌸" },
+                { en: "April", zh: "四月", emoji: "🌷" },
+                { en: "May", zh: "五月", emoji: "🌺" },
+                { en: "June", zh: "六月", emoji: "☀️" },
+                { en: "July", zh: "七月", emoji: "🏖️" },
+                { en: "August", zh: "八月", emoji: "🌊" },
+                { en: "September", zh: "九月", emoji: "🍂" },
+                { en: "October", zh: "十月", emoji: "🎃" }
+            ],
+            week14: [
+                { en: "one", zh: "一", emoji: "1️⃣" },
+                { en: "two", zh: "二", emoji: "2️⃣" },
+                { en: "three", zh: "三", emoji: "3️⃣" },
+                { en: "four", zh: "四", emoji: "4️⃣" },
+                { en: "five", zh: "五", emoji: "5️⃣" },
+                { en: "some", zh: "一些", emoji: "📦" },
+                { en: "many", zh: "許多", emoji: "🔢" },
+                { en: "much", zh: "很多", emoji: "📈" },
+                { en: "any", zh: "任何", emoji: "❓" },
+                { en: "every", zh: "每個", emoji: "🔄" }
+            ],
+            week15: [
+                { en: "under", zh: "在...下面", emoji: "⬇️" },
+                { en: "over", zh: "在...上方", emoji: "⬆️" },
+                { en: "between", zh: "在...之間", emoji: "↔️" },
+                { en: "next", zh: "下一個/旁邊", emoji: "➡️" },
+                { en: "behind", zh: "在...後面", emoji: "⏪" },
+                { en: "front", zh: "前面", emoji: "⏩" },
+                { en: "left", zh: "左邊", emoji: "⬅️" },
+                { en: "right", zh: "右邊", emoji: "➡️" },
+                { en: "near", zh: "靠近", emoji: "📍" },
+                { en: "far", zh: "遠的", emoji: "🌍" }
+            ],
+            week16: [
+                { en: "because", zh: "因為", emoji: "🤔" },
+                { en: "so", zh: "所以", emoji: "💡" },
+                { en: "then", zh: "然後", emoji: "⏭️" },
+                { en: "but", zh: "但是", emoji: "⚠️" },
+                { en: "or", zh: "或者", emoji: "🔀" },
+                { en: "if", zh: "如果", emoji: "❔" },
+                { en: "when", zh: "當...時候", emoji: "⏰" },
+                { en: "before", zh: "之前", emoji: "⏮️" },
+                { en: "after", zh: "之後", emoji: "⏭️" },
+                { en: "while", zh: "當...同時", emoji: "⏸️" }
+            ],
+            week17: [
+                { en: "hot", zh: "熱的", emoji: "🔥" },
+                { en: "cold", zh: "冷的", emoji: "❄️" },
+                { en: "warm", zh: "溫暖的", emoji: "☀️" },
+                { en: "cool", zh: "涼爽的", emoji: "🌬️" },
+                { en: "beautiful", zh: "美麗的", emoji: "😍" },
+                { en: "ugly", zh: "醜的", emoji: "😱" },
+                { en: "clean", zh: "乾淨的", emoji: "✨" },
+                { en: "dirty", zh: "髒的", emoji: "💩" },
+                { en: "full", zh: "滿的", emoji: "💯" },
+                { en: "empty", zh: "空的", emoji: "📭" }
+            ],
+            week18: [
+                { en: "open", zh: "打開", emoji: "🔓" },
+                { en: "close", zh: "關閉", emoji: "🔒" },
+                { en: "start", zh: "開始", emoji: "▶️" },
+                { en: "stop", zh: "停止", emoji: "⏹️" },
+                { en: "begin", zh: "開始", emoji: "🎬" },
+                { en: "finish", zh: "完成", emoji: "🏁" },
+                { en: "turn", zh: "轉/輪流", emoji: "🔄" },
+                { en: "move", zh: "移動", emoji: "🚶" },
+                { en: "keep", zh: "保持", emoji: "✊" },
+                { en: "change", zh: "改變", emoji: "🔀" }
+            ]
+        };
+
+        let currentWeek = 11;
+        let currentIndex = 0;
+        let cards = [];
+
+        function selectWeek(week) {
+            currentWeek = week;
+            document.querySelectorAll('.week-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index + 11 === week);
+            });
+            initCards();
+        }
+
+        function initCards() {
+            cards = [...vocabulary[`week${currentWeek}`]];
+            currentIndex = 0;
+            showCard();
+        }
+
+        function showCard() {
+            const card = cards[currentIndex];
+            const flashcard = document.getElementById('flashcard');
+            
+            // 確保卡片回到正面
+            flashcard.classList.remove('flipped');
+            
+            // 更新內容
+            document.getElementById('wordFront').textContent = card.en;
+            document.getElementById('wordBack').textContent = card.en;
+            document.getElementById('emoji').textContent = card.emoji;
+            document.getElementById('meaning').textContent = card.zh;
+            document.getElementById('counter').textContent = `${currentIndex + 1} / ${cards.length}`;
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            
+            // 如果翻到背面,自動播放語音
+            if (flashcard.classList.contains('flipped')) {
+                setTimeout(() => {
+                    speakWord();
+                }, 300);
+            }
+        }
+
+        function speakWord(event) {
+            // 防止事件冒泡導致卡片翻面
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const word = cards[currentIndex].en;
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function nextCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('flipped');
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % cards.length;
+                showCard();
+            }, 300);
+        }
+
+        function prevCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('flipped');
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                showCard();
+            }, 300);
+        }
+
+        function shuffleCards() {
+            cards.sort(() => Math.random() - 0.5);
+            currentIndex = 0;
+            showCard();
+        }
+
+        // 鍵盤控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevCard();
+            if (e.key === 'ArrowRight') nextCard();
+            if (e.key === ' ') {
+                e.preventDefault();
+                flipCard();
+            }
+        });
+
+        // 初始化
+        initCards();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一般動詞現在式練習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .section-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+
+        .grammar-rules {
+            padding: 30px;
+            background: #fff3cd;
+            margin: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .grammar-rules h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .rule-box {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        .rule-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .example {
+            color: #28a745;
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .practice-section {
+            padding: 30px;
+            display: none;
+        }
+
+        .practice-section.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .question-card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .question-hint {
+            background: #e7f3ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #004085;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            padding: 20px;
+            border: 3px solid #e9ecef;
+            border-radius: 12px;
+            background: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option-btn.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .option-btn.wrong {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .input-answer {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            color: #856404;
+        }
+
+        .next-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .audio-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            background: #218838;
+        }
+
+        .result-section {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .emoji-large {
+            font-size: 100px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .question-text {
+                font-size: 20px;
+            }
+
+            .section-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 一般動詞現在式練習</h1>
+                   </div>
+
+        <div class="section-tabs">
+            <div class="tab active" onclick="showSection('rules')">📖 文法規則</div>
+            <div class="tab" onclick="showSection('type1')">題型1:選動詞</div>
+            <div class="tab" onclick="showSection('type2')">題型2:改句子</div>
+            <div class="tab" onclick="showSection('type3')">題型3:填空</div>
+            <div class="tab" onclick="showSection('wrong')">⚠️ 錯題複習</div>
+        </div>
+
+        <!-- 文法規則 -->
+        <div id="rules" class="practice-section active">
+            <div class="grammar-rules">
+                <h3>📚 一般動詞現在式重點整理</h3>
+                
+                <div class="rule-box">
+                    <div class="rule-title">1️⃣ 肯定句</div>
+                    <div>主詞 + 動詞</div>
+                    <div class="example">✅ I play games. (我玩遊戲)</div>
+                    <div class="example">✅ You watch videos. (你看影片)</div>
+                    <div class="example">⚠️ He play<strong style="color: #dc3545;">s</strong> games. (他玩遊戲) ← 第三人稱單數要+s</div>
+                    <div class="example">⚠️ She watch<strong style="color: #dc3545;">es</strong> videos. (她看影片) ← ch結尾+es</div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">2️⃣ 否定句</div>
+                    <div>I/You/We/They + <strong style="color: #667eea;">do not (don't)</strong> + 原形動詞</div>
+                    <div>He/She/It + <strong style="color: #667eea;">does not (doesn't)</strong> + 原形動詞</div>
+                    <div class="example">✅ I don't like sports. (我不喜歡運動)</div>
+                    <div class="example">✅ He doesn't play basketball. (他不打籃球)</div>
+                    <div class="example">❌ He doesn't play<strong style="color: #dc3545;">s</strong> ← 錯!doesn't後面用原形</div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">3️⃣ 疑問句</div>
+                    <div><strong style="color: #667eea;">Do</strong> + I/you/we/they + 原形動詞?</div>
+                    <div><strong style="color: #667eea;">Does</strong> + he/she/it + 原形動詞?</div>
+                    <div class="example">✅ Do you watch TikTok? (你看抖音嗎?)</div>
+                    <div class="example">✅ Does he play LOL? (他玩LOL嗎?)</div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">⚡ 特別注意:第三人稱單數</div>
+                    <div style="margin-top: 10px;"><strong>He / She / It / 單數名詞</strong> 都算第三人稱單數!</div>
+                    <div class="example">• 一般動詞 +s: play → plays, like → likes</div>
+                    <div class="example">• ch, sh, s, x, o結尾 +es: watch → watches, go → goes</div>
+                    <div class="example">• 子音+y 改ies: study → studies</div>
+                </div>
+
+                <button class="next-btn" onclick="showSection('type1')">開始練習 →</button>
+            </div>
+        </div>
+
+        <!-- 題型1: 選擇正確動詞形式 -->
+        <div id="type1" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress1">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct1">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong1">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy1">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice1Area"></div>
+        </div>
+
+        <!-- 題型2: 句子改寫 -->
+        <div id="type2" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress2">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct2">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong2">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy2">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice2Area"></div>
+        </div>
+
+        <!-- 題型3: 填空 -->
+        <div id="type3" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress3">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct3">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong3">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy3">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice3Area"></div>
+        </div>
+
+        <!-- 錯題複習 -->
+        <div id="wrong" class="practice-section">
+            <div class="grammar-rules">
+                <h3>⚠️ 錯題複習</h3>
+                <p style="margin-bottom: 15px;">這裡會顯示你答錯過的題目,加強練習!</p>
+                <div id="wrongStats" style="padding: 15px; background: white; border-radius: 10px; margin-top: 15px;">
+                    <p style="font-size: 18px; margin-bottom: 10px;">
+                        <strong>錯題統計:</strong>
+                    </p>
+                    <p id="wrongCount" style="font-size: 16px; color: #dc3545;">
+                        目前有 <strong>0</strong> 題需要複習
+                    </p>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="wrongProgressBar" style="display: none;">
+                <div class="progress-fill" id="progressWrong">0/0</div>
+            </div>
+            
+            <div class="stats" id="wrongStatsBar" style="display: none;">
+                <div class="stat-item">
+                    <div class="stat-number" id="correctWrong">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrongWrong">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracyWrong">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practiceWrongArea"></div>
+
+            <div id="wrongListArea"></div>
+        </div>
+    </div>
+
+    <script>
+        // 題型1: 選擇正確動詞形式
+        const type1Questions = [
+            {
+                question: "I _____ LOL every day. (我每天玩LOL)",
+                options: ["play", "plays"],
+                correct: "play",
+                explanation: "I 後面用原形動詞 play"
+            },
+            {
+                question: "He _____ mobile games. (他玩手機遊戲)",
+                options: ["play", "plays"],
+                correct: "plays",
+                explanation: "He 是第三人稱單數,要用 plays"
+            },
+            {
+                question: "My friend _____ TikTok videos. (我朋友看抖音影片)",
+                options: ["watch", "watches"],
+                correct: "watches",
+                explanation: "My friend 是第三人稱單數,watch結尾是ch要+es"
+            },
+            {
+                question: "They _____ with the teacher. (他們跟老師聊天)",
+                options: ["chat", "chats"],
+                correct: "chat",
+                explanation: "They 後面用原形動詞 chat"
+            },
+            {
+                question: "She _____ funny videos online. (她在網路上看搞笑影片)",
+                options: ["watch", "watches"],
+                correct: "watches",
+                explanation: "She 是第三人稱單數,watch+es"
+            },
+            {
+                question: "You _____ your homework. (你做你的作業)",
+                options: ["do", "does"],
+                correct: "do",
+                explanation: "You 後面用原形動詞 do"
+            },
+            {
+                question: "The student _____ English every week. (這個學生每週學英文)",
+                options: ["study", "studies"],
+                correct: "studies",
+                explanation: "The student 是第三人稱單數,study改成studies"
+            },
+            {
+                question: "We _____ to school. (我們去學校)",
+                options: ["go", "goes"],
+                correct: "go",
+                explanation: "We 後面用原形動詞 go"
+            },
+            {
+                question: "My classmate _____ games on the phone. (我同學在手機上玩遊戲)",
+                options: ["play", "plays"],
+                correct: "plays",
+                explanation: "My classmate 是第三人稱單數,要用 plays"
+            },
+            {
+                question: "The teacher _____ the students. (老師幫助學生)",
+                options: ["help", "helps"],
+                correct: "helps",
+                explanation: "The teacher 是第三人稱單數,要用 helps"
+            }
+        ];
+
+        // 題型2: 改句子 (改成否定句/疑問句)
+        const type2Questions = [
+            {
+                question: "I play games. → 改成否定句",
+                options: ["I don't play games.", "I doesn't play games.", "I not play games."],
+                correct: "I don't play games.",
+                explanation: "I 的否定用 don't + 原形動詞"
+            },
+            {
+                question: "He watches videos. → 改成否定句",
+                options: ["He don't watch videos.", "He doesn't watch videos.", "He doesn't watches videos."],
+                correct: "He doesn't watch videos.",
+                explanation: "He 的否定用 doesn't + 原形動詞(watch)"
+            },
+            {
+                question: "You like TikTok. → 改成疑問句",
+                options: ["Do you like TikTok?", "Does you like TikTok?", "You like TikTok?"],
+                correct: "Do you like TikTok?",
+                explanation: "You 的疑問句用 Do 開頭"
+            },
+            {
+                question: "She plays mobile games. → 改成疑問句",
+                options: ["Do she play mobile games?", "Does she plays mobile games?", "Does she play mobile games?"],
+                correct: "Does she play mobile games?",
+                explanation: "She 的疑問句用 Does 開頭 + 原形動詞(play)"
+            },
+            {
+                question: "They chat with friends. → 改成否定句",
+                options: ["They don't chat with friends.", "They doesn't chat with friends.", "They not chat with friends."],
+                correct: "They don't chat with friends.",
+                explanation: "They 的否定用 don't + 原形動詞"
+            },
+            {
+                question: "My friend goes to school. → 改成否定句",
+                options: ["My friend don't go to school.", "My friend doesn't goes to school.", "My friend doesn't go to school."],
+                correct: "My friend doesn't go to school.",
+                explanation: "第三人稱單數的否定用 doesn't + 原形動詞(go)"
+            },
+            {
+                question: "We study English. → 改成疑問句",
+                options: ["Do we study English?", "Does we study English?", "We study English?"],
+                correct: "Do we study English?",
+                explanation: "We 的疑問句用 Do 開頭"
+            },
+            {
+                question: "He talks to the teacher. → 改成疑問句",
+                options: ["Do he talk to the teacher?", "Does he talks to the teacher?", "Does he talk to the teacher?"],
+                correct: "Does he talk to the teacher?",
+                explanation: "He 的疑問句用 Does 開頭 + 原形動詞(talk)"
+            },
+            {
+                question: "I watch YouTube. → 改成否定句",
+                options: ["I don't watch YouTube.", "I doesn't watch YouTube.", "I not watch YouTube."],
+                correct: "I don't watch YouTube.",
+                explanation: "I 的否定用 don't + 原形動詞"
+            },
+            {
+                question: "The game starts now. → 改成疑問句",
+                options: ["Do the game start now?", "Does the game starts now?", "Does the game start now?"],
+                correct: "Does the game start now?",
+                explanation: "The game 是第三人稱單數,用 Does 開頭 + 原形動詞(start)"
+            }
+        ];
+
+        // 題型3: 填空 (do/does/don't/doesn't)
+        const type3Questions = [
+            {
+                question: "_____ you play games? (你玩遊戲嗎?)",
+                hint: "疑問句,主詞是 you",
+                correct: ["Do", "do"],
+                explanation: "You 的疑問句用 Do"
+            },
+            {
+                question: "_____ he watch TikTok? (他看抖音嗎?)",
+                hint: "疑問句,主詞是 he",
+                correct: ["Does", "does"],
+                explanation: "He 是第三人稱單數,用 Does"
+            },
+            {
+                question: "I _____ like sports. (我不喜歡運動)",
+                hint: "否定句,主詞是 I",
+                correct: ["don't", "do not"],
+                explanation: "I 的否定用 don't"
+            },
+            {
+                question: "She _____ play mobile games. (她不玩手機遊戲)",
+                hint: "否定句,主詞是 she",
+                correct: ["doesn't", "does not"],
+                explanation: "She 是第三人稱單數,用 doesn't"
+            },
+            {
+                question: "_____ they chat online? (他們在線上聊天嗎?)",
+                hint: "疑問句,主詞是 they",
+                correct: ["Do", "do"],
+                explanation: "They 的疑問句用 Do"
+            },
+            {
+                question: "My friend _____ watch videos. (我朋友不看影片)",
+                hint: "否定句,主詞是 my friend",
+                correct: ["doesn't", "does not"],
+                explanation: "My friend 是第三人稱單數,用 doesn't"
+            },
+            {
+                question: "_____ your teacher play games? (你的老師玩遊戲嗎?)",
+                hint: "疑問句,主詞是 your teacher",
+                correct: ["Does", "does"],
+                explanation: "Your teacher 是第三人稱單數,用 Does"
+            },
+            {
+                question: "We _____ go to school on Sunday. (我們星期天不去學校)",
+                hint: "否定句,主詞是 we",
+                correct: ["don't", "do not"],
+                explanation: "We 的否定用 don't"
+            },
+            {
+                question: "_____ you like this video? (你喜歡這個影片嗎?)",
+                hint: "疑問句,主詞是 you",
+                correct: ["Do", "do"],
+                explanation: "You 的疑問句用 Do"
+            },
+            {
+                question: "He _____ talk much. (他不太說話)",
+                hint: "否定句,主詞是 he",
+                correct: ["doesn't", "does not"],
+                explanation: "He 是第三人稱單數,用 doesn't"
+            }
+        ];
+
+        let currentType = 1;
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let answered = false;
+        let wrongQuestions = {}; // 儲存錯題: {type: [questionIndex]}
+
+        // 載入錯題記錄
+        function loadWrongQuestions() {
+            const saved = localStorage.getItem('grammarWrongQuestions');
+            if (saved) {
+                wrongQuestions = JSON.parse(saved);
+            }
+            updateWrongCount();
+        }
+
+        // 儲存錯題記錄
+        function saveWrongQuestions() {
+            localStorage.setItem('grammarWrongQuestions', JSON.stringify(wrongQuestions));
+            updateWrongCount();
+        }
+
+        // 更新錯題數量顯示
+        function updateWrongCount() {
+            const totalWrong = (wrongQuestions.type1?.length || 0) + 
+                             (wrongQuestions.type2?.length || 0) + 
+                             (wrongQuestions.type3?.length || 0);
+            const countEl = document.getElementById('wrongCount');
+            if (countEl) {
+                countEl.innerHTML = `目前有 <strong>${totalWrong}</strong> 題需要複習`;
+            }
+        }
+
+        function showSection(section) {
+            // 更新tab樣式
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // 顯示對應section
+            document.querySelectorAll('.practice-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+
+            // 如果是練習區,開始練習
+            if (section === 'type1') {
+                currentType = 1;
+                startPractice(1);
+            } else if (section === 'type2') {
+                currentType = 2;
+                startPractice(2);
+            } else if (section === 'type3') {
+                currentType = 3;
+                startPractice(3);
+            } else if (section === 'wrong') {
+                showWrongReview();
+            }
+        }
+
+        function startPractice(type) {
+            currentType = type;
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            updateStats(type);
+            showQuestion(type);
+        }
+
+        function showQuestion(type) {
+            const questions = type === 1 ? type1Questions : type === 2 ? type2Questions : type3Questions;
+            
+            if (currentQuestion >= questions.length) {
+                showResult(type);
+                return;
+            }
+
+            answered = false;
+            const q = questions[currentQuestion];
+            const practiceArea = document.getElementById(`practice${type}Area`);
+
+            if (type === 3) {
+                // 填空題
+                practiceArea.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-text">${q.question}</div>
+                        <div class="question-hint">💡 提示: ${q.hint}</div>
+                        <input type="text" class="input-answer" id="answer${type}" placeholder="請輸入答案 (do/does/don't/doesn't)" />
+                        <button class="submit-btn" onclick="checkAnswer${type}()">送出答案</button>
+                        <div id="feedback${type}"></div>
+                    </div>
+                `;
+            } else {
+                // 選擇題
+                const optionsHTML = q.options.map(opt => `
+                    <button class="option-btn" onclick="checkAnswer${type}('${opt.replace(/'/g, "\\'")}')">${opt}</button>
+                `).join('');
+
+                practiceArea.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-text">${q.question}</div>
+                        <div class="options">
+                            ${optionsHTML}
+                        </div>
+                        <div id="feedback${type}"></div>
+                    </div>
+                `;
+            }
+        }
+
+        function checkAnswer1(selected) {
+            if (answered) return;
+            answered = true;
+
+            const q = type1Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type1 .option-btn');
+            const feedback = document.getElementById('feedback1');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === q.correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === q.correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(1)">下一題</button>
+                `;
+                // 答對了,從錯題中移除
+                if (wrongQuestions.type1) {
+                    wrongQuestions.type1 = wrongQuestions.type1.filter(i => i !== currentQuestion);
+                    saveWrongQuestions();
+                }
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${q.correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(1)">下一題</button>
+                `;
+                // 答錯了,加入錯題
+                if (!wrongQuestions.type1) wrongQuestions.type1 = [];
+                if (!wrongQuestions.type1.includes(currentQuestion)) {
+                    wrongQuestions.type1.push(currentQuestion);
+                    saveWrongQuestions();
+                }
+            }
+
+            updateStats(1);
+        }
+
+        function checkAnswer2(selected) {
+            if (answered) return;
+            answered = true;
+
+            const q = type2Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type2 .option-btn');
+            const feedback = document.getElementById('feedback2');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === q.correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === q.correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(2)">下一題</button>
+                `;
+                // 答對了,從錯題中移除
+                if (wrongQuestions.type2) {
+                    wrongQuestions.type2 = wrongQuestions.type2.filter(i => i !== currentQuestion);
+                    saveWrongQuestions();
+                }
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${q.correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(2)">下一題</button>
+                `;
+                // 答錯了,加入錯題
+                if (!wrongQuestions.type2) wrongQuestions.type2 = [];
+                if (!wrongQuestions.type2.includes(currentQuestion)) {
+                    wrongQuestions.type2.push(currentQuestion);
+                    saveWrongQuestions();
+                }
+            }
+
+            updateStats(2);
+        }
+
+        function checkAnswer3() {
+            if (answered) return;
+            answered = true;
+
+            const q = type3Questions[currentQuestion];
+            const userAnswer = document.getElementById('answer3').value.trim();
+            const feedback = document.getElementById('feedback3');
+
+            const isCorrect = q.correct.some(ans => ans.toLowerCase() === userAnswer.toLowerCase());
+
+            if (isCorrect) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(3)">下一題</button>
+                `;
+                // 答對了,從錯題中移除
+                if (wrongQuestions.type3) {
+                    wrongQuestions.type3 = wrongQuestions.type3.filter(i => i !== currentQuestion);
+                    saveWrongQuestions();
+                }
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${q.correct[0]}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(3)">下一題</button>
+                `;
+                // 答錯了,加入錯題
+                if (!wrongQuestions.type3) wrongQuestions.type3 = [];
+                if (!wrongQuestions.type3.includes(currentQuestion)) {
+                    wrongQuestions.type3.push(currentQuestion);
+                    saveWrongQuestions();
+                }
+            }
+
+            updateStats(3);
+        }
+
+        function nextQuestion(type) {
+            currentQuestion++;
+            updateStats(type);
+            showQuestion(type);
+        }
+
+        function updateStats(type) {
+            const total = correctAnswers + wrongAnswers;
+            const accuracy = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+            const questions = type === 1 ? type1Questions : type === 2 ? type2Questions : type3Questions;
+
+            document.getElementById(`correct${type}`).textContent = correctAnswers;
+            document.getElementById(`wrong${type}`).textContent = wrongAnswers;
+            document.getElementById(`accuracy${type}`).textContent = accuracy + '%';
+
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById(`progress${type}`).style.width = progress + '%';
+            document.getElementById(`progress${type}`).textContent = `${currentQuestion}/${questions.length}`;
+        }
+
+        function showResult(type) {
+            const accuracy = Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+            const practiceArea = document.getElementById(`practice${type}Area`);
+
+            let message = '';
+            let emoji = '';
+            if (accuracy >= 90) {
+                message = '太棒了!你完全掌握了!';
+                emoji = '🎉';
+            } else if (accuracy >= 70) {
+                message = '不錯!再多練習就更好了!';
+                emoji = '👍';
+            } else {
+                message = '繼續努力!多練習!';
+                emoji = '💪';
+            }
+
+            const typeNames = ['', '選動詞形式', '改句子', '填空'];
+
+            practiceArea.innerHTML = `
+                <div class="result-section">
+                    <div class="emoji-large">${emoji}</div>
+                    <h2 style="font-size: 32px; color: #667eea; margin-bottom: 20px;">${message}</h2>
+                    <div style="font-size: 24px; margin-bottom: 30px;">
+                        <p>題型: <strong>${typeNames[type]}</strong></p>
+                        <p>答對: <strong style="color: #28a745;">${correctAnswers}</strong></p>
+                        <p>答錯: <strong style="color: #dc3545;">${wrongAnswers}</strong></p>
+                        <p>正確率: <strong style="color: #667eea;">${accuracy}%</strong></p>
+                    </div>
+                    <button class="next-btn" onclick="startPractice(${type})">再練習一次</button>
+                    <button class="next-btn" style="background: #6c757d;" onclick="showSection('rules')">返回文法規則</button>
+                </div>
+            `;
+        }
+
+        // 顯示錯題複習
+        function showWrongReview() {
+            const totalWrong = (wrongQuestions.type1?.length || 0) + 
+                             (wrongQuestions.type2?.length || 0) + 
+                             (wrongQuestions.type3?.length || 0);
+
+            const wrongListArea = document.getElementById('wrongListArea');
+            
+            if (totalWrong === 0) {
+                wrongListArea.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 80px; margin-bottom: 20px;">🎉</div>
+                        <h2 style="font-size: 28px; color: #28a745; margin-bottom: 20px;">太棒了!</h2>
+                        <p style="font-size: 20px;">目前沒有錯題,你都答對了!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let wrongListHTML = '<div style="padding: 20px;">';
+            
+            if (wrongQuestions.type1 && wrongQuestions.type1.length > 0) {
+                wrongListHTML += `
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📝 題型1: 選動詞形式 (${wrongQuestions.type1.length}題)</h3>
+                        <button class="next-btn" onclick="startWrongPractice(1)">開始練習</button>
+                    </div>
+                `;
+            }
+
+            if (wrongQuestions.type2 && wrongQuestions.type2.length > 0) {
+                wrongListHTML += `
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📝 題型2: 改句子 (${wrongQuestions.type2.length}題)</h3>
+                        <button class="next-btn" onclick="startWrongPractice(2)">開始練習</button>
+                    </div>
+                `;
+            }
+
+            if (wrongQuestions.type3 && wrongQuestions.type3.length > 0) {
+                wrongListHTML += `
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📝 題型3: 填空 (${wrongQuestions.type3.length}題)</h3>
+                        <button class="next-btn" onclick="startWrongPractice(3)">開始練習</button>
+                    </div>
+                `;
+            }
+
+            wrongListHTML += `
+                <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 10px;">
+                    <p style="color: #856404; font-size: 16px; margin-bottom: 10px;">
+                        <strong>💡 提示:</strong>
+                    </p>
+                    <p style="color: #856404;">
+                        • 錯題會在你答對後自動移除<br>
+                        • 建議先複習文法規則,再來練習錯題<br>
+                        • 答錯的題目會重新加回錯題本
+                    </p>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="next-btn" style="background: #dc3545;" onclick="clearAllWrongQuestions()">清空所有錯題</button>
+                </div>
+            </div>`;
+
+            wrongListArea.innerHTML = wrongListHTML;
+        }
+
+        // 開始錯題練習
+        function startWrongPractice(type) {
+            const wrongIndices = wrongQuestions[`type${type}`];
+            if (!wrongIndices || wrongIndices.length === 0) {
+                alert('沒有錯題了!');
+                return;
+            }
+
+            currentType = type;
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+
+            // 只練習錯題
+            const allQuestions = type === 1 ? type1Questions : type === 2 ? type2Questions : type3Questions;
+            questions = wrongIndices.map(i => allQuestions[i]);
+
+            // 顯示進度條和統計
+            document.getElementById('wrongProgressBar').style.display = 'block';
+            document.getElementById('wrongStatsBar').style.display = 'flex';
+            document.getElementById('wrongListArea').style.display = 'none';
+
+            updateStatsWrong();
+            showQuestionWrong();
+        }
+
+        // 顯示錯題
+        function showQuestionWrong() {
+            if (currentQuestion >= questions.length) {
+                showResultWrong();
+                return;
+            }
+
+            answered = false;
+            const q = questions[currentQuestion];
+            const practiceArea = document.getElementById('practiceWrongArea');
+
+            if (currentType === 3) {
+                // 填空題
+                practiceArea.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-text">${q.question}</div>
+                        <div class="question-hint">💡 提示: ${q.hint}</div>
+                        <input type="text" class="input-answer" id="answerWrong" placeholder="請輸入答案" />
+                        <button class="submit-btn" onclick="checkAnswerWrong()">送出答案</button>
+                        <div id="feedbackWrong"></div>
+                    </div>
+                `;
+            } else {
+                // 選擇題
+                const optionsHTML = q.options.map(opt => `
+                    <button class="option-btn" onclick="checkAnswerWrong('${opt.replace(/'/g, "\\'")}')">${opt}</button>
+                `).join('');
+
+                practiceArea.innerHTML = `
+                    <div class="question-card">
+                        <div class="question-text">${q.question}</div>
+                        <div class="options">
+                            ${optionsHTML}
+                        </div>
+                        <div id="feedbackWrong"></div>
+                    </div>
+                `;
+            }
+        }
+
+        // 檢查錯題答案
+        function checkAnswerWrong(selected) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestion];
+            const feedback = document.getElementById('feedbackWrong');
+            let isCorrect = false;
+
+            if (currentType === 3) {
+                const userAnswer = document.getElementById('answerWrong').value.trim();
+                isCorrect = q.correct.some(ans => ans.toLowerCase() === userAnswer.toLowerCase());
+            } else {
+                const buttons = document.querySelectorAll('#practiceWrongArea .option-btn');
+                buttons.forEach(btn => {
+                    btn.style.pointerEvents = 'none';
+                    if (btn.textContent === q.correct) {
+                        btn.classList.add('correct');
+                    } else if (btn.textContent === selected) {
+                        btn.classList.add('wrong');
+                    }
+                });
+                isCorrect = (selected === q.correct);
+            }
+
+            if (isCorrect) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確! 太棒了!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestionWrong()">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                const correctAnswer = currentType === 3 ? q.correct[0] : q.correct;
+                feedback.innerHTML = `
+                    ❌ 還是錯了! 正確答案是: <strong>${correctAnswer}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestionWrong()">下一題</button>
+                `;
+            }
+
+            updateStatsWrong();
+        }
+
+        // 下一題(錯題)
+        function nextQuestionWrong() {
+            currentQuestion++;
+            updateStatsWrong();
+            showQuestionWrong();
+        }
+
+        // 更新統計(錯題)
+        function updateStatsWrong() {
+            const total = correctAnswers + wrongAnswers;
+            const accuracy = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+
+            document.getElementById('correctWrong').textContent = correctAnswers;
+            document.getElementById('wrongWrong').textContent = wrongAnswers;
+            document.getElementById('accuracyWrong').textContent = accuracy + '%';
+
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById('progressWrong').style.width = progress + '%';
+            document.getElementById('progressWrong').textContent = `${currentQuestion}/${questions.length}`;
+        }
+
+        // 顯示錯題結果
+        function showResultWrong() {
+            const accuracy = Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+            const practiceArea = document.getElementById('practiceWrongArea');
+
+            let message = '';
+            let emoji = '';
+            if (accuracy === 100) {
+                message = '完美!全部答對了!';
+                emoji = '🎉';
+            } else if (accuracy >= 70) {
+                message = '不錯!繼續加油!';
+                emoji = '👍';
+            } else {
+                message = '再多練習!你可以的!';
+                emoji = '💪';
+            }
+
+            practiceArea.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">${emoji}</div>
+                    <h2 style="font-size: 32px; color: #667eea; margin-bottom: 20px;">${message}</h2>
+                    <div style="font-size: 24px; margin-bottom: 30px;">
+                        <p>題型: <strong>錯題複習 - 題型${currentType}</strong></p>
+                        <p>答對: <strong style="color: #28a745;">${correctAnswers}</strong></p>
+                        <p>答錯: <strong style="color: #dc3545;">${wrongAnswers}</strong></p>
+                        <p>正確率: <strong style="color: #667eea;">${accuracy}%</strong></p>
+                    </div>
+                    <button class="next-btn" onclick="showWrongReview(); document.getElementById('wrongProgressBar').style.display='none'; document.getElementById('wrongStatsBar').style.display='none'; document.getElementById('wrongListArea').style.display='block'; document.getElementById('practiceWrongArea').innerHTML='';">返回錯題列表</button>
+                </div>
+            `;
+        }
+
+        // 清空所有錯題
+        function clearAllWrongQuestions() {
+            if (confirm('確定要清空所有錯題嗎?')) {
+                wrongQuestions = {};
+                saveWrongQuestions();
+                showWrongReview();
+            }
+        }
+
+        // 初始化
+        window.onload = function() {
+            loadWrongQuestions();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L7 TED Talks 單字・片語・句型</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap');
+
+  :root {
+    --teal-dark: #1a6b5f;
+    --teal-mid: #2a9d8f;
+    --teal-light: #52c9bb;
+    --teal-pale: #e0f5f3;
+    --teal-bg: #f0faf9;
+    --green-accent: #57cc99;
+    --amber: #e9c46a;
+    --amber-dark: #c9a227;
+    --coral: #e76f51;
+    --text-dark: #1a2e2c;
+    --text-mid: #3a5552;
+    --text-light: #6b8f8c;
+    --white: #ffffff;
+    --shadow: 0 2px 12px rgba(26,107,95,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--teal-bg);
+    color: var(--text-dark);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-mid) 60%, var(--teal-light) 100%);
+    padding: 28px 24px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.04) 20px, rgba(255,255,255,0.04) 40px);
+  }
+  header .badge {
+    display: inline-block;
+    background: var(--green-accent);
+    color: var(--teal-dark);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+    font-size: 22px;
+    position: relative;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  header p {
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    margin-top: 6px;
+    position: relative;
+  }
+
+  /* ── Nav tabs ── */
+  nav {
+    display: flex;
+    background: var(--white);
+    border-bottom: 2px solid var(--teal-pale);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  nav button {
+    flex: 1;
+    padding: 13px 8px;
+    border: none;
+    background: transparent;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  nav button.active {
+    color: var(--teal-dark);
+    border-bottom-color: var(--teal-mid);
+    font-weight: 700;
+    background: var(--teal-pale);
+  }
+  nav button:hover:not(.active) {
+    color: var(--teal-mid);
+    background: #f5fffe;
+  }
+
+  /* ── Main content ── */
+  main { padding: 16px 14px 40px; max-width: 780px; margin: 0 auto; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── Section title ── */
+  .sec-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 14px;
+  }
+  .sec-title .icon {
+    width: 36px; height: 36px;
+    background: var(--teal-mid);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .sec-title h2 {
+    font-size: 16px;
+    color: var(--teal-dark);
+    font-weight: 700;
+  }
+  .sec-title span {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 400;
+  }
+
+  /* ── Word card ── */
+  .word-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .word-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--teal-light);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .word-card:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(26,107,95,0.16); }
+
+  .word-top {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .word-en {
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--teal-dark);
+  }
+  .word-ph {
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: 'DM Mono', monospace;
+  }
+  .word-pos {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .pos-n { background: #ddf0ed; color: var(--teal-dark); }
+  .pos-v { background: #fdefd0; color: #8a6000; }
+  .pos-adj { background: #e8f5d0; color: #3a6a00; }
+  .pos-adv { background: #fce4d9; color: #8a2000; }
+
+  .word-zh {
+    font-size: 15px;
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .colloc-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .colloc {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--teal-pale);
+    color: var(--teal-dark);
+    font-weight: 500;
+  }
+  .example {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #cce8e5;
+    font-style: italic;
+  }
+  .example b { color: var(--teal-mid); font-style: normal; }
+
+  /* number badge */
+  .num {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    background: var(--teal-mid);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  /* ── Quiz mode ── */
+  .quiz-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .quiz-toggle input { width: 16px; height: 16px; accent-color: var(--teal-mid); cursor: pointer; }
+  .quiz-toggle label { font-size: 13px; color: var(--teal-dark); font-weight: 600; cursor: pointer; }
+
+  .quiz-mode .word-zh { filter: blur(5px); transition: filter 0.2s; }
+  .quiz-mode .word-zh:active,
+  .quiz-mode .word-zh.show { filter: none; }
+  .quiz-hint { font-size: 11px; color: var(--text-light); margin-top: 2px; display: none; }
+  .quiz-mode .quiz-hint { display: block; }
+
+  /* ── Phrase cards ── */
+  .phrase-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--amber);
+  }
+  .phrase-en {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: #7a5000;
+    margin-bottom: 4px;
+  }
+  .phrase-zh {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+  }
+  .phrase-note {
+    font-size: 12px;
+    color: var(--text-mid);
+    background: #fffbe8;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--amber);
+  }
+  .phrase-example {
+    font-size: 13px;
+    color: var(--text-light);
+    font-style: italic;
+  }
+  .phrase-example b { color: var(--amber-dark); font-style: normal; }
+
+  /* ── Grammar cards ── */
+  .grammar-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .grammar-formula {
+    background: var(--teal-dark);
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+    word-break: break-all;
+  }
+  .grammar-meaning {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 8px;
+  }
+  .grammar-sub {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-bottom: 10px;
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .case-item {
+    background: var(--teal-pale);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .case-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal-mid);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .case-form {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    margin-bottom: 2px;
+  }
+  .case-note { font-size: 11px; color: var(--text-mid); }
+
+  .example-block {
+    background: #f5fffe;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    border: 1px solid #cce8e5;
+  }
+  .example-block .en { font-size: 13px; color: var(--text-dark); margin-bottom: 2px; }
+  .example-block .en b { color: var(--teal-mid); font-style: normal; }
+  .example-block .zh { font-size: 12px; color: var(--text-light); }
+
+  .adj-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 8px 0;
+  }
+  .adj-tag {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #e8f5d0;
+    color: #3a6a00;
+    text-align: center;
+  }
+  .adj-tag.blue { background: #d8eefe; color: #1a4a7a; }
+
+  /* ── Practice section ── */
+  .practice-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .practice-q {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+  .blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 2px solid var(--teal-mid);
+    color: transparent;
+    background: var(--teal-pale);
+    border-radius: 4px;
+    padding: 0 6px;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+    font-size: 14px;
+    user-select: none;
+  }
+  .blank.revealed { color: var(--teal-dark); background: #c5ede9; }
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .opt-btn {
+    padding: 6px 14px;
+    border: 2px solid var(--teal-light);
+    border-radius: 20px;
+    background: var(--white);
+    color: var(--teal-dark);
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .opt-btn:hover { background: var(--teal-pale); }
+  .opt-btn.correct { background: var(--green-accent); border-color: var(--green-accent); color: white; }
+  .opt-btn.wrong { background: var(--coral); border-color: var(--coral); color: white; }
+
+  /* ── Responsive ── */
+  @media (min-width: 540px) {
+    .word-grid { grid-template-columns: 1fr 1fr; }
+    .case-grid { grid-template-columns: repeat(4,1fr); }
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">高一英文</div>
+  <h1>Lesson 7 ✦ TED Talks</h1>
+  <p>單字・片語・句型 學習講義</p>
+</header>
+
+<nav>
+  <button class="active" onclick="switchTab('vocab')">📚 單字</button>
+  <button onclick="switchTab('phrase')">💬 片語</button>
+  <button onclick="switchTab('grammar')">📐 句型</button>
+  <button onclick="switchTab('practice')">✏️ 練習</button>
+</nav>
+
+<main>
+
+<!-- ═══════════════ VOCAB ═══════════════ -->
+<div id="vocab" class="section active">
+
+  <div class="sec-title">
+    <div class="icon">📚</div>
+    <div>
+      <h2>Words for Production <span>生產性單字（共 21 個）</span></h2>
+    </div>
+  </div>
+
+  <div class="quiz-toggle">
+    <input type="checkbox" id="quizCheck" onchange="toggleQuiz()">
+    <label for="quizCheck">🙈 遮住中文，考考自己！（點中文顯示答案）</label>
+  </div>
+
+  <div class="word-grid" id="wordGrid">
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">1</span>
+        <span class="word-en">seek</span>
+        <span class="word-ph">[siːk]</span>
+        <span class="word-pos pos-v">vt.</span>
+      </div>
+      <div class="word-zh">尋求；尋找</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">seek + N 尋找某物</span>
+        <span class="colloc">seek help 尋求幫助</span>
+      </div>
+      <div class="example">She <b>sought</b> advice from her teacher before the exam. ✦ 過去式 sought</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">2</span>
+        <span class="word-en">audience</span>
+        <span class="word-ph">[ˈɔːdiəns]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">觀眾；聽眾</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">audience of… …的觀眾</span>
+        <span class="colloc">captive audience 被迫聆聽的聽眾</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">3</span>
+        <span class="word-en">series</span>
+        <span class="word-ph">[ˈsɪriz]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">系列</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">a series of 一系列的……</span>
+      </div>
+      <div class="example">Harry Potter is a <b>series of</b> novels.</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">4</span>
+        <span class="word-en">technology</span>
+        <span class="word-ph">[tɛkˈnɑlədʒi]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">科技</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">medical technology 醫學科技</span>
+        <span class="colloc">information technology 資訊科技</span>
+        <span class="colloc">technological 科技的（adj.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">5</span>
+        <span class="word-en">worth</span>
+        <span class="word-ph">[wɜːrθ]</span>
+        <span class="word-pos pos-adj">adj.</span>
+      </div>
+      <div class="word-zh">值得……的</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">worth + V-ing 值得（做）</span>
+        <span class="colloc">worth a try 值得一試</span>
+        <span class="colloc">worthy of 值得……（adj.）</span>
+      </div>
+      <div class="example">This movie is <b>worth watching</b>. ✦ worth 後面接 V-ing，不接 to V！</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">6</span>
+        <span class="word-en">foundation</span>
+        <span class="word-ph">[faʊnˈdeʃən]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">基金會；基礎</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">set up a foundation 設立基金會</span>
+        <span class="colloc">found 創立（vt.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">7</span>
+        <span class="word-en">conference</span>
+        <span class="word-ph">[ˈkɑnfərəns]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">會議；研討會</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">attend a conference 參加研討會</span>
+        <span class="colloc">press conference 記者會</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">8</span>
+        <span class="word-en">increasingly</span>
+        <span class="word-ph">[ɪnˈkrisiŋli]</span>
+        <span class="word-pos pos-adv">adv.</span>
+      </div>
+      <div class="word-zh">愈來愈……</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">反義：decreasingly 愈來愈不</span>
+        <span class="colloc">increase 增加（v./n.）</span>
+      </div>
+      <div class="example">TED Talks became <b>increasingly</b> popular.</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">9</span>
+        <span class="word-en">organizer</span>
+        <span class="word-ph">[ˈɔrgənaɪzər]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">組織者；籌辦者</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">organize 籌辦（vt.）</span>
+        <span class="colloc">organization 組織（n.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">10</span>
+        <span class="word-en">broad</span>
+        <span class="word-ph">[brɔːd]</span>
+        <span class="word-pos pos-adj">adj.</span>
+      </div>
+      <div class="word-zh">廣泛的；寬闊的</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">a broad range of 各式各樣的</span>
+        <span class="colloc">broaden 拓展（vt.）</span>
+        <span class="colloc">in broad daylight 光天化日</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">11</span>
+        <span class="word-en">range</span>
+        <span class="word-ph">[reɪndʒ]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">種類；系列；範圍</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">a range of 各式各樣的</span>
+        <span class="colloc">range from A to B 從A到B（vi.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">12</span>
+        <span class="word-en">field</span>
+        <span class="word-ph">[fiːld]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">領域；田地</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">in the field of 在……領域</span>
+      </div>
+      <div class="example">She is an expert <b>in the field of</b> medicine.</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">13</span>
+        <span class="word-en">philosophy</span>
+        <span class="word-ph">[fəˈlɑsəfi]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">哲學；人生哲學</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">philosopher 哲學家</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">14</span>
+        <span class="word-en">launch</span>
+        <span class="word-ph">[lɔːntʃ]</span>
+        <span class="word-pos pos-v">vt.</span>
+      </div>
+      <div class="word-zh">發行；發起；發射</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">launch a product 發行產品</span>
+        <span class="colloc">launch an attack 發起攻擊</span>
+      </div>
+      <div class="example">TED.com was <b>launched</b> in 2007.</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">15</span>
+        <span class="word-en">collection</span>
+        <span class="word-ph">[kəˈlɛkʃən]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">一批；收藏品；收集</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">a collection of 一批……</span>
+        <span class="colloc">collect 收集（vt.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">16</span>
+        <span class="word-en">numerous</span>
+        <span class="word-ph">[ˈnjuːmərəs]</span>
+        <span class="word-pos pos-adj">adj.</span>
+      </div>
+      <div class="word-zh">許多的</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">同：many / a large number of</span>
+        <span class="colloc">abundant 豐盛的</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">17</span>
+        <span class="word-en">celebrity</span>
+        <span class="word-ph">[səˈlɛbrəti]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">名人</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">international celebrity 國際名人</span>
+        <span class="colloc">celebrity endorsement 名人代言</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">18</span>
+        <span class="word-en">fascination</span>
+        <span class="word-ph">[ˌfæsnˈeʃən]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">著迷；吸引力</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">in fascination 入迷</span>
+        <span class="colloc">hold a fascination for 對……具吸引力</span>
+        <span class="colloc">fascinate 使著迷（vt.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">19</span>
+        <span class="word-en">fiction</span>
+        <span class="word-ph">[ˈfɪkʃən]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">小說</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">science fiction 科幻小說</span>
+        <span class="colloc">romantic fiction 浪漫愛情小說</span>
+        <span class="colloc">fictional 虛構的（adj.）</span>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">20</span>
+        <span class="word-en">discuss</span>
+        <span class="word-ph">[dɪˈskʌs]</span>
+        <span class="word-pos pos-v">vt.</span>
+      </div>
+      <div class="word-zh">探討；討論</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">discuss sth. in detail 仔細討論</span>
+        <span class="colloc">discussion 討論（n.）</span>
+        <span class="colloc">under discussion 討論中</span>
+      </div>
+      <div class="example">注意：discuss 後面直接接受詞，不加 about！</div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-top">
+        <span class="num">21</span>
+        <span class="word-en">method</span>
+        <span class="word-ph">[ˈmɛθəd]</span>
+        <span class="word-pos pos-n">n.</span>
+      </div>
+      <div class="word-zh">方式；方法</div>
+      <div class="quiz-hint">👆 點中文查看答案</div>
+      <div class="colloc-box">
+        <span class="colloc">adopt a method of 採取……方式</span>
+      </div>
+    </div>
+
+  </div><!-- /word-grid -->
+</div><!-- /vocab -->
+
+
+<!-- ═══════════════ PHRASE ═══════════════ -->
+<div id="phrase" class="section">
+  <div class="sec-title">
+    <div class="icon">💬</div>
+    <div>
+      <h2>Idioms & Phrases <span>重要片語（共 5 個）</span></h2>
+    </div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-en">1. as well as</div>
+    <div class="phrase-zh">和；除了……以外</div>
+    <div class="phrase-note">⚠️ 重點：A as well as B 當主詞時，動詞的單複數與 <b>A</b> 一致，不看 B！</div>
+    <div class="phrase-example">Each student will be given a textbook <b>as well as</b> a notebook.<br>→ 動詞用 will be given（與 Each student 一致）</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-en">2. for free</div>
+    <div class="phrase-zh">免費</div>
+    <div class="phrase-note">副詞片語，修飾動作。同義：free of charge</div>
+    <div class="phrase-example">The videos can be watched <b>for free</b> on TED.com.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-en">3. at present</div>
+    <div class="phrase-zh">目前；現在</div>
+    <div class="phrase-note">時間副詞，同義：now / currently，通常搭配現在式動詞使用。</div>
+    <div class="phrase-example"><b>At present</b>, the collection of TED Talk videos is growing week by week.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-en">4. give … a try</div>
+    <div class="phrase-zh">嘗試……</div>
+    <div class="phrase-note">用於嘗試新事物或方法。<br>同義說法：give…a shot / give…a go / give…a whirl</div>
+    <div class="phrase-example">You won't realize how much you can learn unless you <b>give it a try</b>.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-en">5. broaden one's horizons</div>
+    <div class="phrase-zh">拓展（某人的）視野</div>
+    <div class="phrase-note">horizons 恆為複數。broaden 也可替換為 expand / widen。</div>
+    <div class="phrase-example">Traveling abroad can really <b>broaden your horizons</b>.</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ GRAMMAR ═══════════════ -->
+<div id="grammar" class="section">
+  <div class="sec-title">
+    <div class="icon">📐</div>
+    <div>
+      <h2>Sentence Patterns <span>本課句型（共 2 個）</span></h2>
+    </div>
+  </div>
+
+  <!-- Pattern 1 -->
+  <div class="grammar-card">
+    <div class="grammar-formula">S + keep / leave / find + O + V-ing / p.p. / adj. / prep.</div>
+    <div class="grammar-meaning">「使／任由／發現……處於某種狀態」</div>
+    <div class="grammar-sub">keep、leave、find 是不完全及物動詞，受詞後面要加「受詞補語 (OC)」說明狀態，句子才完整。</div>
+
+    <div class="case-grid">
+      <div class="case-item">
+        <div class="case-label">① V-ing</div>
+        <div class="case-form">現在分詞</div>
+        <div class="case-note">主動、進行中的動作</div>
+      </div>
+      <div class="case-item">
+        <div class="case-label">② p.p.</div>
+        <div class="case-form">過去分詞</div>
+        <div class="case-note">被動、已完成的動作</div>
+      </div>
+      <div class="case-item">
+        <div class="case-label">③ adj.</div>
+        <div class="case-form">形容詞</div>
+        <div class="case-note">描述狀態</div>
+      </div>
+      <div class="case-item">
+        <div class="case-label">④ prep.</div>
+        <div class="case-form">介系詞片語</div>
+        <div class="case-note">描述位置、狀態</div>
+      </div>
+    </div>
+
+    <div class="example-block">
+      <div class="en">Don't <b>leave</b> your car <b>running</b> while you fill it with gas.</div>
+      <div class="zh">加油時，別讓車子發動著。（running = V-ing，主動進行）</div>
+    </div>
+    <div class="example-block">
+      <div class="en">I was surprised to <b>find</b> the door <b>unlocked</b> when I got home.</div>
+      <div class="zh">我回到家，驚訝地發現門沒上鎖。（unlocked = p.p.，被動）</div>
+    </div>
+    <div class="example-block">
+      <div class="en">Please <b>keep</b> the windows <b>open</b>.</div>
+      <div class="zh">請讓窗戶保持開著。（open = adj.，狀態）</div>
+    </div>
+    <div class="example-block">
+      <div class="en">Hank woke up and <b>found</b> his dog <b>beside his bed</b>.</div>
+      <div class="zh">Hank 醒來發現狗在床邊。（beside his bed = prep.，位置）</div>
+    </div>
+    <div class="example-block">
+      <div class="en">Bill Gates left <b>millions</b> feeling <b>inspired</b> through his TED Talk.</div>
+      <div class="zh">比爾蓋茲透過 TED 演講讓數百萬人受到啟發。（課文例句）</div>
+    </div>
+  </div>
+
+  <!-- Pattern 2 -->
+  <div class="grammar-card">
+    <div class="grammar-formula">It is/was + adj. + that + S + V...</div>
+    <div class="grammar-meaning">「……是……的」（虛主詞句型）</div>
+    <div class="grammar-sub">that 引導的名詞子句才是真正的主詞。因為太長，所以移到後面，句首用虛主詞 it 代替，避免「頭重腳輕」。</div>
+
+    <div style="margin: 10px 0 6px; font-size: 13px; font-weight: 700; color: var(--teal-dark);">常見形容詞：</div>
+    <div class="adj-grid">
+      <div class="adj-tag">true 真實的</div>
+      <div class="adj-tag">clear 明顯的</div>
+      <div class="adj-tag blue">obvious 明顯的</div>
+      <div class="adj-tag blue">certain 確定的</div>
+      <div class="adj-tag">possible 可能的</div>
+      <div class="adj-tag">impossible 不可能的</div>
+      <div class="adj-tag blue">amazing 驚人的</div>
+      <div class="adj-tag blue">surprising 令人驚訝的</div>
+      <div class="adj-tag">strange 奇怪的</div>
+      <div class="adj-tag">interesting 有趣的</div>
+    </div>
+
+    <div class="example-block">
+      <div class="en"><b>It is interesting that</b> Bill Gates didn't talk about computers.</div>
+      <div class="zh">有趣的是，比爾蓋茲並沒有談論電腦。（課文例句）</div>
+    </div>
+    <div class="example-block">
+      <div class="en"><b>It was clear to</b> the organizers <b>that</b> they should invite thinkers from a broader range of fields.</div>
+      <div class="zh">對籌辦者而言，顯然他們應該邀請更廣泛領域的思想家。（課文例句）</div>
+    </div>
+    <div class="example-block">
+      <div class="en"><b>It is possible that</b> we will win the championship.</div>
+      <div class="zh">我們有可能會贏得冠軍。</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PRACTICE ═══════════════ -->
+<div id="practice" class="section">
+  <div class="sec-title">
+    <div class="icon">✏️</div>
+    <div>
+      <h2>Quick Practice <span>點選選項，確認答案！</span></h2>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="practice-card">
+    <div class="practice-q">
+      <b>Q1</b> 以下哪個選項正確填入空格？<br><br>
+      Please keep the windows <span class="blank" id="b1" onclick="revealBlank('b1', 'open')">＿＿＿</span> on windy days.
+    </div>
+    <div class="options">
+      <button class="opt-btn" onclick="checkAns(this,'b1','open','open')">open</button>
+      <button class="opt-btn" onclick="checkAns(this,'b1','opening','open')">opening</button>
+      <button class="opt-btn" onclick="checkAns(this,'b1','opened','open')">opened</button>
+      <button class="opt-btn" onclick="checkAns(this,'b1','openly','open')">openly</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="practice-card">
+    <div class="practice-q">
+      <b>Q2</b> 選出正確選項：<br><br>
+      <span class="blank" id="b2" onclick="revealBlank('b2','It is surprising that')">＿＿＿</span> such a young person could give such an inspiring talk.
+    </div>
+    <div class="options">
+      <button class="opt-btn" onclick="checkAns(this,'b2','It is surprising that','It is surprising that')">It is surprising that</button>
+      <button class="opt-btn" onclick="checkAns(this,'b2','It is that surprising','It is surprising that')">It is that surprising</button>
+      <button class="opt-btn" onclick="checkAns(this,'b2','That is surprising it','It is surprising that')">That is surprising it</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="practice-card">
+    <div class="practice-q">
+      <b>Q3</b> 中文翻英文，選出正確答案：<br><br>
+      她對科幻小說的著迷最終使她成為一位作家。<br><br>
+      Her <span class="blank" id="b3" onclick="revealBlank('b3','fascination with')">＿＿＿</span> science fiction eventually led her to become a writer.
+    </div>
+    <div class="options">
+      <button class="opt-btn" onclick="checkAns(this,'b3','fascination with','fascination with')">fascination with</button>
+      <button class="opt-btn" onclick="checkAns(this,'b3','fascinating of','fascination with')">fascinating of</button>
+      <button class="opt-btn" onclick="checkAns(this,'b3','fascinated about','fascination with')">fascinated about</button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="practice-card">
+    <div class="practice-q">
+      <b>Q4</b> 選出 <b>as well as</b> 主詞一致的正確句子：
+    </div>
+    <div class="options">
+      <button class="opt-btn" onclick="checkAnsGeneral(this,'A')">A. The students as well as the teacher are ready.</button>
+      <button class="opt-btn" onclick="checkAnsGeneral(this,'B')">B. The teacher as well as the students are ready.</button>
+    </div>
+    <div id="q4-result" style="margin-top:10px; font-size:13px; color:var(--teal-dark); display:none;">
+      ✅ A 和 B 都是常見的困惑！<br>
+      A：主詞是 students（複數）→ are ✓<br>
+      B：主詞是 teacher（單數）→ 應用 <b>is</b>，但 B 用了 are，所以 <b>B 是錯的</b>！
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="practice-card">
+    <div class="practice-q">
+      <b>Q5</b> 以下哪個是 <b>seek</b> 的過去式？
+    </div>
+    <div class="options">
+      <button class="opt-btn" onclick="checkAns(this,'b5','sought','sought')">sought</button>
+      <button class="opt-btn" onclick="checkAns(this,'b5','seeked','sought')">seeked</button>
+      <button class="opt-btn" onclick="checkAns(this,'b5','seeked','sought')">seeked</button>
+      <button class="opt-btn" onclick="checkAns(this,'b5','seeke','sought')">seeke</button>
+    </div>
+    <div id="b5-note" style="display:none; margin-top:8px; font-size:12px; color:var(--teal-dark);">
+      ✅ seek → sought → sought （不規則動詞！）
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<footer>G1 L7 TED Talks ✦ 魚兒老師製作</footer>
+
+<script>
+// Tab switch
+function switchTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Quiz mode
+function toggleQuiz() {
+  const grid = document.getElementById('wordGrid');
+  const checked = document.getElementById('quizCheck').checked;
+  if (checked) {
+    grid.classList.add('quiz-mode');
+  } else {
+    grid.classList.remove('quiz-mode');
+    document.querySelectorAll('.word-zh').forEach(el => el.classList.remove('show'));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.word-zh').forEach(el => {
+    el.addEventListener('click', () => {
+      if (document.getElementById('wordGrid').classList.contains('quiz-mode')) {
+        el.classList.toggle('show');
+      }
+    });
+  });
+});
+
+// Blank reveal
+function revealBlank(id, ans) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.textContent = ans;
+    el.classList.add('revealed');
+  }
+}
+
+// Check answer
+function checkAns(btn, blankId, chosen, correct) {
+  const isCorrect = chosen === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) revealBlank(blankId, correct);
+  if (blankId === 'b5') document.getElementById('b5-note').style.display = 'block';
+  setTimeout(() => btn.classList.remove('correct', 'wrong'), 1200);
+}
+
+function checkAnsGeneral(btn, choice) {
+  const result = document.getElementById('q4-result');
+  result.style.display = 'block';
+  if (choice === 'A') {
+    btn.classList.add('correct');
+  } else {
+    btn.classList.add('wrong');
+  }
+  setTimeout(() => btn.classList.remove('correct', 'wrong'), 1500);
+}
+</script>
+</body>
+</html>

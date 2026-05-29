@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時態判斷練習</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #A5B4FC;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --bg: #F1F5F9;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: var(--card);
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        .stat-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .stat-value.correct { color: var(--success); }
+        .stat-value.wrong { color: var(--error); }
+        .stat-value.total { color: var(--primary); }
+        
+        /* Mode Selection */
+        .mode-selection {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 10px 18px;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn:hover {
+            border-color: var(--primary-light);
+            background: #F5F3FF;
+        }
+        
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .mode-btn.wrong-mode {
+            border-color: var(--error);
+            color: var(--error);
+        }
+        
+        .mode-btn.wrong-mode:hover {
+            background: #FEF2F2;
+        }
+        
+        .mode-btn.wrong-mode.active {
+            background: var(--error);
+            color: white;
+        }
+        
+        .wrong-count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--error);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            margin-left: 6px;
+            padding: 0 6px;
+        }
+        
+        .mode-btn.wrong-mode.active .wrong-count-badge {
+            background: white;
+            color: var(--error);
+        }
+        
+        /* Wrong Review Section */
+        .wrong-review {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .wrong-review h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .clear-wrong-btn {
+            padding: 8px 16px;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .clear-wrong-btn:hover {
+            background: #DC2626;
+            transform: scale(1.05);
+        }
+        
+        .wrong-word-item {
+            background: #FEF2F2;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .wrong-word-item .sentence {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .wrong-word-item .tense {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        /* Main Card */
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .question-number {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Sentence Display */
+        .sentence-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .sentence-box {
+            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+            border-radius: 16px;
+            padding: 25px 20px;
+            border-left: 5px solid var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .sentence-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--text);
+        }
+        
+        .sentence-text .keyword {
+            background: var(--warning);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .sentence-text .blank {
+            display: inline-block;
+            min-width: 120px;
+            border-bottom: 3px solid var(--primary);
+            margin: 0 5px;
+        }
+        
+        .hint-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+        
+        .hint-text .hint-keyword {
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        /* Sound Button */
+        .sound-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 15px 0;
+            transition: all 0.2s;
+        }
+        
+        .sound-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .sound-btn.playing {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .sound-btn.answer-sound {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            margin-top: 10px;
+        }
+        
+        .sound-btn.answer-sound:hover {
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Stage Indicator */
+        .stage-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stage-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .stage-badge.stage1 {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+        
+        .stage-badge.stage2 {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        @media (max-width: 550px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .option-btn {
+            padding: 16px 20px;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--primary);
+            background: #FAFAFF;
+            transform: translateY(-2px);
+        }
+        
+        .option-btn.correct {
+            border-color: var(--success);
+            background: #ECFDF5;
+            color: #047857;
+        }
+        
+        .option-btn.wrong {
+            border-color: var(--error);
+            background: #FEF2F2;
+            color: #B91C1C;
+        }
+        
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        
+        .option-btn .option-chinese {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        
+        .option-btn.correct .option-chinese,
+        .option-btn.wrong .option-chinese {
+            color: inherit;
+            opacity: 0.8;
+        }
+        
+        /* Feedback */
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+        }
+        
+        .feedback.wrong {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+        }
+        
+        .feedback-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feedback.correct .feedback-title {
+            color: #047857;
+        }
+        
+        .feedback.wrong .feedback-title {
+            color: #B91C1C;
+        }
+        
+        .feedback-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        
+        .feedback-answer {
+            margin-top: 12px;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+        }
+        
+        .feedback-answer .label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .feedback-answer .answer {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Next Button */
+        .next-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+            transition: all 0.2s;
+        }
+        
+        .next-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .next-btn.show {
+            display: block;
+        }
+        
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+        
+        .result-screen.show {
+            display: block;
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .result-score {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+        
+        .result-message {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .restart-btn {
+            padding: 14px 40px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        /* Tense Reference */
+        .tense-reference {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+        
+        .tense-reference h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tense-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .tense-table th, .tense-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tense-table th {
+            background: #F8FAFC;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .tense-table .keyword-cell {
+            color: var(--warning);
+            font-weight: 500;
+        }
+        
+        /* Toggle Reference */
+        .toggle-ref-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .toggle-ref-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .tense-reference.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ 時態判斷練習</h1>
+            <p>看句子 → 找關鍵字 → 判斷時態</p>
+        </div>
+        
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-label">正確</div>
+                <div class="stat-value correct" id="correctCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">錯誤</div>
+                <div class="stat-value wrong" id="wrongCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">正確率</div>
+                <div class="stat-value total" id="accuracy">0%</div>
+            </div>
+        </div>
+        
+        <div class="mode-selection">
+            <button class="mode-btn active" data-mode="10">10 題</button>
+            <button class="mode-btn" data-mode="20">20 題</button>
+            <button class="mode-btn" data-mode="all">全部</button>
+            <button class="mode-btn wrong-mode" data-mode="wrong">複習錯題 <span class="wrong-count-badge" id="wrongBadge">0</span></button>
+        </div>
+        
+        <div class="card" id="quizCard">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <div class="question-number" id="questionNumber">第 1 題 / 共 10 題</div>
+            
+            <div class="sentence-display">
+                <div class="sentence-box">
+                    <div class="sentence-text" id="sentenceText">
+                        He _____ here <span class="keyword">since 1990</span>.
+                    </div>
+                </div>
+                <button class="sound-btn" id="soundBtn" onclick="playSentenceSound()">
+                    🔊 聽句子發音
+                </button>
+                <div class="hint-text" id="hintText">
+                    💡 關鍵字：<span class="hint-keyword">since 1990</span>
+                </div>
+            </div>
+            
+            <div class="stage-indicator">
+                <span class="stage-badge stage1" id="stageBadge">第一步：選擇時態大類</span>
+            </div>
+            
+            <div class="options-grid" id="options">
+                <!-- Options inserted here -->
+            </div>
+            
+            <div class="feedback" id="feedback">
+                <div class="feedback-title" id="feedbackTitle">
+                    <span>✓</span>
+                    <span>正確！</span>
+                </div>
+                <div class="feedback-text" id="feedbackText"></div>
+                <div class="feedback-answer">
+                    <div class="label">正確答案</div>
+                    <div class="answer" id="correctAnswer"></div>
+                    <button class="sound-btn answer-sound" id="answerSoundBtn" onclick="playAnswerSound()">
+                        🔊 聽正確句子
+                    </button>
+                </div>
+            </div>
+            
+            <button class="next-btn" id="nextBtn">下一題 →</button>
+        </div>
+        
+        <div class="result-screen" id="resultScreen">
+            <div class="result-icon" id="resultIcon">🎉</div>
+            <div class="result-title" id="resultTitle">練習完成！</div>
+            <div class="result-score" id="resultScore">8/10</div>
+            <div class="result-message" id="resultMessage">
+                做得很好！
+            </div>
+            <button class="restart-btn" onclick="startQuiz()">再練習一次</button>
+            
+            <div class="wrong-review" id="wrongReview" style="display: none;">
+                <h3>
+                    <span>📝 需要加強的題目：</span>
+                    <button class="clear-wrong-btn" onclick="clearWrongQuestions()">🗑️ 清除全部錯題</button>
+                </h3>
+                <div id="wrongQuestionsList"></div>
+            </div>
+        </div>
+        
+        <button class="toggle-ref-btn" onclick="toggleReference()">📖 顯示時態對照表</button>
+        
+        <div class="tense-reference hidden" id="tenseReference">
+            <h3>📖 時態關鍵字對照表</h3>
+            <table class="tense-table">
+                <tr>
+                    <th>時態</th>
+                    <th>關鍵字</th>
+                </tr>
+                <tr>
+                    <td>現在簡單式</td>
+                    <td class="keyword-cell">every day, always, usually, often, sometimes</td>
+                </tr>
+                <tr>
+                    <td>現在進行式</td>
+                    <td class="keyword-cell">now, right now, at the moment, Look!, Listen!</td>
+                </tr>
+                <tr>
+                    <td>現在完成式</td>
+                    <td class="keyword-cell">since, for, already, yet, ever, never, just</td>
+                </tr>
+                <tr>
+                    <td>過去簡單式</td>
+                    <td class="keyword-cell">yesterday, last week/month/year, ago, in 2020</td>
+                </tr>
+                <tr>
+                    <td>過去進行式</td>
+                    <td class="keyword-cell">at that time, when + 過去式, while</td>
+                </tr>
+                <tr>
+                    <td>過去完成式</td>
+                    <td class="keyword-cell">before + 過去式, by the time, after + 過去式</td>
+                </tr>
+                <tr>
+                    <td>未來簡單式</td>
+                    <td class="keyword-cell">tomorrow, next week/month/year, soon, will</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 語音合成
+        const synth = window.speechSynthesis;
+        let currentSentenceForSound = '';
+        let currentAnswerSentence = '';
+        
+        // 播放句子發音（題目，空格處說 blank）
+        function playSentenceSound() {
+            if (!currentSentenceForSound) return;
+            
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(currentSentenceForSound);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            utterance.pitch = 1;
+            
+            const btn = document.getElementById('soundBtn');
+            btn.classList.add('playing');
+            setTimeout(() => btn.classList.remove('playing'), 500);
+            
+            synth.speak(utterance);
+        }
+        
+        // 播放正確答案句子
+        function playAnswerSound() {
+            if (!currentAnswerSentence) return;
+            
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(currentAnswerSentence);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            utterance.pitch = 1;
+            
+            const btn = document.getElementById('answerSoundBtn');
+            btn.classList.add('playing');
+            setTimeout(() => btn.classList.remove('playing'), 500);
+            
+            synth.speak(utterance);
+        }
+
+        // 題庫
+        const questions = [
+            // 現在簡單式
+            {
+                sentence: "He _____ to school <span class='keyword'>every day</span>.",
+                soundSentence: "He blank to school every day.",
+                fullSentence: "He goes to school every day.",
+                keyword: "every day",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "present_simple",
+                tenseName: "現在簡單式",
+                explanation: "every day 表示「每天」的習慣性動作，用現在簡單式。",
+                answer: "goes"
+            },
+            {
+                sentence: "She <span class='keyword'>always</span> _____ breakfast at 7 a.m.",
+                soundSentence: "She always blank breakfast at 7 a.m.",
+                fullSentence: "She always eats breakfast at 7 a.m.",
+                keyword: "always",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "present_simple",
+                tenseName: "現在簡單式",
+                explanation: "always（總是）表示習慣性動作，用現在簡單式。",
+                answer: "eats"
+            },
+            {
+                sentence: "Water _____ at 100 degrees Celsius. (科學事實)",
+                soundSentence: "Water blank at 100 degrees Celsius.",
+                fullSentence: "Water boils at 100 degrees Celsius.",
+                keyword: "科學事實",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "present_simple",
+                tenseName: "現在簡單式",
+                explanation: "科學事實、永恆真理用現在簡單式。",
+                answer: "boils"
+            },
+            {
+                sentence: "My father <span class='keyword'>usually</span> _____ home at 6 p.m.",
+                soundSentence: "My father usually blank home at 6 p.m.",
+                fullSentence: "My father usually arrives home at 6 p.m.",
+                keyword: "usually",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "present_simple",
+                tenseName: "現在簡單式",
+                explanation: "usually（通常）表示習慣性動作，用現在簡單式。",
+                answer: "arrives"
+            },
+            
+            // 現在進行式
+            {
+                sentence: "<span class='keyword'>Look!</span> The baby _____ .",
+                soundSentence: "Look! The baby blank.",
+                fullSentence: "Look! The baby is crying.",
+                keyword: "Look!",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "present_progressive",
+                tenseName: "現在進行式",
+                explanation: "Look!（看！）暗示正在發生的事，用現在進行式。",
+                answer: "is crying"
+            },
+            {
+                sentence: "She _____ a book <span class='keyword'>right now</span>.",
+                soundSentence: "She blank a book right now.",
+                fullSentence: "She is reading a book right now.",
+                keyword: "right now",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "present_progressive",
+                tenseName: "現在進行式",
+                explanation: "right now（現在）表示此刻正在進行，用現在進行式。",
+                answer: "is reading"
+            },
+            {
+                sentence: "<span class='keyword'>Listen!</span> Someone _____ at the door.",
+                soundSentence: "Listen! Someone blank at the door.",
+                fullSentence: "Listen! Someone is knocking at the door.",
+                keyword: "Listen!",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "present_progressive",
+                tenseName: "現在進行式",
+                explanation: "Listen!（聽！）暗示正在發生的事，用現在進行式。",
+                answer: "is knocking"
+            },
+            {
+                sentence: "The students _____ an exam <span class='keyword'>at the moment</span>.",
+                soundSentence: "The students blank an exam at the moment.",
+                fullSentence: "The students are taking an exam at the moment.",
+                keyword: "at the moment",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "present_progressive",
+                tenseName: "現在進行式",
+                explanation: "at the moment（此刻）表示正在進行，用現在進行式。",
+                answer: "are taking"
+            },
+            
+            // 現在完成式
+            {
+                sentence: "He _____ here <span class='keyword'>since 1990</span>.",
+                soundSentence: "He blank here since 1990.",
+                fullSentence: "He has lived here since 1990.",
+                keyword: "since 1990",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "present_perfect",
+                tenseName: "現在完成式",
+                explanation: "since + 過去時間點，表示「從...到現在」，用現在完成式。",
+                answer: "has lived"
+            },
+            {
+                sentence: "I _____ <span class='keyword'>already</span> _____ my homework.",
+                soundSentence: "I blank already blank my homework.",
+                fullSentence: "I have already finished my homework.",
+                keyword: "already",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "present_perfect",
+                tenseName: "現在完成式",
+                explanation: "already（已經）常與現在完成式連用。",
+                answer: "have, finished"
+            },
+            {
+                sentence: "She _____ <span class='keyword'>never</span> _____ to Japan.",
+                soundSentence: "She blank never blank to Japan.",
+                fullSentence: "She has never been to Japan.",
+                keyword: "never",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "present_perfect",
+                tenseName: "現在完成式",
+                explanation: "never（從不）表示經驗，常與現在完成式連用。",
+                answer: "has, been"
+            },
+            {
+                sentence: "They _____ married <span class='keyword'>for 20 years</span>.",
+                soundSentence: "They blank married for 20 years.",
+                fullSentence: "They have been married for 20 years.",
+                keyword: "for 20 years",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "present_perfect",
+                tenseName: "現在完成式",
+                explanation: "for + 一段時間，表示「持續...」，用現在完成式。",
+                answer: "have been"
+            },
+            {
+                sentence: "_____ you _____ your lunch <span class='keyword'>yet</span>?",
+                soundSentence: "Blank you blank your lunch yet?",
+                fullSentence: "Have you eaten your lunch yet?",
+                keyword: "yet",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "present_perfect",
+                tenseName: "現在完成式",
+                explanation: "yet（尚未、已經）用於疑問句和否定句，與現在完成式連用。",
+                answer: "Have, eaten"
+            },
+            {
+                sentence: "I _____ <span class='keyword'>just</span> _____ home.",
+                soundSentence: "I blank just blank home.",
+                fullSentence: "I have just arrived home.",
+                keyword: "just",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "present_perfect",
+                tenseName: "現在完成式",
+                explanation: "just（剛剛）表示剛完成的動作，用現在完成式。",
+                answer: "have, arrived"
+            },
+            
+            // 過去簡單式
+            {
+                sentence: "I _____ to Taipei <span class='keyword'>yesterday</span>.",
+                soundSentence: "I blank to Taipei yesterday.",
+                fullSentence: "I went to Taipei yesterday.",
+                keyword: "yesterday",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "past_simple",
+                tenseName: "過去簡單式",
+                explanation: "yesterday（昨天）是過去時間，用過去簡單式。",
+                answer: "went"
+            },
+            {
+                sentence: "She _____ a doctor <span class='keyword'>last year</span>.",
+                soundSentence: "She blank a doctor last year.",
+                fullSentence: "She became a doctor last year.",
+                keyword: "last year",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "past_simple",
+                tenseName: "過去簡單式",
+                explanation: "last year（去年）是過去時間，用過去簡單式。",
+                answer: "became"
+            },
+            {
+                sentence: "They _____ to Japan <span class='keyword'>three years ago</span>.",
+                soundSentence: "They blank to Japan three years ago.",
+                fullSentence: "They moved to Japan three years ago.",
+                keyword: "three years ago",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "past_simple",
+                tenseName: "過去簡單式",
+                explanation: "ago（...前）表示過去時間，用過去簡單式。",
+                answer: "moved"
+            },
+            {
+                sentence: "He _____ born <span class='keyword'>in 1985</span>.",
+                soundSentence: "He blank born in 1985.",
+                fullSentence: "He was born in 1985.",
+                keyword: "in 1985",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "past_simple",
+                tenseName: "過去簡單式",
+                explanation: "in + 過去年份，表示過去特定時間，用過去簡單式。",
+                answer: "was"
+            },
+            
+            // 過去進行式
+            {
+                sentence: "I _____ TV <span class='keyword'>when</span> she called.",
+                soundSentence: "I blank TV when she called.",
+                fullSentence: "I was watching TV when she called.",
+                keyword: "when + 過去式",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "past_progressive",
+                tenseName: "過去進行式",
+                explanation: "when + 過去式，主句描述「那時正在做」的動作，用過去進行式。",
+                answer: "was watching"
+            },
+            {
+                sentence: "<span class='keyword'>While</span> I _____ , the phone rang.",
+                soundSentence: "While I blank, the phone rang.",
+                fullSentence: "While I was sleeping, the phone rang.",
+                keyword: "while",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "past_progressive",
+                tenseName: "過去進行式",
+                explanation: "while（當...時）引導的子句描述持續進行的動作，用過去進行式。",
+                answer: "was sleeping"
+            },
+            {
+                sentence: "They _____ dinner <span class='keyword'>at 7 p.m. yesterday</span>.",
+                soundSentence: "They blank dinner at 7 p.m. yesterday.",
+                fullSentence: "They were having dinner at 7 p.m. yesterday.",
+                keyword: "at 7 p.m. yesterday",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "past_progressive",
+                tenseName: "過去進行式",
+                explanation: "at + 過去特定時刻，描述當時正在進行的動作，用過去進行式。",
+                answer: "were having"
+            },
+            {
+                sentence: "He _____ a shower <span class='keyword'>at that time</span>.",
+                soundSentence: "He blank a shower at that time.",
+                fullSentence: "He was taking a shower at that time.",
+                keyword: "at that time",
+                category: "progressive",
+                categoryName: "進行式",
+                tense: "past_progressive",
+                tenseName: "過去進行式",
+                explanation: "at that time（那時）描述過去某時刻正在進行的動作，用過去進行式。",
+                answer: "was taking"
+            },
+            
+            // 過去完成式
+            {
+                sentence: "<span class='keyword'>By the time</span> I arrived, she _____ .",
+                soundSentence: "By the time I arrived, she blank.",
+                fullSentence: "By the time I arrived, she had left.",
+                keyword: "by the time + 過去式",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "past_perfect",
+                tenseName: "過去完成式",
+                explanation: "by the time + 過去式，表示「在...之前已完成」，用過去完成式。",
+                answer: "had left"
+            },
+            {
+                sentence: "I _____ the movie <span class='keyword'>before</span> I read the book.",
+                soundSentence: "I blank the movie before I read the book.",
+                fullSentence: "I had seen the movie before I read the book.",
+                keyword: "before + 過去式",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "past_perfect",
+                tenseName: "過去完成式",
+                explanation: "before + 過去式，描述「過去的過去」，用過去完成式。",
+                answer: "had seen"
+            },
+            {
+                sentence: "<span class='keyword'>After</span> she _____ dinner, she went to bed.",
+                soundSentence: "After she blank dinner, she went to bed.",
+                fullSentence: "After she had finished dinner, she went to bed.",
+                keyword: "after + 過去完成式",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "past_perfect",
+                tenseName: "過去完成式",
+                explanation: "after 引導的子句發生在主句之前，用過去完成式。",
+                answer: "had finished"
+            },
+            {
+                sentence: "He told me he _____ that book.",
+                soundSentence: "He told me he blank that book.",
+                fullSentence: "He told me he had read that book.",
+                keyword: "told（過去式）+ 從句",
+                category: "perfect",
+                categoryName: "完成式",
+                tense: "past_perfect",
+                tenseName: "過去完成式",
+                explanation: "主句是過去式，從句描述更早的動作，用過去完成式。",
+                answer: "had read"
+            },
+            
+            // 未來簡單式
+            {
+                sentence: "I _____ you <span class='keyword'>tomorrow</span>.",
+                soundSentence: "I blank you tomorrow.",
+                fullSentence: "I will call you tomorrow.",
+                keyword: "tomorrow",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "future_simple",
+                tenseName: "未來簡單式",
+                explanation: "tomorrow（明天）是未來時間，用未來簡單式。",
+                answer: "will call"
+            },
+            {
+                sentence: "She _____ 18 <span class='keyword'>next month</span>.",
+                soundSentence: "She blank 18 next month.",
+                fullSentence: "She will be 18 next month.",
+                keyword: "next month",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "future_simple",
+                tenseName: "未來簡單式",
+                explanation: "next month（下個月）是未來時間，用未來簡單式。",
+                answer: "will be"
+            },
+            {
+                sentence: "They _____ back <span class='keyword'>soon</span>.",
+                soundSentence: "They blank back soon.",
+                fullSentence: "They will come back soon.",
+                keyword: "soon",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "future_simple",
+                tenseName: "未來簡單式",
+                explanation: "soon（很快）暗示未來，用未來簡單式。",
+                answer: "will come"
+            },
+            {
+                sentence: "We _____ a meeting <span class='keyword'>next week</span>.",
+                soundSentence: "We blank a meeting next week.",
+                fullSentence: "We will have a meeting next week.",
+                keyword: "next week",
+                category: "simple",
+                categoryName: "簡單式",
+                tense: "future_simple",
+                tenseName: "未來簡單式",
+                explanation: "next week（下週）是未來時間，用未來簡單式。",
+                answer: "will have"
+            }
+        ];
+
+        // 時態大類選項
+        const categoryOptions = [
+            { value: "simple", label: "簡單式", chinese: "Simple" },
+            { value: "progressive", label: "進行式", chinese: "Progressive" },
+            { value: "perfect", label: "完成式", chinese: "Perfect" }
+        ];
+
+        // 各大類的細項選項
+        const tenseOptions = {
+            simple: [
+                { value: "present_simple", label: "現在簡單式", chinese: "Present Simple" },
+                { value: "past_simple", label: "過去簡單式", chinese: "Past Simple" },
+                { value: "future_simple", label: "未來簡單式", chinese: "Future Simple" }
+            ],
+            progressive: [
+                { value: "present_progressive", label: "現在進行式", chinese: "Present Progressive" },
+                { value: "past_progressive", label: "過去進行式", chinese: "Past Progressive" }
+            ],
+            perfect: [
+                { value: "present_perfect", label: "現在完成式", chinese: "Present Perfect" },
+                { value: "past_perfect", label: "過去完成式", chinese: "Past Perfect" }
+            ]
+        };
+
+        // 遊戲狀態
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let stage = 1; // 1: 選大類, 2: 選細項
+        let selectedCategory = null;
+        let answered = false;
+        let sessionWrongQuestions = []; // 本次練習的錯題
+
+        // DOM 元素
+        const quizCard = document.getElementById('quizCard');
+        const resultScreen = document.getElementById('resultScreen');
+        const sentenceText = document.getElementById('sentenceText');
+        const hintText = document.getElementById('hintText');
+        const stageBadge = document.getElementById('stageBadge');
+        const optionsEl = document.getElementById('options');
+        const feedback = document.getElementById('feedback');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackText = document.getElementById('feedbackText');
+        const correctAnswer = document.getElementById('correctAnswer');
+        const nextBtn = document.getElementById('nextBtn');
+        const questionNumber = document.getElementById('questionNumber');
+        const progressFill = document.getElementById('progressFill');
+        const wrongBadge = document.getElementById('wrongBadge');
+
+        // 更新錯題數量顯示
+        function updateWrongBadge() {
+            const saved = JSON.parse(localStorage.getItem('wrongTenseQuestions') || '[]');
+            wrongBadge.textContent = saved.length;
+        }
+
+        // 清除錯題
+        function clearWrongQuestions() {
+            if (confirm('確定要清除所有錯題嗎？')) {
+                localStorage.removeItem('wrongTenseQuestions');
+                updateWrongBadge();
+                alert('已清除所有錯題！');
+                showResult();
+            }
+        }
+
+        // 儲存錯題（只加入，不自動移除）
+        function saveWrongQuestions() {
+            const saved = JSON.parse(localStorage.getItem('wrongTenseQuestions') || '[]');
+            
+            sessionWrongQuestions.forEach(q => {
+                // 用句子作為唯一識別
+                if (!saved.some(s => s.sentence === q.sentence)) {
+                    saved.push(q);
+                }
+            });
+            
+            localStorage.setItem('wrongTenseQuestions', JSON.stringify(saved));
+            updateWrongBadge();
+        }
+
+        // 模式按鈕
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                startQuiz();
+            });
+        });
+
+        // 下一題
+        nextBtn.addEventListener('click', () => {
+            currentIndex++;
+            if (currentIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        });
+
+        // 切換對照表
+        function toggleReference() {
+            const ref = document.getElementById('tenseReference');
+            const btn = document.querySelector('.toggle-ref-btn');
+            if (ref.classList.contains('hidden')) {
+                ref.classList.remove('hidden');
+                btn.textContent = '📖 隱藏時態對照表';
+            } else {
+                ref.classList.add('hidden');
+                btn.textContent = '📖 顯示時態對照表';
+            }
+        }
+
+        // 開始測驗
+        function startQuiz() {
+            const mode = document.querySelector('.mode-btn.active').dataset.mode;
+            
+            currentIndex = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            sessionWrongQuestions = [];
+            
+            const savedWrongQuestions = JSON.parse(localStorage.getItem('wrongTenseQuestions') || '[]');
+            
+            if (mode === 'wrong') {
+                if (savedWrongQuestions.length === 0) {
+                    alert('目前沒有錯題記錄！先做其他練習吧。');
+                    return;
+                }
+                // 從題庫中找出對應的題目
+                currentQuestions = savedWrongQuestions.map(saved => 
+                    questions.find(q => q.sentence === saved.sentence)
+                ).filter(Boolean);
+                shuffleArray(currentQuestions);
+            } else {
+                currentQuestions = [...questions];
+                shuffleArray(currentQuestions);
+                
+                if (mode !== 'all') {
+                    currentQuestions = currentQuestions.slice(0, parseInt(mode));
+                }
+            }
+            
+            quizCard.style.display = 'block';
+            resultScreen.classList.remove('show');
+            
+            updateStats();
+            showQuestion();
+        }
+
+        // 顯示題目
+        function showQuestion() {
+            stage = 1;
+            selectedCategory = null;
+            answered = false;
+            
+            const current = currentQuestions[currentIndex];
+            
+            // 設定發音句子
+            currentSentenceForSound = current.soundSentence;
+            currentAnswerSentence = current.fullSentence;
+            
+            sentenceText.innerHTML = current.sentence;
+            hintText.innerHTML = `💡 關鍵字：<span class="hint-keyword">${current.keyword}</span>`;
+            
+            questionNumber.textContent = `第 ${currentIndex + 1} 題 / 共 ${currentQuestions.length} 題`;
+            progressFill.style.width = `${(currentIndex / currentQuestions.length) * 100}%`;
+            
+            stageBadge.textContent = '第一步：選擇時態大類';
+            stageBadge.className = 'stage-badge stage1';
+            
+            renderCategoryOptions();
+            
+            feedback.classList.remove('show', 'correct', 'wrong');
+            nextBtn.classList.remove('show');
+        }
+
+        // 渲染大類選項
+        function renderCategoryOptions() {
+            optionsEl.innerHTML = categoryOptions.map(opt => `
+                <button class="option-btn" data-value="${opt.value}">
+                    <div>${opt.label}</div>
+                    <div class="option-chinese">${opt.chinese}</div>
+                </button>
+            `).join('');
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => handleCategorySelect(btn.dataset.value));
+            });
+        }
+
+        // 渲染細項選項
+        function renderTenseOptions(category) {
+            const options = tenseOptions[category];
+            
+            optionsEl.innerHTML = options.map(opt => `
+                <button class="option-btn" data-value="${opt.value}">
+                    <div>${opt.label}</div>
+                    <div class="option-chinese">${opt.chinese}</div>
+                </button>
+            `).join('');
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => handleTenseSelect(btn.dataset.value));
+            });
+        }
+
+        // 處理大類選擇
+        function handleCategorySelect(value) {
+            const current = currentQuestions[currentIndex];
+            
+            selectedCategory = value;
+            
+            // 標記選擇
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.add('disabled');
+                if (btn.dataset.value === value) {
+                    if (value === current.category) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                }
+                if (btn.dataset.value === current.category && value !== current.category) {
+                    btn.classList.add('correct');
+                }
+            });
+            
+            // 如果大類就錯了，直接顯示結果
+            if (value !== current.category) {
+                wrongCount++;
+                // 記錄錯題
+                sessionWrongQuestions.push({
+                    sentence: current.sentence,
+                    tenseName: current.tenseName
+                });
+                saveWrongQuestions();
+                updateStats();
+                showFeedback(false, current);
+                return;
+            }
+            
+            // 大類對了，進入第二階段
+            setTimeout(() => {
+                stage = 2;
+                stageBadge.textContent = '第二步：選擇具體時態';
+                stageBadge.className = 'stage-badge stage2';
+                renderTenseOptions(value);
+            }, 600);
+        }
+
+        // 處理細項選擇
+        function handleTenseSelect(value) {
+            if (answered) return;
+            answered = true;
+            
+            const current = currentQuestions[currentIndex];
+            const isCorrect = value === current.tense;
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.add('disabled');
+                if (btn.dataset.value === current.tense) {
+                    btn.classList.add('correct');
+                } else if (btn.dataset.value === value && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+            
+            if (isCorrect) {
+                correctCount++;
+            } else {
+                wrongCount++;
+                // 記錄錯題
+                sessionWrongQuestions.push({
+                    sentence: current.sentence,
+                    tenseName: current.tenseName
+                });
+                saveWrongQuestions();
+            }
+            
+            updateStats();
+            showFeedback(isCorrect, current);
+        }
+
+        // 顯示反饋
+        function showFeedback(isCorrect, current) {
+            feedback.classList.add('show');
+            feedback.classList.remove('correct', 'wrong');
+            feedback.classList.add(isCorrect ? 'correct' : 'wrong');
+            
+            if (isCorrect) {
+                feedbackTitle.innerHTML = '<span>✓</span><span>正確！</span>';
+            } else {
+                feedbackTitle.innerHTML = '<span>✗</span><span>答錯了</span>';
+            }
+            
+            feedbackText.textContent = current.explanation;
+            correctAnswer.textContent = `${current.tenseName}（${current.answer}）`;
+            
+            // 設定正確答案句子供發音
+            currentAnswerSentence = current.fullSentence;
+            
+            nextBtn.classList.add('show');
+            nextBtn.textContent = currentIndex >= currentQuestions.length - 1 ? '看結果' : '下一題 →';
+            
+            // 自動播放正確句子
+            setTimeout(() => playAnswerSound(), 300);
+        }
+
+        // 更新統計
+        function updateStats() {
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('wrongCount').textContent = wrongCount;
+            const total = correctCount + wrongCount;
+            document.getElementById('accuracy').textContent = total > 0 ? `${Math.round(correctCount / total * 100)}%` : '0%';
+        }
+
+        // 顯示結果
+        function showResult() {
+            quizCard.style.display = 'none';
+            resultScreen.classList.add('show');
+            
+            const total = currentQuestions.length;
+            const percent = Math.round(correctCount / total * 100);
+            
+            document.getElementById('resultScore').textContent = `${correctCount}/${total}`;
+            
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (percent >= 90) {
+                resultIcon.textContent = '🏆';
+                resultTitle.textContent = '太厲害了！';
+                resultMessage.textContent = '你對時態判斷已經非常熟練！';
+            } else if (percent >= 70) {
+                resultIcon.textContent = '🎉';
+                resultTitle.textContent = '做得很好！';
+                resultMessage.textContent = '大部分時態都判斷對了，繼續加油！';
+            } else if (percent >= 50) {
+                resultIcon.textContent = '💪';
+                resultTitle.textContent = '繼續努力！';
+                resultMessage.textContent = '多看關鍵字對照表，會越來越熟練！';
+            } else {
+                resultIcon.textContent = '📚';
+                resultTitle.textContent = '需要多練習';
+                resultMessage.textContent = '建議先熟悉關鍵字對照表，再來練習。';
+            }
+            
+            // 顯示所有累積的錯題
+            const wrongReview = document.getElementById('wrongReview');
+            const wrongQuestionsList = document.getElementById('wrongQuestionsList');
+            const allWrongQuestions = JSON.parse(localStorage.getItem('wrongTenseQuestions') || '[]');
+            
+            if (allWrongQuestions.length > 0) {
+                wrongReview.style.display = 'block';
+                wrongQuestionsList.innerHTML = allWrongQuestions.map(q => {
+                    // 移除 HTML 標籤顯示純文字
+                    const cleanSentence = q.sentence.replace(/<[^>]*>/g, '');
+                    return `
+                        <div class="wrong-word-item">
+                            <div class="sentence">${cleanSentence}</div>
+                            <div class="tense">→ ${q.tenseName}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                wrongReview.style.display = 'none';
+            }
+            
+            updateWrongBadge();
+        }
+
+        // 洗牌
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 啟動
+        updateWrongBadge();
+        startQuiz();
+    </script>
+</body>
+</html>

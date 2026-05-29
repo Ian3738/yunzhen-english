@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L4 單字練習 Living under Nature's Wing</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #eef4fb;
+  --card: #ffffff;
+  --primary: #1f5fad;
+  --primary-dark: #1a3f6f;
+  --accent: #f5a623;
+  --success: #2faa6a;
+  --danger: #e05050;
+  --text: #222;
+  --muted: #7a7a8c;
+  --border: #d4e2f5;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 10% 10%, #d5e8f9 0%, transparent 45%),
+    radial-gradient(circle at 90% 90%, #fdf0dc 0%, transparent 45%);
+  min-height: 100vh; color: var(--text);
+}
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+#home { align-items: center; justify-content: flex-start; padding: 32px 20px 48px; }
+.home-logo { font-size: 3em; animation: float 3s ease-in-out infinite; margin-bottom: 6px; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.home-title { font-size: 1.75em; font-weight: 900; color: var(--primary-dark); margin-bottom: 3px; }
+.home-sub { font-size: 0.9em; color: var(--muted); margin-bottom: 6px; }
+.home-tip { background: #ddeaf8; color: var(--primary); border-radius: 20px; padding: 4px 16px; font-size: 0.82em; font-weight: 700; margin-bottom: 28px; }
+
+.sect-label { width:100%; max-width:720px; font-size:0.78em; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; padding-left:4px; }
+.sets-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; width:100%; max-width:720px; margin-bottom:20px; }
+
+.set-card { background:var(--card); border-radius:14px; padding:18px 16px 14px; box-shadow:var(--shadow); cursor:pointer; border:2px solid transparent; transition:all 0.2s; position:relative; overflow:hidden; }
+.set-card::after { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:14px 14px 0 0; }
+.set-card:nth-child(1)::after { background:#1f5fad; }
+.set-card:nth-child(2)::after { background:#f5a623; }
+.set-card:nth-child(3)::after { background:#2faa6a; }
+.set-card:nth-child(4)::after { background:#9b59b6; }
+.set-card:nth-child(5)::after { background:#e74c3c; }
+.set-card:hover { border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 28px rgba(0,0,0,0.12); }
+.set-tag { font-size:0.72em; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
+.set-words { font-size:0.95em; font-weight:800; color:var(--primary-dark); line-height:1.5; margin-bottom:8px; }
+.set-status { font-size:0.78em; font-weight:700; background:#f0f4f8; color:var(--muted); border-radius:20px; padding:3px 10px; display:inline-block; }
+.set-status.done { background:#d4f0e4; color:var(--success); }
+
+.wrong-btn { width:100%; max-width:720px; padding:14px; background:#fff0f0; border:2px solid #fbbcbc; border-radius:14px; font-size:1em; font-weight:800; color:var(--danger); cursor:pointer; transition:all 0.2s; font-family:inherit; }
+.wrong-btn:hover:not(:disabled) { background:#fdd6d6; }
+.wrong-btn:disabled { opacity:0.38; cursor:default; }
+
+.top-bar { background:var(--primary-dark); color:#fff; padding:14px 18px; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.back-btn { background:rgba(255,255,255,0.15); border:none; border-radius:10px; color:#fff; padding:7px 14px; font-size:0.88em; font-weight:800; cursor:pointer; font-family:inherit; transition:background 0.15s; }
+.back-btn:hover { background:rgba(255,255,255,0.25); }
+.bar-title { font-size:1em; font-weight:800; flex:1; }
+.bar-sub { font-size:0.82em; opacity:0.75; }
+
+.cards-scroll { flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:22px 16px; gap:14px; }
+.vocab-card { background:var(--card); border-radius:var(--radius); padding:20px 22px; width:100%; max-width:640px; box-shadow:var(--shadow); border-left:5px solid var(--primary); }
+.vc-row1 { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:6px; }
+.vc-word { font-size:1.5em; font-weight:900; color:var(--primary-dark); }
+.vc-pos { font-size:0.75em; background:#ddeaf8; color:var(--primary); border-radius:6px; padding:3px 9px; font-weight:800; flex-shrink:0; }
+.vc-phone-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.vc-phonetic { font-size:0.88em; color:var(--muted); }
+.speak-btn { background:var(--primary); border:none; border-radius:50%; width:28px; height:28px; color:#fff; font-size:0.85em; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s, transform 0.1s; flex-shrink:0; }
+.speak-btn:hover { background:var(--primary-dark); transform:scale(1.1); }
+.speak-btn:active { transform:scale(0.93); }
+.vc-meaning { font-size:1.1em; font-weight:800; color:var(--text); margin-bottom:10px; }
+.vc-ex { font-size:0.88em; color:#444; line-height:1.65; background:#f8f6f2; border-radius:10px; padding:10px 13px; }
+.vc-ex-tr { font-size:0.83em; color:var(--muted); margin-top:4px; }
+.start-quiz-btn { width:100%; max-width:640px; padding:16px; border:none; border-radius:var(--radius); background:var(--primary); color:#fff; font-size:1.05em; font-weight:800; cursor:pointer; font-family:inherit; box-shadow:0 4px 16px rgba(31,95,173,0.3); transition:background 0.2s, transform 0.1s; }
+.start-quiz-btn:hover { background:var(--primary-dark); transform:translateY(-2px); }
+
+.quiz-bar { background:var(--primary-dark); color:#fff; padding:14px 18px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.quiz-info { flex:1; }
+.quiz-label { font-size:0.75em; opacity:0.7; text-transform:uppercase; letter-spacing:1px; }
+.quiz-name { font-size:0.95em; font-weight:800; }
+.pbar-bg { height:5px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:5px; }
+.pbar-fill { height:5px; background:var(--accent); border-radius:3px; transition:width 0.4s; }
+.quiz-counter { font-size:0.88em; opacity:0.8; white-space:nowrap; }
+
+.quiz-body { flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:22px 16px; gap:14px; }
+.q-card { background:var(--card); border-radius:var(--radius); padding:26px 22px; width:100%; max-width:640px; box-shadow:var(--shadow); text-align:center; }
+.q-num { font-size:0.78em; color:var(--muted); font-weight:700; margin-bottom:8px; }
+.q-word { font-size:2.1em; font-weight:900; color:var(--primary-dark); margin-bottom:6px; }
+.q-phone { display:flex; align-items:center; justify-content:center; gap:10px; font-size:0.9em; color:var(--muted); }
+
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:11px; width:100%; max-width:640px; }
+@media(max-width:480px){ .opts { grid-template-columns:1fr; } }
+.opt { padding:14px 10px; background:var(--card); border:2px solid var(--border); border-radius:13px; font-size:1em; font-weight:700; color:var(--text); cursor:pointer; font-family:inherit; text-align:center; transition:all 0.18s; line-height:1.4; }
+.opt:hover:not(:disabled) { border-color:var(--primary); background:#ddeaf8; transform:translateY(-2px); }
+.opt.correct { background:#d4f0e4; border-color:var(--success); color:#155a35; }
+.opt.wrong   { background:#fde8e8; border-color:var(--danger);  color:#8a2020; }
+.opt:disabled { cursor:default; }
+
+.fb-row { width:100%; max-width:640px; min-height:40px; display:flex; align-items:center; justify-content:center; font-size:1em; font-weight:800; }
+.fb-row.good { color:var(--success); }
+.fb-row.bad  { color:var(--danger); }
+.next-btn { width:100%; max-width:640px; padding:15px; border:none; border-radius:var(--radius); background:var(--primary); color:#fff; font-size:1em; font-weight:800; cursor:pointer; font-family:inherit; display:none; transition:background 0.2s; }
+.next-btn:hover { background:var(--primary-dark); }
+
+#result { align-items:center; justify-content:center; padding:28px 16px; }
+.result-wrap { background:var(--card); border-radius:22px; padding:36px 26px; width:100%; max-width:560px; box-shadow:0 8px 40px rgba(0,0,0,0.1); text-align:center; }
+.score-ring { width:120px; height:120px; border-radius:50%; background:conic-gradient(var(--primary) calc(var(--pct)*1%), #d4e2f5 0%); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+.score-inner { width:88px; height:88px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-big { font-size:1.9em; font-weight:900; color:var(--primary-dark); line-height:1; }
+.score-of  { font-size:0.72em; color:var(--muted); font-weight:700; }
+.res-emoji { font-size:2.4em; margin-bottom:8px; }
+.res-msg   { font-size:1.2em; font-weight:900; color:var(--primary-dark); margin-bottom:4px; }
+.res-sub   { font-size:0.88em; color:var(--muted); margin-bottom:22px; }
+.review { text-align:left; margin:4px 0 22px; }
+.review-ttl { font-weight:800; color:var(--danger); font-size:0.9em; margin-bottom:8px; }
+.review-item { background:#fff8f8; border-left:4px solid #f5b8b8; border-radius:0 9px 9px 0; padding:9px 13px; margin-bottom:7px; font-size:0.87em; line-height:1.5; }
+.rw { font-weight:800; color:var(--primary-dark); }
+.rright { color:var(--success); font-weight:700; }
+.res-btns { display:flex; flex-direction:column; gap:10px; }
+.rbtn { padding:13px; border-radius:13px; border:none; font-size:1em; font-weight:800; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.rbtn-retry { background:var(--primary); color:#fff; }
+.rbtn-retry:hover { background:var(--primary-dark); }
+.rbtn-wrong { background:#fde8e8; color:var(--danger); border:2px solid #f5b8b8; }
+.rbtn-wrong:hover { background:#fdd0d0; }
+.rbtn-home { background:#f0f4f8; color:var(--muted); }
+.rbtn-home:hover { background:#dde8f5; color:var(--primary-dark); }
+.rbtn:disabled { opacity:0.38; cursor:default; }
+</style>
+</head>
+<body>
+
+<div class="screen active" id="home">
+  <div class="home-logo">🦅</div>
+  <div class="home-title">L4 單字練習</div>
+  <div class="home-sub">Living under Nature's Wing</div>
+  <div class="home-tip">📖 每次練習 3 個單字，慢慢來！</div>
+  <div class="sect-label">選擇一組開始練習</div>
+  <div class="sets-grid" id="setsGrid"></div>
+  <div class="sect-label" style="margin-top:8px;">錯題複習</div>
+  <button class="wrong-btn" id="wrongBtn" onclick="startWrong()" disabled>
+    ❌ 練習錯題庫 <span id="wrongCount">（0 個）</span>
+  </button>
+</div>
+
+<div class="screen" id="study">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goHome()">← 首頁</button>
+    <div class="bar-title" id="studyTitle"></div>
+    <div class="bar-sub" id="studySub"></div>
+  </div>
+  <div class="cards-scroll" id="cardsScroll"></div>
+</div>
+
+<div class="screen" id="quiz">
+  <div class="quiz-bar">
+    <button class="back-btn" onclick="goHome()">← 首頁</button>
+    <div class="quiz-info">
+      <div class="quiz-label">測驗中</div>
+      <div class="quiz-name" id="quizName"></div>
+      <div class="pbar-bg"><div class="pbar-fill" id="pbarFill" style="width:0%"></div></div>
+    </div>
+    <div class="quiz-counter" id="quizCounter"></div>
+  </div>
+  <div class="quiz-body">
+    <div class="q-card">
+      <div class="q-num" id="qNum"></div>
+      <div class="q-word" id="qWord"></div>
+      <div class="q-phone">
+        <span id="qPhone"></span>
+        <button class="speak-btn" onclick="speakNow()" title="聽發音">🔊</button>
+      </div>
+    </div>
+    <div class="opts" id="opts"></div>
+    <div class="fb-row" id="fbRow"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQ()"></button>
+  </div>
+</div>
+
+<div class="screen" id="result">
+  <div class="result-wrap">
+    <div class="res-emoji" id="resEmoji"></div>
+    <div class="score-ring" id="scoreRing">
+      <div class="score-inner">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-of" id="scoreOf"></div>
+      </div>
+    </div>
+    <div class="res-msg" id="resMsg"></div>
+    <div class="res-sub" id="resSub"></div>
+    <div class="review" id="review"></div>
+    <div class="res-btns">
+      <button class="rbtn rbtn-retry" onclick="retrySet()">🔄 再練一次這組</button>
+      <button class="rbtn rbtn-wrong" id="practiceWrongBtn" onclick="startWrong()">❌ 練習錯題</button>
+      <button class="rbtn rbtn-home" onclick="goHome()">🏠 回首頁</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const VOCAB = [
+  { word:"adventurous", phonetic:"[əd`vɛntʃərəs]", pos:"adj.", meaning:"好冒險的", example:"She is very adventurous and loves to try new things.", exTr:"她很愛冒險，喜歡嘗試新事物。" },
+  { word:"indigenous", phonetic:"[ɪn`dɪdʒənəs]", pos:"adj.", meaning:"當地的；原住民的", example:"The indigenous people have lived here for thousands of years.", exTr:"這些原住民已經在這裡住了幾千年。" },
+  { word:"tribe", phonetic:"[traɪb]", pos:"n.", meaning:"部落", example:"The tribe lives near the ocean.", exTr:"這個部落住在海邊。" },
+  { word:"span", phonetic:"[spæn]", pos:"v.", meaning:"持續；貫穿", example:"The festival spans three days.", exTr:"這個節慶持續三天。" },
+  { word:"multiple", phonetic:"[`mʌltəpḷ]", pos:"adj.", meaning:"多種多樣的；多個的", example:"She has multiple jobs.", exTr:"她有多份工作。" },
+  { word:"prosperous", phonetic:"[`prɑspərəs]", pos:"adj.", meaning:"繁榮的；富裕的", example:"The city became prosperous after the factory opened.", exTr:"工廠開業後，這座城市變得繁榮起來。" },
+  { word:"plentiful", phonetic:"[`plɛntɪfəl]", pos:"adj.", meaning:"豐富的；大量的", example:"Food is plentiful in this market.", exTr:"這個市場的食物很豐富。" },
+  { word:"elaborate", phonetic:"[ɪ`læbərɪt]", pos:"adj.", meaning:"精巧的；精心製作的", example:"She wore an elaborate costume at the party.", exTr:"她在派對上穿了一套精心製作的服裝。" },
+  { word:"appeal", phonetic:"[ə`pil]", pos:"v.", meaning:"請求；懇求", example:"He appealed to his teacher for more time.", exTr:"他向老師請求更多時間。" },
+  { word:"shallow", phonetic:"[`ʃælo]", pos:"adj.", meaning:"淺的", example:"The river is very shallow here.", exTr:"這裡的河流很淺。" },
+  { word:"species", phonetic:"[`spiʃɪz]", pos:"n.", meaning:"物種", example:"This species of bird is very rare.", exTr:"這種鳥非常稀有。" },
+  { word:"harmony", phonetic:"[`hɑrmənɪ]", pos:"n.", meaning:"融洽；和睦", example:"The two groups live in harmony.", exTr:"這兩個群體和睦相處。" },
+  { word:"harvest", phonetic:"[`hɑrvɪst]", pos:"n./v.", meaning:"收穫；收成", example:"The harvest this year was very good.", exTr:"今年的收成非常好。" },
+  { word:"guarantee", phonetic:"[ˏgærən`ti]", pos:"v.", meaning:"保證；擔保", example:"Hard work does not guarantee success.", exTr:"努力不能保證成功。" },
+  { word:"disturb", phonetic:"[dɪ`stɝb]", pos:"v.", meaning:"干擾；打擾", example:"Please don't disturb me when I am studying.", exTr:"我在讀書時請不要打擾我。" },
+];
+
+const SETS = [
+  { name:"第一組", words: VOCAB.slice(0,3) },
+  { name:"第二組", words: VOCAB.slice(3,6) },
+  { name:"第三組", words: VOCAB.slice(6,9) },
+  { name:"第四組", words: VOCAB.slice(9,12) },
+  { name:"第五組", words: VOCAB.slice(12,15) },
+];
+
+let curSetIdx=-1, curVocab=[], isWrong=false;
+let questions=[], qIdx=0, score=0;
+let wrongThisRound=[], globalWrong={}, setDone={};
+
+function speak(w){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(w);
+  u.lang='en-US';u.rate=0.88;
+  window.speechSynthesis.speak(u);
+}
+function speakNow(){speak(document.getElementById('qWord').textContent);}
+
+function buildHome(){
+  const g=document.getElementById('setsGrid');
+  g.innerHTML='';
+  SETS.forEach((s,i)=>{
+    const done=setDone[i];
+    const c=document.createElement('div');
+    c.className='set-card';
+    c.onclick=()=>startSet(i);
+    c.innerHTML=`<div class="set-tag">${s.name}</div><div class="set-words">${s.words.map(v=>v.word).join(' · ')}</div><div class="set-status ${done?'done':''}">${done?'✅ 完成':'▶ 開始練習'}</div>`;
+    g.appendChild(c);
+  });
+  const wc=Object.keys(globalWrong).length;
+  document.getElementById('wrongCount').textContent=`（${wc} 個）`;
+  document.getElementById('wrongBtn').disabled=wc===0;
+}
+function goHome(){show('home');buildHome();}
+function startSet(idx){curSetIdx=idx;isWrong=false;curVocab=SETS[idx].words;showStudy(SETS[idx].name,curVocab.length+' 個單字');}
+function startWrong(){isWrong=true;curSetIdx=-1;curVocab=Object.values(globalWrong);if(!curVocab.length)return;showStudy('錯題複習',curVocab.length+' 個單字');}
+
+function showStudy(title,sub){
+  document.getElementById('studyTitle').textContent=title;
+  document.getElementById('studySub').textContent=sub;
+  const scroll=document.getElementById('cardsScroll');
+  scroll.innerHTML='';
+  curVocab.forEach(v=>{
+    const card=document.createElement('div');
+    card.className='vocab-card';
+    card.innerHTML=`<div class="vc-row1"><div class="vc-word">${v.word}</div><div class="vc-pos">${v.pos}</div></div><div class="vc-phone-row"><span class="vc-phonetic">${v.phonetic}</span><button class="speak-btn" onclick="speak('${v.word}')" title="聽發音">🔊</button></div><div class="vc-meaning">${v.meaning}</div><div class="vc-ex">📌 ${v.example}<div class="vc-ex-tr">${v.exTr}</div></div>`;
+    scroll.appendChild(card);
+  });
+  const btn=document.createElement('button');
+  btn.className='start-quiz-btn';btn.textContent='我記住了，開始測驗 →';btn.onclick=startQuiz;
+  scroll.appendChild(btn);
+  show('study');
+}
+
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
+
+function startQuiz(){
+  const base=[...curVocab,...curVocab];
+  questions=shuffle(base);qIdx=0;score=0;wrongThisRound=[];
+  document.getElementById('quizName').textContent=isWrong?'錯題練習':(SETS[curSetIdx]?.name||'');
+  show('quiz');renderQ();
+}
+
+function renderQ(){
+  const total=questions.length,q=questions[qIdx];
+  document.getElementById('pbarFill').style.width=(qIdx/total*100)+'%';
+  document.getElementById('quizCounter').textContent=`${qIdx+1} / ${total}`;
+  document.getElementById('qNum').textContent=`第 ${qIdx+1} 題`;
+  document.getElementById('qWord').textContent=q.word;
+  document.getElementById('qPhone').textContent=q.phonetic;
+  document.getElementById('fbRow').textContent='';
+  document.getElementById('fbRow').className='fb-row';
+  document.getElementById('nextBtn').style.display='none';
+  const others=shuffle(VOCAB.filter(v=>v.word!==q.word)).slice(0,3);
+  const opts=shuffle([q,...others]);
+  const grid=document.getElementById('opts');grid.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='opt';btn.textContent=o.meaning;
+    btn.onclick=()=>handleAns(o.meaning,q.meaning,q);
+    grid.appendChild(btn);
+  });
+}
+
+function handleAns(chosen,correct,vo){
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===correct)b.classList.add('correct');
+    else if(b.textContent===chosen&&chosen!==correct)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('fbRow'),nb=document.getElementById('nextBtn');
+  if(chosen===correct){
+    score++;fb.textContent='✅ 答對了！';fb.className='fb-row good';
+    delete globalWrong[vo.word];
+  } else {
+    fb.textContent=`❌ 正確答案是「${correct}」`;fb.className='fb-row bad';
+    globalWrong[vo.word]=vo;
+    if(!wrongThisRound.find(w=>w.word===vo.word))wrongThisRound.push({word:vo.word,correct});
+  }
+  nb.style.display='block';nb.textContent=qIdx+1>=questions.length?'查看結果 →':'下一題 →';
+}
+
+function nextQ(){qIdx++;if(qIdx>=questions.length)showResult();else renderQ();}
+
+function showResult(){
+  const total=questions.length,pct=Math.round(score/total*100);
+  document.getElementById('scoreRing').style.setProperty('--pct',pct);
+  document.getElementById('scoreBig').textContent=score;
+  document.getElementById('scoreOf').textContent=`/ ${total}`;
+  const[emoji,msg,sub]=pct>=90?['🏆','太棒了！','幾乎全對，繼續保持！']:pct>=70?['👍','做得很好！','再複習一下錯的單字就更好了！']:pct>=50?['💪','加油！','多練幾次，你一定可以的！']:['📖','再複習一次吧！','先回去看單字表，再試一次看看。'];
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resMsg').textContent=msg;
+  document.getElementById('resSub').textContent=sub;
+  const rv=document.getElementById('review');rv.innerHTML='';
+  if(wrongThisRound.length){
+    rv.innerHTML=`<div class="review-ttl">❌ 這次答錯的單字，多看幾次：</div>`;
+    wrongThisRound.forEach(w=>{const d=document.createElement('div');d.className='review-item';d.innerHTML=`<span class="rw">${w.word}</span> → 正確意思：<span class="rright">${w.correct}</span>`;rv.appendChild(d);});
+  } else {
+    rv.innerHTML=`<div style="color:var(--success);font-weight:800;text-align:center;padding:10px 0;">🎉 全部答對！完美！</div>`;
+  }
+  const wb=document.getElementById('practiceWrongBtn'),wc=Object.keys(globalWrong).length;
+  wb.disabled=wc===0;wb.textContent=`❌ 練習錯題（${wc} 個）`;
+  if(!isWrong&&curSetIdx>=0)setDone[curSetIdx]=true;
+  show('result');
+}
+
+function retrySet(){startQuiz();}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+buildHome();
+</script>
+</body>
+</html>

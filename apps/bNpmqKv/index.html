@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第九課 新詩選 - 自學教材</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary: #2c5530;
+            --primary-light: #4a7c59;
+            --secondary: #8b4513;
+            --accent: #d4a574;
+            --bg-cream: #faf8f5;
+            --bg-light: #f5f2eb;
+            --text-dark: #2d2d2d;
+            --text-medium: #555;
+            --success: #28a745;
+            --warning: #ffc107;
+            --error: #dc3545;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --radius: 16px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        
+        /* 頂部導航 */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 20px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .progress-container {
+            flex: 1;
+            max-width: 200px;
+            margin: 0 20px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+        
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--text-medium);
+            text-align: center;
+            margin-top: 4px;
+        }
+        
+        /* 主容器 */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px 100px;
+        }
+        
+        /* 頁面區塊 */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 歡迎頁面 */
+        .welcome-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .welcome-card h1 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .welcome-card .subtitle {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .poem-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .poem-card {
+            background: linear-gradient(135deg, var(--bg-light), white);
+            border-radius: var(--radius);
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: left;
+        }
+        
+        .poem-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+        
+        .poem-card h3 {
+            font-family: 'Noto Serif TC', serif;
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        
+        .poem-card .author {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .poem-card .description {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .poem-card .tag {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 15px;
+        }
+        
+        /* 內容卡片 */
+        .content-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .content-card h2 {
+            font-family: 'Noto Serif TC', serif;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg-light);
+        }
+        
+        .content-card h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin: 25px 0 15px;
+        }
+        
+        /* 作者資訊卡 */
+        .author-info {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        
+        .author-details h4 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        
+        .author-details .meta {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .author-details p {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        /* 重點標籤 */
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9e6, #fff5d6);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .highlight-box .label {
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        /* 課文區 */
+        .poem-text {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.15rem;
+            line-height: 2.2;
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .poem-line {
+            margin: 8px 0;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .poem-line:hover {
+            background: rgba(44, 85, 48, 0.1);
+        }
+        
+        .poem-line.highlighted {
+            background: rgba(212, 165, 116, 0.3);
+        }
+        
+        .annotation {
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            border: 1px solid var(--accent);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 200px; }
+        }
+        
+        .poem-line.active .annotation {
+            display: block;
+        }
+        
+        /* 表格整理 */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        
+        .summary-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .summary-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--bg-light);
+            vertical-align: top;
+        }
+        
+        .summary-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        
+        .summary-table tr:hover {
+            background: rgba(44, 85, 48, 0.05);
+        }
+        
+        /* 練習題區 */
+        .quiz-section {
+            margin-top: 30px;
+        }
+        
+        .quiz-question {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-question .q-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+        
+        .quiz-question .q-text {
+            display: inline;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+        }
+        
+        .quiz-options {
+            margin-top: 20px;
+        }
+        
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid var(--bg-light);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1rem;
+        }
+        
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--primary-light);
+            background: rgba(44, 85, 48, 0.05);
+        }
+        
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: rgba(44, 85, 48, 0.1);
+        }
+        
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(40, 167, 69, 0.15);
+        }
+        
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: rgba(220, 53, 69, 0.1);
+        }
+        
+        .quiz-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .feedback.correct {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--success);
+        }
+        
+        .feedback.incorrect {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--error);
+        }
+        
+        .feedback .icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        
+        /* 填空題 */
+        .fill-blank {
+            margin: 20px 0;
+        }
+        
+        .fill-blank input {
+            border: none;
+            border-bottom: 2px solid var(--primary);
+            background: transparent;
+            padding: 8px 15px;
+            font-size: 1rem;
+            width: 150px;
+            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .fill-blank input:focus {
+            outline: none;
+            border-bottom-color: var(--accent);
+        }
+        
+        .fill-blank input.correct {
+            border-bottom-color: var(--success);
+            color: var(--success);
+        }
+        
+        .fill-blank input.incorrect {
+            border-bottom-color: var(--error);
+            color: var(--error);
+        }
+        
+        /* 按鈕 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-light);
+        }
+        
+        .btn-check {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-check:hover {
+            background: var(--secondary);
+        }
+        
+        /* 導航按鈕區 */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--bg-light);
+        }
+        
+        /* 成績卡 */
+        .score-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .score-card .score-number {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .score-card .score-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .score-card .message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+        
+        /* 心智圖風格 */
+        .mind-map {
+            padding: 30px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .mind-center {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .mind-branches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .mind-branch {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .mind-branch h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .mind-branch ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .mind-branch li {
+            padding: 5px 0;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .mind-branch li::before {
+            content: "•";
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+        }
+        
+        /* 比較表格 */
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .compare-column {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .compare-column.style2 {
+            border-top-color: var(--accent);
+        }
+        
+        .compare-column h4 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        /* 學習提示 */
+        .tip-box {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .tip-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .tip-content h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .tip-content p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+        }
+        
+        /* 底部導航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background: var(--primary);
+            width: 30px;
+            border-radius: 6px;
+        }
+        
+        .nav-dot:hover:not(.active) {
+            background: var(--primary-light);
+        }
+        
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 70px 15px 90px;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .welcome-card {
+                padding: 25px;
+            }
+            
+            .welcome-card h1 {
+                font-size: 1.6rem;
+            }
+            
+            .author-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* 字詞解釋彈窗 */
+        .vocab-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 2000;
+            max-width: 400px;
+            width: 90%;
+            display: none;
+        }
+        
+        .vocab-popup.show {
+            display: block;
+            animation: popIn 0.3s ease;
+        }
+        
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+            display: none;
+        }
+        
+        .overlay.show {
+            display: block;
+        }
+        
+        .vocab-popup h4 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .vocab-popup .pronunciation {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .vocab-popup .meaning {
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+        
+        .vocab-popup .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-medium);
+        }
+        
+        /* 可點擊的詞彙 */
+        .vocab-word {
+            color: var(--secondary);
+            border-bottom: 1px dashed var(--secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .vocab-word:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* 勾選清單 */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-light);
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checklist li:hover {
+            background: rgba(44, 85, 48, 0.1);
+        }
+        
+        .checklist li.checked {
+            background: rgba(40, 167, 69, 0.15);
+        }
+        
+        .checklist .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .checklist li.checked .checkbox {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航 -->
+    <nav class="top-nav">
+        <div class="nav-title">📖 第九課 新詩選</div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">學習進度 0%</div>
+        </div>
+    </nav>
+    
+    <main class="main-container">
+        <!-- 首頁 -->
+        <div class="page active" id="page-home">
+            <div class="welcome-card">
+                <h1>🌟 新詩選</h1>
+                <p class="subtitle">第九課｜自學教材</p>
+                
+                <div class="tip-box">
+                    <div class="tip-icon">💡</div>
+                    <div class="tip-content">
+                        <h4>學習小提醒</h4>
+                        <p>點擊課文中的句子可以看到白話翻譯，點擊<span style="color: var(--secondary); border-bottom: 1px dashed;">有底線的詞彙</span>可以看解釋喔！</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="poem-cards">
+                <div class="poem-card" onclick="goToPage('wolf-1')">
+                    <h3>🐺 狼之獨步</h3>
+                    <p class="author">紀弦</p>
+                    <p class="description">透過「狼」的意象，表達詩人孤獨獨行、堅持理念的精神。</p>
+                    <span class="tag">獨立自信</span>
+                </div>
+                
+                <div class="poem-card" onclick="goToPage('love-1')">
+                    <h3>💕 愛的辯證</h3>
+                    <p class="author">洛夫</p>
+                    <p class="description">以「尾生抱柱」的故事為基礎，探討愛情中的選擇與堅持。</p>
+                    <span class="tag">愛與選擇</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 狼之獨步：作者介紹 -->
+        <div class="page" id="page-wolf-1">
+            <div class="content-card">
+                <h2>🐺 狼之獨步｜作者介紹</h2>
+                
+                <div class="author-info">
+                    <div class="author-avatar">紀</div>
+                    <div class="author-details">
+                        <h4>紀弦</h4>
+                        <p class="meta">本名路逾｜民國2年～民國102年｜陝西周至人</p>
+                        <p>紀弦是臺灣<strong>現代詩派</strong>的創始者，被譽為「<strong>詩壇長青樹</strong>」。他主張「<strong>橫的移植</strong>」，認為新詩應該學習西方詩歌的技法，而不只是繼承傳統。</p>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="label">📌 重點記憶</div>
+                    <p><strong>橫的移植</strong>：向西方詩歌學習新的表現手法<br>
+                    <strong>代表作品</strong>：《檳榔樹》系列詩集、《紀弦詩拔萃》</p>
+                </div>
+                
+                <h3>創作背景</h3>
+                <p>這首詩寫於民國五十三年。當時紀弦推動「新詩現代化」，起初支持者眾多，但後來能堅持的人越來越少，各方批評讓他形同<strong>孤軍奮戰</strong>。這首詩正是他當時處境的寫照。</p>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('home')">← 回首頁</button>
+                <button class="btn btn-primary" onclick="goToPage('wolf-2')">開始學課文 →</button>
+            </div>
+        </div>
+        
+        <!-- 狼之獨步：課文 -->
+        <div class="page" id="page-wolf-2">
+            <div class="content-card">
+                <h2>🐺 狼之獨步｜課文學習</h2>
+                
+                <div class="tip-box">
+                    <div class="tip-icon">👆</div>
+                    <div class="tip-content">
+                        <h4>互動學習</h4>
+                        <p>點擊每一句詩，會出現白話文翻譯喔！</p>
+                    </div>
+                </div>
+                
+                <div class="poem-text" id="wolf-poem">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        我乃曠野裡獨來獨往的一匹狼。
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>我是一匹在空曠原野上獨自行走的狼。<br>
+                            <strong>解析：</strong>詩人用「狼」來比喻自己，表示他獨立自主、不隨波逐流。
+                        </div>
+                    </div>
+                    
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        不是<span class="vocab-word" onclick="showVocab(event, '先知', '具有先見之明的人，能預知未來並警告世人。')">先知</span>，沒有半個字的嘆息。
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>我不是能預知未來的先知，也不會發出一點嘆息聲。<br>
+                            <strong>解析：</strong>詩人不自認為先知，但他也不會自怨自艾。
+                        </div>
+                    </div>
+                    
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        而恆以數聲<span class="vocab-word" onclick="showVocab(event, '悽厲', 'ㄑㄧ ㄌㄧˋ，淒涼而尖銳。')">悽厲</span>已極之長<span class="vocab-word" onclick="showVocab(event, '嗥', 'ㄏㄠˊ，野獸大聲吼叫。')">嗥</span>
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>我總是發出幾聲極為淒厲的長嗥<br>
+                            <strong>解析：</strong>狼嗥代表詩人向世界宣告自己的存在和主張。
+                        </div>
+                    </div>
+                    
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        搖撼彼空無一物之天地，
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>震撼那空曠無物的天地。<br>
+                            <strong>解析：</strong>雖然周圍沒有同伴，但詩人的聲音仍然能震撼整個世界。
+                        </div>
+                    </div>
+                    
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        使天地<span class="vocab-word" onclick="showVocab(event, '戰慄', 'ㄓㄢˋ ㄌㄧˋ，因恐懼或寒冷而發抖。')">戰慄</span>如同發了<span class="vocab-word" onclick="showVocab(event, '瘧疾', 'ㄋㄩㄝˋ ㄐㄧˊ，一種傳染病，症狀為忽冷忽熱。')">瘧疾</span>；
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>讓天地顫抖，就像發了瘧疾一樣忽冷忽熱。<br>
+                            <strong>解析：</strong>這裡誇張地描寫狼嗥的威力，表達詩人的影響力。
+                        </div>
+                    </div>
+                    
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        並颳起涼風<span class="vocab-word" onclick="showVocab(event, '颯颯', 'ㄙㄚˋ ㄙㄚˋ，形容風吹的聲音。')">颯颯</span>的，颯颯颯颯的：
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>還颳起涼風，發出颯颯颯颯的聲音。<br>
+                            <strong>解析：</strong>「颯颯」的重複使用，模擬風聲，增強詩的音樂性。
+                        </div>
+                    </div>
+                    
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        這就是一種過癮。
+                        <div class="annotation">
+                            <strong>白話翻譯：</strong>這就是一種痛快過癮的感覺。<br>
+                            <strong>解析：</strong>結尾以輕鬆的口吻表達詩人的自信和滿足，化解前面的孤獨感。
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('wolf-1')">← 作者介紹</button>
+                <button class="btn btn-primary" onclick="goToPage('wolf-3')">重點整理 →</button>
+            </div>
+        </div>
+        
+        <!-- 狼之獨步：重點整理 -->
+        <div class="page" id="page-wolf-3">
+            <div class="content-card">
+                <h2>🐺 狼之獨步｜重點整理</h2>
+                
+                <div class="mind-map">
+                    <div style="text-align: center;">
+                        <div class="mind-center">狼之獨步</div>
+                    </div>
+                    <div class="mind-branches">
+                        <div class="mind-branch">
+                            <h4>🎯 主旨</h4>
+                            <ul>
+                                <li>表達對創作理念的執著</li>
+                                <li>展現孤絕的精神</li>
+                                <li>流露傲視天下的自信</li>
+                            </ul>
+                        </div>
+                        <div class="mind-branch">
+                            <h4>🐺 象徵意義</h4>
+                            <ul>
+                                <li>狼 → 詩人自己</li>
+                                <li>曠野 → 詩壇/現實環境</li>
+                                <li>狼嗥 → 詩人的創作/主張</li>
+                            </ul>
+                        </div>
+                        <div class="mind-branch">
+                            <h4>✨ 寫作特色</h4>
+                            <ul>
+                                <li>以狼自況（離群之狼）</li>
+                                <li>設喻貼切，意境孤絕</li>
+                                <li>節奏鏗鏘，音韻生動</li>
+                            </ul>
+                        </div>
+                        <div class="mind-branch">
+                            <h4>📝 結構分析</h4>
+                            <ul>
+                                <li>前二行：點題述志</li>
+                                <li>中間：展現威力</li>
+                                <li>結尾：自信過癮</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="summary-table">
+                    <tr>
+                        <th width="25%">項目</th>
+                        <th>內容</th>
+                    </tr>
+                    <tr>
+                        <td><strong>作者</strong></td>
+                        <td>紀弦（詩壇長青樹）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>主張</strong></td>
+                        <td>橫的移植（學習西方詩歌）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>背景</strong></td>
+                        <td>推動新詩現代化時，遭遇批評而孤軍奮戰</td>
+                    </tr>
+                    <tr>
+                        <td><strong>情感</strong></td>
+                        <td>既睥睨詩壇、目空一切，又孤單寂寞</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('wolf-2')">← 課文學習</button>
+                <button class="btn btn-primary" onclick="goToPage('wolf-4')">練習題 →</button>
+            </div>
+        </div>
+        
+        <!-- 狼之獨步：練習題 -->
+        <div class="page" id="page-wolf-4">
+            <div class="content-card">
+                <h2>🐺 狼之獨步｜練習題</h2>
+                
+                <div class="quiz-section">
+                    <div class="quiz-question" id="wolf-q1">
+                        <span class="q-number">1</span>
+                        <span class="q-text">紀弦在這首詩中用什麼動物來比喻自己？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q1', this, false)">A. 老虎</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q1', this, true)">B. 狼</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q1', this, false)">C. 獅子</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q1', this, false)">D. 鷹</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="wolf-q2">
+                        <span class="q-number">2</span>
+                        <span class="q-text">「橫的移植」是指什麼意思？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q2', this, false)">A. 繼承中國傳統詩歌</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q2', this, true)">B. 學習西方詩歌的技法</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q2', this, false)">C. 橫著書寫新詩</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q2', this, false)">D. 移植植物到詩中</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="wolf-q3">
+                        <span class="q-number">3</span>
+                        <span class="q-text">詩中「狼嗥」象徵什麼？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q3', this, false)">A. 詩人的悲傷</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q3', this, false)">B. 詩人的憤怒</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q3', this, true)">C. 詩人的創作和主張</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q3', this, false)">D. 詩人對家鄉的思念</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="wolf-q4">
+                        <span class="q-number">4</span>
+                        <span class="q-text">這首詩的結尾「這就是一種過癮」表達了什麼情感？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q4', this, false)">A. 無奈和悲傷</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q4', this, true)">B. 自信和滿足</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q4', this, false)">C. 後悔和遺憾</button>
+                            <button class="quiz-option" onclick="checkAnswer('wolf-q4', this, false)">D. 害怕和擔心</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('wolf-3')">← 重點整理</button>
+                <button class="btn btn-primary" onclick="goToPage('love-1')">下一首詩 →</button>
+            </div>
+        </div>
+        
+        <!-- 愛的辯證：作者介紹 -->
+        <div class="page" id="page-love-1">
+            <div class="content-card">
+                <h2>💕 愛的辯證｜作者介紹</h2>
+                
+                <div class="author-info">
+                    <div class="author-avatar">洛</div>
+                    <div class="author-details">
+                        <h4>洛夫</h4>
+                        <p class="meta">本名莫洛夫｜民國17年～民國107年｜湖南衡陽人</p>
+                        <p>洛夫被譽為「<strong>詩魔</strong>」，意象詭奇，作品以新詩為主。他與張默、瘂弦創辦《創世紀》詩刊，是臺灣新詩發展史上的重要人物。</p>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <div class="label">📌 重點記憶</div>
+                    <p><strong>詩魔</strong>：因意象詭奇而得名<br>
+                    <strong>代表作品</strong>：《石室之死亡》、《魔歌》、《漂木》<br>
+                    <strong>創辦</strong>：《創世紀》詩刊</p>
+                </div>
+                
+                <h3>典故來源：尾生抱柱</h3>
+                <div class="highlight-box" style="background: linear-gradient(135deg, #fce4ec, #f8bbd9);">
+                    <p>出自《莊子・盜跖篇》：「尾生與女子期於梁下，女子不來，水至不去，抱梁柱而死。」</p>
+                    <p style="margin-top: 10px;"><strong>白話：</strong>尾生和女子約在橋下見面，女子沒來，河水漲了他也不離開，最後抱著橋柱被淹死了。</p>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('wolf-4')">← 狼之獨步</button>
+                <button class="btn btn-primary" onclick="goToPage('love-2')">開始學課文 →</button>
+            </div>
+        </div>
+        
+        <!-- 愛的辯證：課文式一 -->
+        <div class="page" id="page-love-2">
+            <div class="content-card">
+                <h2>💕 愛的辯證｜式一：我在水中等你</h2>
+                
+                <div class="tip-box">
+                    <div class="tip-icon">📖</div>
+                    <div class="tip-content">
+                        <h4>式一的情境</h4>
+                        <p>尾生堅守約定，即使河水淹沒也不離開，最終溺斃。這代表「<strong>至死不渝的愛</strong>」。</p>
+                    </div>
+                </div>
+                
+                <div class="poem-text" id="love1-poem1">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        水深及膝
+                        <div class="annotation">水已經淹到膝蓋了。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        淹腹
+                        <div class="annotation">水淹到腹部了。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        一寸寸漫至喉嚨
+                        <div class="annotation">水一點一點漫到喉嚨。水位持續上升，但尾生仍不離開。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        浮在河面上的兩隻眼睛
+                        <div class="annotation">身體已經被水淹沒，只剩眼睛浮在水面上。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        仍<span class="vocab-word" onclick="showVocab(event, '炯炯然', 'ㄐㄩㄥˇ ㄐㄩㄥˇ ㄖㄢˊ，眼睛明亮的樣子。')">炯炯然</span>
+                        <div class="annotation">眼睛仍然明亮有神。表示尾生至死仍在等待。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        望向一條青石小徑
+                        <div class="annotation">眺望著女子會走來的那條小路。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        兩耳傾聽裙帶撫過<span class="vocab-word" onclick="showVocab(event, '薊草', 'ㄐㄧˋ ㄘㄠˇ，一種有刺的草本植物。')">薊草</span>的<span class="vocab-word" onclick="showVocab(event, '窸窣', 'ㄒㄧ ㄙㄨˋ，細碎斷續的聲音。')">窸窣</span>
+                        <div class="annotation">耳朵專注聆聽女子裙帶掃過野草的細碎聲音。</div>
+                    </div>
+                </div>
+                
+                <h3>第二節</h3>
+                <div class="poem-text" id="love1-poem2">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        日日　月月
+                        <div class="annotation">日復一日，月復一月。時間不斷流逝。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        千百次升降於我脹大的體內
+                        <div class="annotation">潮水千百次漲落於他已經腫脹的身體裡。暗示尾生已經溺死很久了。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        石柱上蒼苔<span class="vocab-word" onclick="showVocab(event, '歷歷', '分明清楚的樣子。')">歷歷</span>
+                        <div class="annotation">石柱上長滿了清晰可見的青苔。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        臂上長滿了<span class="vocab-word" onclick="showVocab(event, '牡蠣', 'ㄇㄨˇ ㄌㄧˋ，一種帶殼的海產，俗稱蚵仔。')">牡蠣</span>
+                        <div class="annotation">手臂上長滿了牡蠣。用超現實手法表現時間的漫長。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        髮，在激流中盤纏如一窩水蛇
+                        <div class="annotation">頭髮在水流中糾纏，像一窩水蛇一樣。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        緊抱橋墩
+                        <div class="annotation">緊緊抱著橋墩。尾生至死不離開約定的地點。</div>
+                    </div>
+                </div>
+                
+                <h3>第三節</h3>
+                <div class="poem-text" id="love1-poem3">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        我在千<span class="vocab-word" onclick="showVocab(event, '噚', 'ㄒㄩㄣˊ，水深的計量單位，約1.8公尺。')">噚</span>之下等你
+                        <div class="annotation">我在深深的水底等你。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        水來　我在水中等你
+                        <div class="annotation">水來了，我在水中等你。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        火來　我在灰燼中等你
+                        <div class="annotation">就算火來了，我也會在灰燼中等你。表達永恆的等待。</div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
+                    <div class="label">💡 式一的愛情觀</div>
+                    <p><strong>愛是：為了等待而犧牲一切，至死不渝。</strong><br>
+                    尾生選擇堅守約定，即使付出生命也在所不惜。</p>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('love-1')">← 作者介紹</button>
+                <button class="btn btn-primary" onclick="goToPage('love-3')">式二 →</button>
+            </div>
+        </div>
+        
+        <!-- 愛的辯證：課文式二 -->
+        <div class="page" id="page-love-3">
+            <div class="content-card">
+                <h2>💕 愛的辯證｜式二：我在橋下等你</h2>
+                
+                <div class="tip-box">
+                    <div class="tip-icon">📖</div>
+                    <div class="tip-content">
+                        <h4>式二的情境</h4>
+                        <p>尾生同樣在等待，但最後選擇<strong>放棄約定、登岸離去</strong>，保全性命。這代表「<strong>理性的愛</strong>」。</p>
+                    </div>
+                </div>
+                
+                <h3>第一節：回憶甜蜜時光</h3>
+                <div class="poem-text" id="love2-poem1">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        風狂，雨點急如過橋的鞋聲
+                        <div class="annotation">狂風大作，雨點像急促的腳步聲。尾生聽著雨聲，期待女子到來。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        是你倉促赴約的腳步？
+                        <div class="annotation">這是你急著來赴約的腳步聲嗎？尾生滿懷期待。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        撐著那把　你我共過微雨黃昏的小傘
+                        <div class="annotation">撐著那把我們一起在微雨黃昏中共用過的小傘。回憶過去的甜蜜。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        裝滿一口袋的　雲彩，以及小銅錢似的　叮噹的誓言
+                        <div class="annotation">口袋裡裝滿了雲彩和叮叮噹噹像小銅錢般的誓言。描寫過去的美好約定。</div>
+                    </div>
+                </div>
+                
+                <h3>第二節：等待與猶豫</h3>
+                <div class="poem-text" id="love2-poem2">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        我在橋下等你　等你從雨中奔來
+                        <div class="annotation">我在橋下等你，等你從雨中跑來。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        河水暴漲　洶湧至腳，及腰，而將浸入驚呼的嘴
+                        <div class="annotation">河水暴漲，水淹到腳、到腰，即將淹到嘴巴。危險逐漸逼近。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        漩渦正逐漸擴大為死者的臉
+                        <div class="annotation">旋渦慢慢變大，像死人的臉一樣恐怖。尾生感受到死亡的威脅。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        我開始有了臨流的怯意
+                        <div class="annotation">面對湍急的水流，我開始感到害怕。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        好冷，孤獨而空虛
+                        <div class="annotation">好冷，感覺孤獨又空虛。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        如一尾產卵後的魚
+                        <div class="annotation">像一條產完卵的魚一樣虛弱。</div>
+                    </div>
+                </div>
+                
+                <h3>第三節：放棄與離去</h3>
+                <div class="poem-text" id="love2-poem3">
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        篤定你是不會來了
+                        <div class="annotation">確定你是不會來了。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        所謂在天願為比翼鳥
+                        <div class="annotation">所謂「在天願為比翼鳥」的誓言。引用白居易《長恨歌》的名句。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        我<span class="vocab-word" onclick="showVocab(event, '黯然', 'ㄢˋ ㄖㄢˊ，心情沮喪的樣子。')">黯然</span>拔下一根白色的羽毛　然後登岸而去
+                        <div class="annotation">我難過地拔下一根白色羽毛，然後上岸離開。放棄等待，選擇保全自己。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        非我無情　只怪水比你來得更快
+                        <div class="annotation">不是我無情，只怪水來得比你還快。為自己的離開找理由。</div>
+                    </div>
+                    <div class="poem-line" onclick="toggleAnnotation(this)">
+                        一束玫瑰被浪捲走　總有一天會漂到你的手中
+                        <div class="annotation">一束玫瑰被浪捲走，總有一天會漂到你手中。雖然離去，但愛意仍在。</div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #fce4ec, #f8bbd9);">
+                    <div class="label">💡 式二的愛情觀</div>
+                    <p><strong>愛是：珍重生命以待來日，放棄約定但不放棄愛。</strong><br>
+                    尾生選擇離開，相信總有一天愛會傳達給對方。</p>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('love-2')">← 式一</button>
+                <button class="btn btn-primary" onclick="goToPage('love-4')">重點整理 →</button>
+            </div>
+        </div>
+        
+        <!-- 愛的辯證：重點整理 -->
+        <div class="page" id="page-love-4">
+            <div class="content-card">
+                <h2>💕 愛的辯證｜重點整理</h2>
+                
+                <h3>📊 式一 vs 式二 比較</h3>
+                <div class="comparison-table">
+                    <div class="compare-column">
+                        <h4>式一：我在水中等你</h4>
+                        <p><strong>選擇：</strong>堅持等待</p>
+                        <p><strong>結果：</strong>溺斃水中</p>
+                        <p><strong>身體變化：</strong>臂長牡蠣、髮如水蛇</p>
+                        <p><strong>感官描寫：</strong>炯炯然望向青石小徑、傾聽裙帶窸窣</p>
+                        <p><strong>愛情觀：</strong>至死不渝、為愛犧牲</p>
+                    </div>
+                    <div class="compare-column style2">
+                        <h4>式二：我在橋下等你</h4>
+                        <p><strong>選擇：</strong>放棄離去</p>
+                        <p><strong>結果：</strong>登岸保命</p>
+                        <p><strong>心理變化：</strong>期待→怯意→黯然</p>
+                        <p><strong>感受描寫：</strong>漩渦如死者臉、好冷、孤獨空虛</p>
+                        <p><strong>愛情觀：</strong>珍惜生命、愛會傳遞</p>
+                    </div>
+                </div>
+                
+                <div class="mind-map">
+                    <div style="text-align: center;">
+                        <div class="mind-center">愛的辯證</div>
+                    </div>
+                    <div class="mind-branches">
+                        <div class="mind-branch">
+                            <h4>📖 典故</h4>
+                            <ul>
+                                <li>尾生抱柱</li>
+                                <li>出自《莊子・盜跖篇》</li>
+                                <li>象徵守信與愛情</li>
+                            </ul>
+                        </div>
+                        <div class="mind-branch">
+                            <h4>✨ 寫作特色</h4>
+                            <ul>
+                                <li>一題二式：兩種結局</li>
+                                <li>意象豐富多變</li>
+                                <li>戲劇情節刻劃心境</li>
+                            </ul>
+                        </div>
+                        <div class="mind-branch">
+                            <h4>🎯 主旨</h4>
+                            <ul>
+                                <li>辯證愛情的選擇</li>
+                                <li>不同選擇都可能是愛</li>
+                                <li>沒有標準答案</li>
+                            </ul>
+                        </div>
+                        <div class="mind-branch">
+                            <h4>🎭 詩人立場</h4>
+                            <ul>
+                                <li>不偏向任何一方</li>
+                                <li>讓讀者自己思考</li>
+                                <li>每人有不同答案</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="summary-table">
+                    <tr>
+                        <th width="25%">項目</th>
+                        <th>內容</th>
+                    </tr>
+                    <tr>
+                        <td><strong>作者</strong></td>
+                        <td>洛夫（詩魔）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>結構</strong></td>
+                        <td>一題二式，兩種愛情觀的辯證</td>
+                    </tr>
+                    <tr>
+                        <td><strong>意象風格</strong></td>
+                        <td>式一陰暗（牡蠣、水蛇）；式二清朗（小傘、雲彩）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>核心問題</strong></td>
+                        <td>面對愛情，你會堅持到底還是珍惜生命？</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('love-3')">← 式二</button>
+                <button class="btn btn-primary" onclick="goToPage('love-5')">練習題 →</button>
+            </div>
+        </div>
+        
+        <!-- 愛的辯證：練習題 -->
+        <div class="page" id="page-love-5">
+            <div class="content-card">
+                <h2>💕 愛的辯證｜練習題</h2>
+                
+                <div class="quiz-section">
+                    <div class="quiz-question" id="love-q1">
+                        <span class="q-number">1</span>
+                        <span class="q-text">「愛的辯證」的典故來源是什麼？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('love-q1', this, false)">A. 梁山伯與祝英台</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q1', this, true)">B. 尾生抱柱</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q1', this, false)">C. 牛郎織女</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q1', this, false)">D. 白蛇傳</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="love-q2">
+                        <span class="q-number">2</span>
+                        <span class="q-text">式一中，「臂上長滿了牡蠣」這個意象表達什麼？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('love-q2', this, false)">A. 尾生很喜歡吃牡蠣</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q2', this, false)">B. 河水中有很多牡蠣</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q2', this, true)">C. 時間非常漫長</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q2', this, false)">D. 尾生身體很健康</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="love-q3">
+                        <span class="q-number">3</span>
+                        <span class="q-text">式二中，尾生最後做了什麼選擇？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('love-q3', this, false)">A. 繼續等待</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q3', this, false)">B. 跳入水中</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q3', this, true)">C. 登岸離去</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q3', this, false)">D. 抱著橋柱</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="love-q4">
+                        <span class="q-number">4</span>
+                        <span class="q-text">洛夫被稱為什麼？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('love-q4', this, false)">A. 詩仙</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q4', this, false)">B. 詩聖</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q4', this, true)">C. 詩魔</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q4', this, false)">D. 詩鬼</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    
+                    <div class="quiz-question" id="love-q5">
+                        <span class="q-number">5</span>
+                        <span class="q-text">這首詩對愛情的立場是什麼？</span>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer('love-q5', this, false)">A. 認為式一的做法才是真愛</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q5', this, false)">B. 認為式二的做法才是真愛</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q5', this, true)">C. 不偏向任何一方，讓讀者自己思考</button>
+                            <button class="quiz-option" onclick="checkAnswer('love-q5', this, false)">D. 認為愛情不值得付出</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('love-4')">← 重點整理</button>
+                <button class="btn btn-primary" onclick="goToPage('summary')">總複習 →</button>
+            </div>
+        </div>
+        
+        <!-- 總複習 -->
+        <div class="page" id="page-summary">
+            <div class="content-card">
+                <h2>📝 第九課 總複習</h2>
+                
+                <h3>✅ 學習檢核表</h3>
+                <p>點擊確認你已經學會的內容：</p>
+                <ul class="checklist" id="checklist">
+                    <li onclick="toggleCheck(this)">
+                        <span class="checkbox"></span>
+                        <span>我知道紀弦是誰，以及「橫的移植」的意思</span>
+                    </li>
+                    <li onclick="toggleCheck(this)">
+                        <span class="checkbox"></span>
+                        <span>我理解〈狼之獨步〉中「狼」象徵詩人自己</span>
+                    </li>
+                    <li onclick="toggleCheck(this)">
+                        <span class="checkbox"></span>
+                        <span>我知道洛夫是誰，他被稱為「詩魔」</span>
+                    </li>
+                    <li onclick="toggleCheck(this)">
+                        <span class="checkbox"></span>
+                        <span>我理解「尾生抱柱」的典故來源</span>
+                    </li>
+                    <li onclick="toggleCheck(this)">
+                        <span class="checkbox"></span>
+                        <span>我能分辨〈愛的辯證〉式一和式二的差異</span>
+                    </li>
+                    <li onclick="toggleCheck(this)">
+                        <span class="checkbox"></span>
+                        <span>我知道這首詩沒有標準答案，讓讀者自己思考</span>
+                    </li>
+                </ul>
+                
+                <div class="score-card" id="finalScore" style="display: none;">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-label">完成度</div>
+                    <div class="message" id="scoreMessage"></div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="calculateFinalScore()">📊 查看學習成果</button>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <h3>📚 兩首詩總整理</h3>
+                <table class="summary-table">
+                    <tr>
+                        <th></th>
+                        <th>狼之獨步</th>
+                        <th>愛的辯證</th>
+                    </tr>
+                    <tr>
+                        <td><strong>作者</strong></td>
+                        <td>紀弦</td>
+                        <td>洛夫</td>
+                    </tr>
+                    <tr>
+                        <td><strong>稱號</strong></td>
+                        <td>詩壇長青樹</td>
+                        <td>詩魔</td>
+                    </tr>
+                    <tr>
+                        <td><strong>主題</strong></td>
+                        <td>獨立自信、堅持理念</td>
+                        <td>愛情的選擇與辯證</td>
+                    </tr>
+                    <tr>
+                        <td><strong>象徵物</strong></td>
+                        <td>狼、曠野、狼嗥</td>
+                        <td>橋、水、羽毛</td>
+                    </tr>
+                    <tr>
+                        <td><strong>寫作特色</strong></td>
+                        <td>以狼自況、節奏鏗鏘</td>
+                        <td>一題二式、意象多變</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goToPage('love-5')">← 練習題</button>
+                <button class="btn btn-primary" onclick="goToPage('home')">🏠 回首頁</button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 底部導航點 -->
+    <div class="bottom-nav" id="bottomNav"></div>
+    
+    <!-- 詞彙彈窗 -->
+    <div class="overlay" id="overlay" onclick="closeVocab()"></div>
+    <div class="vocab-popup" id="vocabPopup">
+        <button class="close-btn" onclick="closeVocab()">×</button>
+        <h4 id="vocabWord"></h4>
+        <p class="pronunciation" id="vocabPron"></p>
+        <p class="meaning" id="vocabMeaning"></p>
+    </div>
+    
+    <script>
+        // 頁面配置
+        const pages = [
+            'home',
+            'wolf-1', 'wolf-2', 'wolf-3', 'wolf-4',
+            'love-1', 'love-2', 'love-3', 'love-4', 'love-5',
+            'summary'
+        ];
+        
+        let currentPage = 'home';
+        let correctAnswers = 0;
+        let totalQuestions = 9;
+        
+        // 初始化
+        function init() {
+            createNavDots();
+            updateProgress();
+        }
+        
+        // 創建導航點
+        function createNavDots() {
+            const nav = document.getElementById('bottomNav');
+            nav.innerHTML = '';
+            pages.forEach((page, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot' + (page === currentPage ? ' active' : '');
+                dot.onclick = () => goToPage(page);
+                dot.title = getPageTitle(page);
+                nav.appendChild(dot);
+            });
+        }
+        
+        // 獲取頁面標題
+        function getPageTitle(page) {
+            const titles = {
+                'home': '首頁',
+                'wolf-1': '狼之獨步-作者',
+                'wolf-2': '狼之獨步-課文',
+                'wolf-3': '狼之獨步-重點',
+                'wolf-4': '狼之獨步-練習',
+                'love-1': '愛的辯證-作者',
+                'love-2': '愛的辯證-式一',
+                'love-3': '愛的辯證-式二',
+                'love-4': '愛的辯證-重點',
+                'love-5': '愛的辯證-練習',
+                'summary': '總複習'
+            };
+            return titles[page] || page;
+        }
+        
+        // 切換頁面
+        function goToPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            currentPage = pageId;
+            createNavDots();
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+        
+        // 更新進度
+        function updateProgress() {
+            const currentIndex = pages.indexOf(currentPage);
+            const progress = Math.round((currentIndex / (pages.length - 1)) * 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = '學習進度 ' + progress + '%';
+        }
+        
+        // 切換註釋
+        function toggleAnnotation(element) {
+            // 如果點擊的是詞彙，不觸發此函數
+            if (event.target.classList.contains('vocab-word')) return;
+            
+            element.classList.toggle('active');
+            element.classList.toggle('highlighted');
+        }
+        
+        // 顯示詞彙解釋
+        function showVocab(event, word, meaning) {
+            event.stopPropagation();
+            
+            // 解析注音（如果有）
+            let pron = '';
+            let def = meaning;
+            if (meaning.includes('，')) {
+                const parts = meaning.split('，');
+                if (parts[0].match(/[ㄅ-ㄩˊˇˋ˙]/)) {
+                    pron = parts[0];
+                    def = parts.slice(1).join('，');
+                }
+            }
+            
+            document.getElementById('vocabWord').textContent = word;
+            document.getElementById('vocabPron').textContent = pron;
+            document.getElementById('vocabMeaning').textContent = def;
+            document.getElementById('overlay').classList.add('show');
+            document.getElementById('vocabPopup').classList.add('show');
+        }
+        
+        // 關閉詞彙解釋
+        function closeVocab() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('vocabPopup').classList.remove('show');
+        }
+        
+        // 檢查答案
+        function checkAnswer(questionId, button, isCorrect) {
+            const question = document.getElementById(questionId);
+            const options = question.querySelectorAll('.quiz-option');
+            const feedback = question.querySelector('.feedback');
+            
+            // 禁用所有選項
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+                opt.disabled = true;
+            });
+            
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = '<span class="icon">✓</span> 答對了！太棒了！';
+                correctAnswers++;
+            } else {
+                button.classList.add('incorrect');
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = '<span class="icon">✗</span> 再想想看喔！';
+                // 顯示正確答案
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+        
+        // 切換勾選
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+            const checkbox = element.querySelector('.checkbox');
+            checkbox.innerHTML = element.classList.contains('checked') ? '✓' : '';
+        }
+        
+        // 計算最終分數
+        function calculateFinalScore() {
+            const checklist = document.querySelectorAll('#checklist li.checked');
+            const checkCount = checklist.length;
+            const totalChecks = document.querySelectorAll('#checklist li').length;
+            
+            const percentage = Math.round(((correctAnswers / totalQuestions) * 50 + (checkCount / totalChecks) * 50));
+            
+            document.getElementById('scoreNumber').textContent = percentage + '%';
+            document.getElementById('finalScore').style.display = 'block';
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🌟 太厲害了！你已經完全掌握這一課的內容！';
+            } else if (percentage >= 70) {
+                message = '👍 表現很好！再複習一下沒把握的地方就更完美了！';
+            } else if (percentage >= 50) {
+                message = '💪 加油！可以再看一次課文和重點整理喔！';
+            } else {
+                message = '📚 沒關係，學習需要時間，讓我們再複習一次吧！';
+            }
+            document.getElementById('scoreMessage').textContent = message;
+            
+            // 滾動到成績卡
+            document.getElementById('finalScore').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 初始化
+        init();
+    </script>
+</body>
+</html>

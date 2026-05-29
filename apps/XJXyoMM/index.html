@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be 動詞完整練習 - am, is, are</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .question-image {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            border-bottom: 3px solid #667eea;
+            margin: 0 10px;
+            text-align: center;
+        }
+
+        .answer-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: white;
+            color: #667eea;
+            border: 3px solid #667eea;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 100px;
+        }
+
+        .option-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+
+        .option-btn.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .button:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.5em;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .result-screen {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .result-screen h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .result-emoji {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            font-size: 1.5em;
+            margin: 20px 0;
+            line-height: 2;
+        }
+
+        .wrong-questions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .wrong-questions h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .wrong-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .rule-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #2196f3;
+        }
+
+        .rule-box.am {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+
+        .rule-box.is {
+            background: #f3e5f5;
+            border-left-color: #9c27b0;
+        }
+
+        .rule-box.are {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mode-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .question-text {
+                font-size: 1.5em;
+            }
+            
+            .option-btn {
+                font-size: 1.2em;
+                padding: 12px 20px;
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 教學提示頁面 -->
+        <div id="instructionScreen">
+            <h1>📖 Be 動詞完整教室</h1>
+            <div class="question-card" style="text-align: left; font-size: 1.2em; line-height: 1.8;">
+                <p style="margin-bottom: 20px; text-align: center; font-size: 1.5em; color: #667eea; font-weight: bold;">
+                    記住這三個重要規則：
+                </p>
+                
+                <div class="rule-box am">
+                    <strong style="font-size: 1.4em; color: #1976d2;">🙋 I (我)</strong> → 用 <strong style="color: #d32f2f; font-size: 1.3em;">am</strong><br>
+                    <span style="color: #666; font-size: 0.9em;">例如：I am happy. (我很開心)</span>
+                </div>
+                
+                <div class="rule-box is">
+                    <strong style="font-size: 1.4em; color: #7b1fa2;">👦👧🐱 He / She / It / This / That</strong> → 用 <strong style="color: #d32f2f; font-size: 1.3em;">is</strong><br>
+                    <span style="color: #666; font-size: 0.9em;">例如：He is a boy. (他是男孩)</span><br>
+                    <span style="color: #666; font-size: 0.9em;">例如：This is a pen. (這是一支筆)</span>
+                </div>
+                
+                <div class="rule-box are">
+                    <strong style="font-size: 1.4em; color: #388e3c;">👥👫🐱🐱 You / We / They / These / Those</strong> → 用 <strong style="color: #d32f2f; font-size: 1.3em;">are</strong><br>
+                    <span style="color: #666; font-size: 0.9em;">例如：You are smart. (你很聰明)</span><br>
+                    <span style="color: #666; font-size: 0.9em;">例如：They are friends. (他們是朋友)</span><br>
+                    <span style="color: #666; font-size: 0.9em;">例如：These are books. (這些是書)</span>
+                </div>
+                
+                <p style="text-align: center; margin-top: 30px; color: #ff6f00; font-weight: bold; font-size: 1.2em;">
+                    ⚠️ 記得看清楚主詞是什麼喔！<br>
+                    單數用 is，複數用 are，I 永遠用 am！
+                </p>
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="selectMode('all')">全部練習</button>
+                <button class="mode-btn" onclick="selectMode('am-is')">只練 am/is</button>
+                <button class="mode-btn" onclick="selectMode('is-are')">只練 is/are</button>
+                <button class="mode-btn" onclick="selectMode('random')">隨機 20 題</button>
+            </div>
+            
+            <button class="button" onclick="startPractice()">開始練習 🚀</button>
+        </div>
+
+        <!-- 練習畫面 -->
+        <div id="practiceScreen" class="hidden">
+            <h1>✏️ Be 動詞練習</h1>
+            <p class="subtitle">選擇正確的 be 動詞</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">題目</div>
+                    <div class="score-value"><span id="currentQuestion">1</span>/<span id="totalQuestions">20</span></div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">答對</div>
+                    <div class="score-value" id="correctCount">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">答錯</div>
+                    <div class="score-value" id="wrongCount">0</div>
+                </div>
+            </div>
+            
+            <div class="question-card">
+                <div class="question-image" id="questionEmoji">🍎</div>
+                <div class="question-text" id="questionText">
+                    This <span class="blank"></span> an apple.
+                </div>
+                
+                <div class="answer-options" id="answerOptions">
+                    <button class="option-btn" onclick="selectAnswer('am')">am</button>
+                    <button class="option-btn" onclick="selectAnswer('is')">is</button>
+                    <button class="option-btn" onclick="selectAnswer('are')">are</button>
+                </div>
+            </div>
+            
+            <button class="button" id="submitBtn" onclick="checkAnswer()">確認答案</button>
+            
+            <div id="feedback" class="feedback hidden"></div>
+        </div>
+
+        <!-- 結果畫面 -->
+        <div id="resultScreen" class="result-screen hidden">
+            <div class="result-emoji" id="resultEmoji">🎉</div>
+            <h2 id="resultTitle">太棒了！</h2>
+            <div class="result-stats" id="resultStats"></div>
+            
+            <div id="wrongQuestionsSection" class="wrong-questions hidden">
+                <h3>📝 錯題複習</h3>
+                <div id="wrongQuestionsList"></div>
+            </div>
+            
+            <button class="button" onclick="retryWrongQuestions()" id="retryWrongBtn" class="hidden">重新練習錯題</button>
+            <button class="button" onclick="restartQuiz()">重新開始</button>
+        </div>
+    </div>
+
+    <script>
+        // 完整題庫
+        const allQuestions = [
+            // am 題目
+            { emoji: "🙋", text: "I ___ a student.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "😊", text: "I ___ happy.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "🙋‍♂️", text: "I ___ a teacher.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "😴", text: "I ___ tired.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "🎨", text: "I ___ creative.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "💪", text: "I ___ strong.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "🏃", text: "I ___ ready.", answer: "am", hint: "(我)", category: "am" },
+            { emoji: "📚", text: "I ___ studying.", answer: "am", hint: "(我)", category: "am" },
+            
+            // is 題目 (單數)
+            { emoji: "🍎", text: "This ___ an apple.", answer: "is", hint: "", category: "is" },
+            { emoji: "🐱", text: "It ___ a cat.", answer: "is", hint: "(它)", category: "is" },
+            { emoji: "📚", text: "This ___ a book.", answer: "is", hint: "", category: "is" },
+            { emoji: "👦", text: "He ___ a boy.", answer: "is", hint: "(他)", category: "is" },
+            { emoji: "🌞", text: "It ___ sunny.", answer: "is", hint: "(它)", category: "is" },
+            { emoji: "🏫", text: "This ___ a school.", answer: "is", hint: "", category: "is" },
+            { emoji: "👧", text: "She ___ a girl.", answer: "is", hint: "(她)", category: "is" },
+            { emoji: "🚗", text: "It ___ a car.", answer: "is", hint: "(它)", category: "is" },
+            { emoji: "🎵", text: "That ___ musical.", answer: "is", hint: "(那個)", category: "is" },
+            { emoji: "👨", text: "He ___ tall.", answer: "is", hint: "(他)", category: "is" },
+            { emoji: "🌊", text: "This ___ an ocean.", answer: "is", hint: "", category: "is" },
+            { emoji: "👩", text: "She ___ a doctor.", answer: "is", hint: "(她)", category: "is" },
+            { emoji: "🏥", text: "That ___ a hospital.", answer: "is", hint: "(那個)", category: "is" },
+            { emoji: "🐶", text: "It ___ a dog.", answer: "is", hint: "(它)", category: "is" },
+            { emoji: "✨", text: "It ___ magical.", answer: "is", hint: "(它)", category: "is" },
+            { emoji: "🏙️", text: "This ___ a city.", answer: "is", hint: "", category: "is" },
+            
+            // are 題目 (複數)
+            { emoji: "👫", text: "You ___ my friend.", answer: "are", hint: "(你)", category: "are" },
+            { emoji: "👥", text: "They ___ students.", answer: "are", hint: "(他們)", category: "are" },
+            { emoji: "🤝", text: "We ___ partners.", answer: "are", hint: "(我們)", category: "are" },
+            { emoji: "📚📚", text: "These ___ books.", answer: "are", hint: "(這些)", category: "are" },
+            { emoji: "🍎🍎", text: "Those ___ apples.", answer: "are", hint: "(那些)", category: "are" },
+            { emoji: "👦👧", text: "They ___ siblings.", answer: "are", hint: "(他們)", category: "are" },
+            { emoji: "🎈🎈", text: "These ___ balloons.", answer: "are", hint: "(這些)", category: "are" },
+            { emoji: "🌟🌟", text: "You ___ special.", answer: "are", hint: "(你/你們)", category: "are" },
+            { emoji: "🏃‍♂️🏃‍♀️", text: "We ___ running.", answer: "are", hint: "(我們)", category: "are" },
+            { emoji: "🐱🐱", text: "Those ___ cats.", answer: "are", hint: "(那些)", category: "are" },
+            { emoji: "🎮🎮", text: "These ___ games.", answer: "are", hint: "(這些)", category: "are" },
+            { emoji: "👨‍👩‍👦", text: "They ___ a family.", answer: "are", hint: "(他們)", category: "are" },
+            { emoji: "🌸🌸", text: "These ___ flowers.", answer: "are", hint: "(這些)", category: "are" },
+            { emoji: "🏠🏠", text: "Those ___ houses.", answer: "are", hint: "(那些)", category: "are" },
+            { emoji: "👨‍🏫👩‍🏫", text: "We ___ teachers.", answer: "are", hint: "(我們)", category: "are" },
+            { emoji: "🎯", text: "You ___ correct.", answer: "are", hint: "(你)", category: "are" },
+            { emoji: "🌈", text: "They ___ colorful.", answer: "are", hint: "(他們)", category: "are" },
+            { emoji: "🚌🚌", text: "Those ___ buses.", answer: "are", hint: "(那些)", category: "are" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let wrongQuestions = [];
+        let currentQuestions = [];
+        let isRetryMode = false;
+        let selectedAnswer = '';
+        let practiceMode = 'all';
+
+        // 選擇練習模式
+        function selectMode(mode) {
+            practiceMode = mode;
+            
+            // 更新按鈕樣式
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 根據模式篩選題目
+            switch(mode) {
+                case 'all':
+                    currentQuestions = [...allQuestions];
+                    break;
+                case 'am-is':
+                    currentQuestions = allQuestions.filter(q => q.category === 'am' || q.category === 'is');
+                    break;
+                case 'is-are':
+                    currentQuestions = allQuestions.filter(q => q.category === 'is' || q.category === 'are');
+                    break;
+                case 'random':
+                    // 隨機選擇20題
+                    currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5).slice(0, 20);
+                    break;
+            }
+            
+            // 打亂題目順序
+            currentQuestions = currentQuestions.sort(() => Math.random() - 0.5);
+        }
+
+        // 開始練習
+        function startPractice() {
+            if (currentQuestions.length === 0) {
+                currentQuestions = [...allQuestions];
+            }
+            
+            document.getElementById('instructionScreen').classList.add('hidden');
+            document.getElementById('practiceScreen').classList.remove('hidden');
+            document.getElementById('totalQuestions').textContent = currentQuestions.length;
+            loadQuestion();
+        }
+
+        // 音效功能
+        function playSound(isCorrect) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            if (isCorrect) {
+                // 答對：愉快的上升音
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } else {
+                // 答錯：低沉的提示音
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+        }
+
+        // 載入題目
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                showResult();
+                return;
+            }
+
+            const question = currentQuestions[currentQuestionIndex];
+            document.getElementById('questionEmoji').textContent = question.emoji;
+            
+            // 顯示題目文字，如果有中文提示就加上
+            let questionHTML = question.text.replace('___', '<span class="blank"></span>');
+            if (question.hint) {
+                // 找出主詞並加上中文提示
+                const words = question.text.split(' ');
+                const subject = words[0]; // 取得第一個字
+                if (subject === 'These' || subject === 'Those') {
+                    questionHTML = questionHTML.replace(subject, `<span style="color: #667eea; font-weight: bold;">${subject} ${question.hint}</span>`);
+                } else {
+                    questionHTML = questionHTML.replace(subject, `<span style="color: #667eea; font-weight: bold;">${subject} ${question.hint}</span>`);
+                }
+            }
+            
+            document.getElementById('questionText').innerHTML = questionHTML;
+            
+            // 重置選項
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            selectedAnswer = '';
+            
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('submitBtn').disabled = false;
+            
+            // 更新進度
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // 選擇答案
+        function selectAnswer(answer) {
+            selectedAnswer = answer;
+            
+            // 更新按鈕樣式
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.textContent === answer) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        // 檢查答案
+        function checkAnswer() {
+            if (!selectedAnswer) {
+                alert('請選擇一個答案！');
+                return;
+            }
+
+            const correctAnswer = currentQuestions[currentQuestionIndex].answer;
+            const feedbackDiv = document.getElementById('feedback');
+            
+            feedbackDiv.classList.remove('hidden');
+            document.getElementById('submitBtn').disabled = true;
+            
+            if (selectedAnswer === correctAnswer) {
+                // 答對
+                correctAnswers++;
+                document.getElementById('correctCount').textContent = correctAnswers;
+                feedbackDiv.className = 'feedback correct';
+                feedbackDiv.textContent = '✓ 答對了！太棒了！';
+                playSound(true);
+                
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 1500);
+            } else {
+                // 答錯
+                wrongAnswers++;
+                document.getElementById('wrongCount').textContent = wrongAnswers;
+                feedbackDiv.className = 'feedback wrong';
+                
+                // 提供詳細解釋
+                let explanation = '';
+                const question = currentQuestions[currentQuestionIndex];
+                if (question.category === 'am') {
+                    explanation = 'I (我) 永遠要用 am';
+                } else if (question.category === 'is') {
+                    explanation = '單數主詞 (He/She/It/This/That) 要用 is';
+                } else if (question.category === 'are') {
+                    explanation = '複數主詞 (You/We/They/These/Those) 要用 are';
+                }
+                
+                feedbackDiv.innerHTML = `✗ 答錯了！<br>正確答案是：<strong>${correctAnswer}</strong><br><span style="font-size: 0.9em;">${explanation}</span>`;
+                playSound(false);
+                
+                // 記錄錯題
+                if (!isRetryMode) {
+                    wrongQuestions.push(currentQuestions[currentQuestionIndex]);
+                }
+                
+                // 3秒後進入下一題
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 3000);
+            }
+        }
+
+        // 顯示結果
+        function showResult() {
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+            
+            const totalQuestions = currentQuestions.length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            let emoji, title;
+            if (percentage === 100) {
+                emoji = '🏆';
+                title = '完美！滿分！';
+            } else if (percentage >= 80) {
+                emoji = '🎉';
+                title = '太棒了！';
+            } else if (percentage >= 60) {
+                emoji = '👍';
+                title = '做得不錯！';
+            } else {
+                emoji = '💪';
+                title = '繼續加油！';
+            }
+            
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('resultStats').innerHTML = `
+                總題數：${totalQuestions} 題<br>
+                答對：${correctAnswers} 題<br>
+                答錯：${wrongAnswers} 題<br>
+                正確率：${percentage}%
+            `;
+            
+            // 顯示錯題
+            if (wrongQuestions.length > 0 && !isRetryMode) {
+                document.getElementById('wrongQuestionsSection').classList.remove('hidden');
+                document.getElementById('retryWrongBtn').classList.remove('hidden');
+                
+                const wrongList = document.getElementById('wrongQuestionsList');
+                wrongList.innerHTML = '';
+                wrongQuestions.forEach((q, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'wrong-item';
+                    let explanation = '';
+                    if (q.category === 'am') {
+                        explanation = ' (記住：I 用 am)';
+                    } else if (q.category === 'is') {
+                        explanation = ' (記住：單數用 is)';
+                    } else {
+                        explanation = ' (記住：複數用 are)';
+                    }
+                    
+                    div.innerHTML = `
+                        <strong>${index + 1}.</strong> ${q.emoji} ${q.text.replace('___', '<strong style="color: #d32f2f;">' + q.answer + '</strong>')}
+                        <span style="color: #666; font-size: 0.9em;">${explanation}</span>
+                    `;
+                    wrongList.appendChild(div);
+                });
+            }
+        }
+
+        // 重新練習錯題
+        function retryWrongQuestions() {
+            if (wrongQuestions.length === 0) return;
+            
+            isRetryMode = true;
+            currentQuestions = [...wrongQuestions];
+            wrongQuestions = [];
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            selectedAnswer = '';
+            
+            document.getElementById('correctCount').textContent = '0';
+            document.getElementById('wrongCount').textContent = '0';
+            document.getElementById('totalQuestions').textContent = currentQuestions.length;
+            document.getElementById('practiceScreen').classList.remove('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            
+            loadQuestion();
+        }
+
+        // 重新開始
+        function restartQuiz() {
+            isRetryMode = false;
+            currentQuestions = [];
+            wrongQuestions = [];
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            selectedAnswer = '';
+            practiceMode = 'all';
+            
+            // 重置模式選擇器
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.mode-btn').classList.add('active');
+            
+            document.getElementById('correctCount').textContent = '0';
+            document.getElementById('wrongCount').textContent = '0';
+            document.getElementById('instructionScreen').classList.remove('hidden');
+            document.getElementById('practiceScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+        }
+
+        // 初始化 - 設定預設模式
+        selectMode('all');
+    </script>
+</body>
+</html>

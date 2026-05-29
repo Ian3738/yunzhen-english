@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第五課　諫逐客書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: '標楷體', 'DFKai-SB', serif;
+  background: #F4F6F9;
+  color: #1C2833;
+  padding: 20px;
+  line-height: 1.7;
+}
+h1 { text-align: center; font-size: 1.6em; color: #C0392B; padding: 18px 0 6px; }
+.subtitle { text-align: center; color: #7F8C8D; font-size: 0.95em; margin-bottom: 24px; }
+
+.tab-bar { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
+.tab-btn {
+  padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+  font-family: inherit; font-size: 1em; font-weight: bold;
+  transition: all 0.2s; background: #ECF0F1; color: #5D6D7E;
+}
+.tab-btn.active { background: #C0392B; color: white; box-shadow: 0 3px 10px rgba(192,57,43,0.3); }
+.tab-btn:hover:not(.active) { background: #D5D8DC; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.card-title { font-size: 1.15em; font-weight: bold; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 3px solid; }
+.ct-red { color: #C0392B; border-color: #C0392B; }
+.ct-blue { color: #1A5276; border-color: #1A5276; }
+.ct-green { color: #1E8449; border-color: #1E8449; }
+.ct-orange { color: #CA6F1E; border-color: #CA6F1E; }
+.ct-purple { color: #6C3483; border-color: #6C3483; }
+
+/* 架構卡片 */
+.struct-grid { display: grid; gap: 12px; }
+.struct-item {
+  border-radius: 10px; padding: 16px;
+  display: grid; grid-template-columns: 100px 1fr;
+  gap: 12px; align-items: start;
+  cursor: pointer; transition: all 0.2s;
+  border: 2px solid transparent;
+}
+.struct-item:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+.struct-item.active-item { border-color: #1A5276; }
+.struct-label { font-weight: bold; font-size: 0.95em; }
+.struct-content { font-size: 0.9em; line-height: 1.7; }
+.struct-detail {
+  display: none; margin-top: 10px; padding: 12px 16px;
+  background: #F8F9FA; border-radius: 8px; border-left: 4px solid #1A5276;
+  font-size: 0.9em; line-height: 1.7;
+  animation: fadeIn 0.3s ease;
+}
+.struct-detail.show { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+/* 配對題 */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.match-col h4 { font-weight: bold; margin-bottom: 10px; color: #5D6D7E; font-size: 0.95em; }
+.match-item {
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 8px;
+  cursor: pointer; transition: all 0.18s; font-size: 0.92em;
+  border: 2px solid transparent; user-select: none;
+}
+.ml { background: #EBF5FB; border-color: #AED6F1; color: #1A5276; font-weight: bold; }
+.ml:hover { background: #D6EAF8; }
+.ml.ml-sel { background: #1A5276; color: white; border-color: #1A5276; }
+.mr { background: #F9F9F9; border-color: #D5D8DC; }
+.mr:hover { background: #EBF5FB; border-color: #AED6F1; }
+.mr.mr-sel { background: #D6EAF8; border-color: #1A5276; }
+.match-item.mc-ok { background: #D5F5E3; border-color: #1E8449; color: #1E8449; cursor: default; font-weight: bold; }
+.match-item.mc-ng { background: #FADBD8; border-color: #C0392B; color: #C0392B; }
+.match-status { text-align: center; margin-top: 14px; font-weight: bold; font-size: 1em; min-height: 28px; }
+.reset-sm { display: block; margin: 10px auto 0; padding: 8px 24px; background: #5D6D7E; color: white; border: none; border-radius: 20px; font-family: inherit; font-size: 0.9em; cursor: pointer; }
+.reset-sm:hover { background: #4D5D6E; }
+
+/* 比喻判斷 */
+.metaphor-q { background: #F8F9FA; border-radius: 10px; padding: 18px; margin-bottom: 14px; border-left: 5px solid #BDC3C7; }
+.metaphor-text { font-size: 1em; font-weight: bold; margin-bottom: 6px; color: #2C3E50; }
+.metaphor-quote { font-size: 0.9em; color: #5D6D7E; margin-bottom: 12px; font-style: italic; }
+.meta-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+.meta-btn {
+  padding: 8px 16px; border: 2px solid #D5D8DC; border-radius: 20px;
+  cursor: pointer; font-family: inherit; font-size: 0.88em;
+  background: white; transition: all 0.18s; font-weight: bold;
+}
+.meta-btn:hover:not(:disabled) { background: #EBF5FB; border-color: #1A5276; color: #1A5276; }
+.meta-btn:disabled { cursor: default; }
+.meta-btn.mb-ok { background: #D5F5E3; border-color: #1E8449; color: #1E8449; }
+.meta-btn.mb-ng { background: #FADBD8; border-color: #C0392B; color: #C0392B; text-decoration: line-through; }
+.meta-fb { margin-top: 10px; font-size: 0.88em; display: none; padding: 8px 12px; border-radius: 6px; }
+.meta-fb.show { display: block; animation: fadeIn 0.3s ease; }
+.fb-ok { background: #D5F5E3; color: #1E8449; border-left: 4px solid #1E8449; }
+.fb-ng { background: #FADBD8; color: #C0392B; border-left: 4px solid #C0392B; }
+
+/* 選擇題 */
+.quiz-q { background: #F8F9FA; border-radius: 10px; padding: 18px; margin-bottom: 14px; }
+.quiz-text { font-size: 0.95em; font-weight: bold; margin-bottom: 12px; }
+.quiz-opts { display: grid; gap: 8px; }
+.quiz-btn {
+  padding: 10px 14px; border: 2px solid #D5D8DC; border-radius: 8px;
+  cursor: pointer; font-family: inherit; font-size: 0.9em;
+  text-align: left; background: white; transition: all 0.18s; width: 100%;
+}
+.quiz-btn:hover:not(:disabled) { background: #EBF5FB; border-color: #1A5276; }
+.quiz-btn.qb-sel { background: #D6EAF8; border-color: #1A5276; }
+.quiz-btn.qb-ok { background: #D5F5E3; border-color: #1E8449; color: #1E8449; font-weight: bold; }
+.quiz-btn.qb-ng { background: #FADBD8; border-color: #C0392B; color: #C0392B; text-decoration: line-through; }
+.quiz-btn:disabled { cursor: default; }
+.quiz-fb { margin-top: 8px; font-size: 0.88em; display: none; padding: 8px 12px; border-radius: 6px; }
+.quiz-fb.show { display: block; animation: fadeIn 0.3s ease; }
+
+.submit-btn {
+  display: block; margin: 20px auto 0; padding: 12px 40px;
+  background: #1E8449; color: white; border: none; border-radius: 25px;
+  font-family: inherit; font-size: 1em; font-weight: bold; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(30,132,73,0.3); transition: all 0.2s;
+}
+.submit-btn:hover { background: #196F3D; transform: translateY(-1px); }
+.reset-btn {
+  display: none; margin: 10px auto 0; padding: 10px 30px;
+  background: #5D6D7E; color: white; border: none; border-radius: 25px;
+  font-family: inherit; font-size: 0.95em; cursor: pointer; transition: background 0.2s;
+}
+.reset-btn:hover { background: #4D5D6E; }
+.score-box {
+  text-align: center; margin-top: 20px; padding: 16px;
+  background: #EBF5FB; border-radius: 10px;
+  font-size: 1.1em; font-weight: bold; color: #1A5276; display: none;
+}
+.score-box.show { display: block; animation: fadeIn 0.4s ease; }
+
+/* 重要句子 */
+.key-sentence {
+  background: white; border-radius: 10px; padding: 18px;
+  margin-bottom: 12px; border-left: 5px solid #CA6F1E;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.ks-original { font-size: 1em; font-weight: bold; color: #2C3E50; margin-bottom: 8px; }
+.ks-meaning { font-size: 0.92em; color: #5D6D7E; margin-bottom: 6px; }
+.ks-note { font-size: 0.9em; color: #CA6F1E; font-weight: bold; }
+
+@media(max-width:600px){ .match-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<h1>諫逐客書</h1>
+<div class="subtitle">作者：李斯　｜　第五課互動學習工具</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('struct',this)">📋 課文架構</button>
+  <button class="tab-btn" onclick="switchTab('match',this)">🔗 四君配對</button>
+  <button class="tab-btn" onclick="switchTab('meta',this)">💡 比喻判斷</button>
+  <button class="tab-btn" onclick="switchTab('quiz',this)">✏️ 選擇題</button>
+  <button class="tab-btn" onclick="switchTab('keys',this)">📜 重要句子</button>
+</div>
+
+<!-- ════ Tab 1：課文架構 ════ -->
+<div id="tab-struct" class="tab-content active">
+  <div class="card">
+    <div class="card-title ct-blue">課文架構——點擊各段查看詳情</div>
+    <div class="struct-grid">
+      <div class="struct-item" style="background:#EBF5FB" onclick="toggleStruct(0,this)">
+        <div class="struct-label" style="color:#1A5276">開頭<br>（第一段）</div>
+        <div class="struct-content">
+          <strong style="color:#1A5276">核心論點：逐客為過</strong><br>
+          直接點明立場：臣私下認為驅逐客卿是錯誤的。
+          <div class="struct-detail" id="sd0">
+            <strong>原文：</strong>「臣聞吏議逐客，竊以為過矣。」<br><br>
+            <strong>策略：</strong>開門見山，直接表態，讓秦王知道這封信的目的。「竊以為」是謙遜說法，表示臣下的個人意見，避免過於強硬。
+          </div>
+        </div>
+      </div>
+      <div class="struct-item" style="background:#FDEDEC" onclick="toggleStruct(1,this)">
+        <div class="struct-label" style="color:#C0392B">第二段<br>（納客之利）</div>
+        <div class="struct-content">
+          <strong style="color:#C0392B">正面論證：援引四君史例</strong><br>
+          穆公、孝公、惠王、昭王皆因重用客卿而成就霸業。
+          <div class="struct-detail" id="sd1">
+            <strong>策略：</strong>以秦國自身歷史為例，說明客卿對秦有功。秦王無法否認自己祖先的成就，也就無法否認客卿的價值。<br><br>
+            <strong>結論：</strong>「此四君者，皆以客之功。由此觀之，客何負於秦哉？」
+          </div>
+        </div>
+      </div>
+      <div class="struct-item" style="background:#FEF9E7" onclick="toggleStruct(2,this)">
+        <div class="struct-label" style="color:#B7950B">第三段<br>（對比說理）</div>
+        <div class="struct-content">
+          <strong style="color:#B7950B">類比反問：愛物不愛人</strong><br>
+          秦王喜愛異國珠寶、美女、音樂，為何獨獨不用異國人才？
+          <div class="struct-detail" id="sd2">
+            <strong>策略：</strong>用秦王自己的行為來反將一軍——他享用的一切幾乎都不產於秦，卻唯獨對人才要求「必秦國之所生然後可」，前後矛盾。<br><br>
+            <strong>結論：</strong>「所重者在乎色樂珠玉，而所輕者在乎民人也！此非所以跨海內、制諸侯之術也。」
+          </div>
+        </div>
+      </div>
+      <div class="struct-item" style="background:#D5F5E3" onclick="toggleStruct(3,this)">
+        <div class="struct-label" style="color:#1E8449">第四段<br>（逐客之害）</div>
+        <div class="struct-content">
+          <strong style="color:#1E8449">反面論證：比喻警示</strong><br>
+          泰山不讓土壤、河海不擇細流→王者不卻眾庶；逐客是「藉寇兵而齎盜糧」。
+          <div class="struct-detail" id="sd3">
+            <strong>策略：</strong>先以自然比喻說明廣納人才的道理，再以強烈的警語「藉寇兵而齎盜糧」點出逐客的嚴重後果——等於在幫助敵國。<br><br>
+            <strong>結論：</strong>天下人才將不敢入秦，「裹足不入秦」。
+          </div>
+        </div>
+      </div>
+      <div class="struct-item" style="background:#F5EEF8" onclick="toggleStruct(4,this)">
+        <div class="struct-label" style="color:#6C3483">結尾<br>（第五段）</div>
+        <div class="struct-content">
+          <strong style="color:#6C3483">總結：國危警示</strong><br>
+          物不產於秦可寶者多；士不產於秦願忠者眾。逐客將使國家危亡。
+          <div class="struct-detail" id="sd4">
+            <strong>策略：</strong>以最強烈的危機感收束，讓秦王不得不重視。<br><br>
+            <strong>原文：</strong>「今逐客以資敵國，損民以益讎，內自虛而外樹怨於諸侯，求國無危，不可得也。」
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title ct-red">本文論證方式總整理</div>
+    <table style="width:100%;border-collapse:collapse;font-size:0.92em;">
+      <tr style="background:#FADBD8;">
+        <th style="padding:10px;border:1px solid #F1948A;text-align:left;color:#C0392B;">論證技巧</th>
+        <th style="padding:10px;border:1px solid #F1948A;text-align:left;color:#C0392B;">課文例子</th>
+        <th style="padding:10px;border:1px solid #F1948A;text-align:left;color:#C0392B;">效果</th>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#FEF9F9;">援引史實</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">四君重用客卿的具體功績</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">讓秦王無法否認，論據充分</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#FEF9F9;">類比對比</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">秦王愛異國珠寶卻不用異國人才</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">讓秦王看見自己的矛盾，自我反省</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#FEF9F9;">比喻說理</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">泰山不讓土壤、藉寇兵而齎盜糧</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">化抽象為具體，形象生動有力</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#FEF9F9;">排比對偶</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">列舉四君功業、列舉珍寶美物</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">氣勢豐沛，節奏鮮明，說服力強</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════ Tab 2：四君配對 ════ -->
+<div id="tab-match" class="tab-content">
+  <div class="card">
+    <div class="card-title ct-blue">四君配對——點左欄秦君，再點右欄功績來配對</div>
+    <p style="font-size:0.9em;color:#5D6D7E;margin-bottom:18px;">先點左欄的秦君，再點右欄的客卿功績。</p>
+    <div class="match-grid">
+      <div><h4>秦君</h4><div id="ml-kings"></div></div>
+      <div><h4>客卿功績</h4><div id="mr-deeds"></div></div>
+    </div>
+    <div class="match-status" id="match-status"></div>
+    <button class="reset-sm" onclick="resetMatch()">重新配對</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title ct-green">四君一覽</div>
+    <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+      <tr style="background:#D5F5E3;">
+        <th style="padding:8px;border:1px solid #A9DFBF;color:#1E8449;">秦君</th>
+        <th style="padding:8px;border:1px solid #A9DFBF;color:#1E8449;">重用客卿</th>
+        <th style="padding:8px;border:1px solid #A9DFBF;color:#1E8449;">客卿來自</th>
+        <th style="padding:8px;border:1px solid #A9DFBF;color:#1E8449;">主要成就</th>
+      </tr>
+      <tr>
+        <td style="padding:8px;border:1px solid #D5D8DC;background:#EAFAF1;font-weight:bold;">繆（穆）公</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">由余、百里奚、蹇叔、丕豹、公孫支</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">戎、宛、宋、晉</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">并國二十，遂霸西戎</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;border:1px solid #D5D8DC;font-weight:bold;">孝公</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">商鞅</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">衛國</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">移風易俗，民以殷盛，國以富強</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;border:1px solid #D5D8DC;background:#EAFAF1;font-weight:bold;">惠王</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">張儀</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">魏國</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">拔三川，西并巴蜀，散六國之從</td>
+      </tr>
+      <tr>
+        <td style="padding:8px;border:1px solid #D5D8DC;font-weight:bold;">昭王</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">范雎</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">魏國</td>
+        <td style="padding:8px;border:1px solid #D5D8DC;">廢穰侯，彊公室，蠶食諸侯，成帝業</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════ Tab 3：比喻判斷 ════ -->
+<div id="tab-meta" class="tab-content">
+  <div class="card">
+    <div class="card-title ct-orange">比喻判斷——這個比喻在說什麼？</div>
+    <p style="font-size:0.9em;color:#5D6D7E;margin-bottom:18px;">讀完比喻，選出正確的意涵。</p>
+    <div id="meta-container"></div>
+  </div>
+</div>
+
+<!-- ════ Tab 4：選擇題 ════ -->
+<div id="tab-quiz" class="tab-content">
+  <div class="card">
+    <div class="card-title ct-purple">選擇題——全部作答後按送出</div>
+    <div id="quiz-container"></div>
+    <button class="submit-btn" id="quiz-submit" onclick="submitQuiz()">送出答案</button>
+    <button class="reset-btn" id="quiz-reset" onclick="resetQuiz()">重新作答</button>
+    <div class="score-box" id="quiz-score"></div>
+  </div>
+</div>
+
+<!-- ════ Tab 5：重要句子 ════ -->
+<div id="tab-keys" class="tab-content">
+  <div class="card">
+    <div class="card-title ct-orange">重要句子解析</div>
+    <p style="font-size:0.9em;color:#5D6D7E;margin-bottom:18px;">考試最常出現的關鍵句，搭配白話意思。</p>
+
+    <div class="key-sentence">
+      <div class="ks-original">① 臣聞吏議逐客，竊以為過矣。</div>
+      <div class="ks-meaning">白話：我聽說官員們議論要驅逐客卿，私下認為這是錯誤的決策。</div>
+      <div class="ks-note">→ 全文核心論點，開門見山點明立場</div>
+    </div>
+
+    <div class="key-sentence">
+      <div class="ks-original">② 此四君者，皆以客之功。由此觀之，客何負於秦哉？</div>
+      <div class="ks-meaning">白話：這四位君主，都是靠著客卿的功勞。由此看來，客卿哪裡對不起秦國呢？</div>
+      <div class="ks-note">→ 援引史例後的總結，以反問加強語氣</div>
+    </div>
+
+    <div class="key-sentence">
+      <div class="ks-original">③ 向使四君卻客而不內，疏士而不用，是使國無富利之實，而秦無彊大之名也。</div>
+      <div class="ks-meaning">白話：假使這四位君主拒絕客卿而不接納，疏遠人才而不任用，那麼秦國就不會有富強的實力，也不會有強大的名聲。</div>
+      <div class="ks-note">→ 假設反推，說明納客的重要性</div>
+    </div>
+
+    <div class="key-sentence">
+      <div class="ks-original">④ 泰山不讓土壤，故能成其大；河海不擇細流，故能就其深；王者不卻眾庶，故能明其德。</div>
+      <div class="ks-meaning">白話：泰山不拒絕任何土石，才能高大；河海不嫌棄任何細流，才能深廣；王者不拒絕任何人民，才能彰顯德行。</div>
+      <div class="ks-note">→ 排比比喻，說明廣納人才的道理；是全文最重要的比喻句</div>
+    </div>
+
+    <div class="key-sentence">
+      <div class="ks-original">⑤ 此所謂藉寇兵而齎盜糧者也。</div>
+      <div class="ks-meaning">白話：這就是所謂的把武器借給敵人、把糧食送給盜賊啊。</div>
+      <div class="ks-note">→ 比喻逐客等於資助敵國，語氣最為強烈</div>
+    </div>
+
+    <div class="key-sentence">
+      <div class="ks-original">⑥ 今逐客以資敵國，損民以益讎，內自虛而外樹怨於諸侯，求國無危，不可得也。</div>
+      <div class="ks-meaning">白話：現在驅逐客卿來幫助敵國，損失人民來讓仇敵得益，對內削弱自己對外又與諸侯結怨，想要國家不危亡，是不可能的。</div>
+      <div class="ks-note">→ 結尾總結，以最強烈的危機感警示秦王</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Tab ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── 架構展開 ──
+function toggleStruct(i, el) {
+  const detail = document.getElementById('sd' + i);
+  const isOpen = detail.classList.contains('show');
+  document.querySelectorAll('.struct-detail').forEach(d => d.classList.remove('show'));
+  document.querySelectorAll('.struct-item').forEach(d => d.classList.remove('active-item'));
+  if (!isOpen) { detail.classList.add('show'); el.classList.add('active-item'); }
+}
+
+// ── 四君配對 ──
+const kings = [
+  { id:'k1', name:'秦繆（穆）公' },
+  { id:'k2', name:'秦孝公' },
+  { id:'k3', name:'秦惠王' },
+  { id:'k4', name:'秦昭王' },
+];
+const deeds = [
+  { id:'d1', belongsTo:'k1', text:'用由余等五人，并國二十，遂霸西戎' },
+  { id:'d2', belongsTo:'k2', text:'用商鞅，移風易俗，民以殷盛，國以富強' },
+  { id:'d3', belongsTo:'k3', text:'用張儀，拔三川，西并巴蜀，散六國之從' },
+  { id:'d4', belongsTo:'k4', text:'用范雎，廢穰侯，彊公室，蠶食諸侯，成帝業' },
+];
+
+let matchSel = null;
+let matchDone = {};
+let shuffledDeeds = [];
+
+function buildMatch() {
+  matchSel = null; matchDone = {};
+  shuffledDeeds = [...deeds].sort(() => Math.random() - 0.5);
+  const mlEl = document.getElementById('ml-kings');
+  const mrEl = document.getElementById('mr-deeds');
+  mlEl.innerHTML = ''; mrEl.innerHTML = '';
+  document.getElementById('match-status').textContent = '';
+
+  kings.forEach(k => {
+    const el = document.createElement('div');
+    el.className = 'match-item ml';
+    el.textContent = k.name;
+    el.dataset.id = k.id;
+    el.onclick = () => selectKing(k.id, el);
+    mlEl.appendChild(el);
+  });
+  shuffledDeeds.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'match-item mr';
+    el.textContent = d.text;
+    el.dataset.id = d.id;
+    el.onclick = () => selectDeed(d.id, d.belongsTo, el);
+    mrEl.appendChild(el);
+  });
+}
+
+function selectKing(id, el) {
+  if (matchDone['K'+id]) return;
+  document.querySelectorAll('.ml').forEach(e => e.classList.remove('ml-sel'));
+  matchSel = id;
+  el.classList.add('ml-sel');
+}
+
+function selectDeed(did, belongsTo, el) {
+  if (!matchSel || matchDone['K'+matchSel]) return;
+  if (matchDone['D'+did]) return;
+  if (matchSel === belongsTo) {
+    // 正確
+    document.querySelector(`[data-id="${matchSel}"]`).classList.remove('ml-sel');
+    document.querySelector(`[data-id="${matchSel}"]`).classList.add('mc-ok');
+    el.classList.add('mc-ok');
+    matchDone['K'+matchSel] = true;
+    matchDone['D'+did] = true;
+    const done = Object.keys(matchDone).length / 2;
+    document.getElementById('match-status').textContent =
+      done === kings.length ? '🎉 全部配對正確！' : `已完成 ${done} / ${kings.length} 對`;
+  } else {
+    // 錯誤
+    document.querySelector(`[data-id="${matchSel}"]`).classList.add('mc-ng');
+    el.classList.add('mc-ng');
+    setTimeout(() => {
+      document.querySelector(`[data-id="${matchSel}"]`).classList.remove('mc-ng','ml-sel');
+      el.classList.remove('mc-ng');
+      document.getElementById('match-status').textContent = '';
+    }, 700);
+    document.getElementById('match-status').textContent = '❌ 再想想看！';
+  }
+  matchSel = null;
+}
+
+function resetMatch() { buildMatch(); }
+
+// ── 比喻判斷 ──
+const metaData = [
+  {
+    text: '「泰山不讓土壤，故能成其大；河海不擇細流，故能就其深」',
+    opts: ['王者應廣納人才，不因出身而排斥', '秦國地形險要，易守難攻', '人才必須來自大國才有用'],
+    ans: 0,
+    exp: '泰山因為不拒絕任何土石才能高大、河海因為不嫌棄任何細流才能深廣，比喻王者應廣納各地人才，才能成就大業。'
+  },
+  {
+    text: '「此所謂藉寇兵而齎盜糧者也」',
+    opts: ['秦國應該向敵國學習軍事策略', '逐客等於資助敵國，削弱自己', '秦國糧草不足，需向外借糧'],
+    ans: 1,
+    exp: '把武器借給敵人、把糧食送給盜賊，比喻逐客等於把人才送給其他諸侯國，反而幫助了敵人。'
+  },
+  {
+    text: '秦王喜愛崑山之玉、隨和之寶、太阿之劍……「此數寶者，秦不生一焉，而陛下說之」',
+    opts: ['說明秦國物產貧乏，需要向外採購', '說明秦王只重視物質享受', '以秦王愛異國珍寶反問：為何獨不用異國人才？'],
+    ans: 2,
+    exp: '李斯列舉秦王喜愛的珠寶、美女、音樂都不產於秦，目的是反問：秦王對物品不要求「必秦國之所生」，為何對人才卻要這樣要求？暗示秦王的邏輯自相矛盾。'
+  },
+  {
+    text: '「今棄黔首以資敵國，卻賓客以業諸侯，使天下之士，退而不敢西向，裹足不入秦」',
+    opts: ['諸侯各國人才眾多，秦國不缺人才', '逐客將使天下人才不敢入秦，秦國孤立無援', '秦國西邊地形崎嶇，人才難以到達'],
+    ans: 1,
+    exp: '拋棄百姓資助敵國、驅逐客卿讓諸侯成就功業，結果天下人才「裹足不入秦」——比喻逐客政策將使秦國陷入人才荒，失去統一天下的機會。'
+  },
+  {
+    text: '「夫物不產於秦，可寶者多；士不產於秦，而願忠者眾。」',
+    opts: ['秦國土地貧瘠，物產不豐', '不是秦國出產的東西也可以是珍寶，不是秦國人也可以效忠秦國', '只有秦國本地人才最值得信賴'],
+    ans: 1,
+    exp: '這是全文的最終結論——物不產於秦可以是珍寶，人不產於秦也可以忠心效忠。逐客的理由根本不成立，反而會使秦國自我削弱。'
+  },
+];
+
+function buildMeta() {
+  const container = document.getElementById('meta-container');
+  container.innerHTML = '';
+  metaData.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'metaphor-q';
+    div.innerHTML = `
+      <div class="metaphor-text">${i+1}. 這個句子的意涵是什麼？</div>
+      <div class="metaphor-quote">${m.text}</div>
+      <div class="meta-opts">${m.opts.map((o,j)=>`<button class="meta-btn" onclick="checkMeta(${i},${j},this)">${o}</button>`).join('')}</div>
+      <div class="meta-fb" id="mfb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function checkMeta(qi, chosen, btn) {
+  const q = metaData[qi];
+  const container = btn.closest('.metaphor-q');
+  container.querySelectorAll('.meta-btn').forEach(b => b.disabled = true);
+  if (chosen === q.ans) {
+    btn.classList.add('mb-ok');
+    const fb = document.getElementById('mfb-'+qi);
+    fb.className = 'meta-fb show fb-ok';
+    fb.innerHTML = '✅ ' + q.exp;
+  } else {
+    btn.classList.add('mb-ng');
+    container.querySelectorAll('.meta-btn')[q.ans].classList.add('mb-ok');
+    const fb = document.getElementById('mfb-'+qi);
+    fb.className = 'meta-fb show fb-ng';
+    fb.innerHTML = '❌ ' + q.exp;
+  }
+}
+
+// ── 選擇題 ──
+const quizData = [
+  { q:'李斯寫《諫逐客書》的直接原因是什麼？', opts:['A　李斯想自薦擔任秦相', 'B　韓國派鄭國到秦修渠耗損國力，事跡敗露後秦下令逐客', 'C　秦王認為外國人不可信任，主動下令逐客', 'D　李斯和秦宗室大臣發生衝突'], ans:'B', exp:'韓國派鄭國到秦國修築灌溉大渠，目的是耗損秦的國力。此意圖被發現後，秦宗室大臣進言將所有客卿驅逐出境，李斯也在被逐之列，於是上書力諫。' },
+  { q:'李斯在第二段援引四君史例，主要目的是什麼？', opts:['A　誇耀自己的學識淵博', 'B　說明秦國歷史上靠外來人才成就霸業，逐客是否定自己的成功', 'C　說明秦王的祖先都犯了用人失當的錯誤', 'D　要求秦王向這四位君主學習節儉'], ans:'B', exp:'李斯列舉穆公、孝公、惠王、昭王皆因重用客卿而成就功業，最後結論「此四君者，皆以客之功」，論證納客之利，讓秦王無法否認。' },
+  { q:'「泰山不讓土壤，故能成其大；河海不擇細流，故能就其深」這個比喻，用來說明什麼道理？', opts:['A　秦國地理位置的優勢', 'B　水利工程對農業的重要性', 'C　王者應廣納各地人才，不應因出身排斥', 'D　秦國應效仿自然，順其自然發展'], ans:'C', exp:'泰山因不拒絕土石才高大，河海因不嫌棄細流才深廣，由此比喻王者應廣納人才，不卻眾庶，才能彰顯德行、成就大業。' },
+  { q:'李斯在第三段列舉秦王喜愛異國珠寶、美女、音樂，用意是什麼？', opts:['A　說明秦王奢侈無度，應該節省開支', 'B　說明異國的物品比秦國的好', 'C　以秦王的行為矛盾反問：為何對物品不限秦產，對人才卻要限制出身', 'D　建議秦王多向異國購買物品'], ans:'C', exp:'李斯以秦王享用的一切幾乎都不產於秦，但他照樣喜愛，反問為何獨獨對人才要求「必秦國之所生然後可」——前後矛盾，讓秦王自我反省。' },
+  { q:'「藉寇兵而齎盜糧」這個比喻，意思是什麼？', opts:['A　秦國糧草不足，需向鄰國借糧', 'B　逐客等於把人才送給敵國，資助了競爭對手', 'C　客卿都是敵國派來的間諜', 'D　秦國應該主動與他國結盟'], ans:'B', exp:'「藉寇兵而齎盜糧」意指把武器借給敵人、把糧食送給盜賊，比喻逐客等於把人才推給其他諸侯國，反而幫助了敵人，削弱了秦國自己。' },
+  { q:'本文在說服策略上最大的特點是什麼？', opts:['A　以威脅秦王的方式要求收回成命', 'B　以柔和的讚美讓秦王心情愉快', 'C　援引史實、類比對比、比喻說理並用，從正反兩面論證，氣勢豐沛', 'D　只用一個比喻反覆強調同一個論點'], ans:'C', exp:'本文綜合運用援引史實（四君）、類比對比（愛物不愛人）、比喻說理（泰山河海、藉寇兵）等多種論證手法，同時論納客之利與逐客之害，全篇排比對偶，氣勢豐沛，是議論文典範。' },
+  { q:'「向使四君卻客而不內，疏士而不用」，句中「向使」的意思是什麼？', opts:['A　從前的情況', 'B　假使、如果（表假設）', 'C　朝著某個方向', 'D　命令某人去做'], ans:'B', exp:'「向使」是「假使」「如果」的意思，表示假設。這句話的意思是：假使這四位君主拒絕客卿而不接納，疏遠人才而不任用，那麼秦國就不會有富強的實力與名聲。' },
+  { q:'本文最後一段的功能是什麼？', opts:['A　重新列舉四君的功績作為補充', 'B　以最強烈的危機感總結，警示逐客將使秦國危亡', 'C　請求秦王給李斯另一個官職', 'D　說明客卿應該感謝秦王的恩典'], ans:'B', exp:'最後一段總結全文：「今逐客以資敵國，損民以益讎，內自虛而外樹怨於諸侯，求國無危，不可得也。」以最強烈的危機感警示秦王，是情感最激昂的收尾。' },
+];
+
+const quizAnswers = {};
+
+function buildQuiz() {
+  Object.keys(quizAnswers).forEach(k => delete quizAnswers[k]);
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `<div class="quiz-text">${i+1}.　${q.q}</div>
+      <div class="quiz-opts">${q.opts.map((o,j)=>`<button class="quiz-btn" onclick="selQ(${i},'${o[0]}',this)">${o}</button>`).join('')}</div>
+      <div class="quiz-fb" id="qfb-${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function selQ(qi, val, btn) {
+  const qs = document.querySelectorAll('.quiz-q')[qi];
+  qs.querySelectorAll('.quiz-btn').forEach(b => b.classList.remove('qb-sel'));
+  btn.classList.add('qb-sel');
+  quizAnswers[qi] = val;
+}
+
+function submitQuiz() {
+  let correct = 0;
+  quizData.forEach((q, i) => {
+    const qs = document.querySelectorAll('.quiz-q')[i];
+    const fb = document.getElementById('qfb-'+i);
+    const chosen = quizAnswers[i];
+    qs.querySelectorAll('.quiz-btn').forEach(b => {
+      b.disabled = true; b.classList.remove('qb-sel');
+      if (b.textContent[0] === q.ans) b.classList.add('qb-ok');
+      else if (b.textContent[0] === chosen && b.textContent[0] !== q.ans) b.classList.add('qb-ng');
+    });
+    if (chosen === q.ans) {
+      correct++;
+      fb.className = 'quiz-fb show fb-ok';
+      fb.innerHTML = '✅ ' + q.exp;
+    } else if (chosen) {
+      fb.className = 'quiz-fb show fb-ng';
+      fb.innerHTML = `❌ 正確答案是 ${q.ans}。${q.exp}`;
+    } else {
+      fb.className = 'quiz-fb show fb-ng';
+      fb.innerHTML = `⚠️ 未作答。正確答案是 ${q.ans}。${q.exp}`;
+    }
+  });
+  document.getElementById('quiz-submit').style.display = 'none';
+  document.getElementById('quiz-reset').style.display = 'block';
+  const sb = document.getElementById('quiz-score');
+  sb.className = 'score-box show';
+  const pct = Math.round(correct/quizData.length*100);
+  sb.innerHTML = `共答對 ${correct} / ${quizData.length} 題（${pct}%）${pct>=80?'　🎉 太棒了！':pct>=60?'　👍 不錯！':'　📖 繼續加油！'}`;
+}
+
+function resetQuiz() {
+  buildQuiz();
+  document.getElementById('quiz-submit').style.display = 'block';
+  document.getElementById('quiz-reset').style.display = 'none';
+  document.getElementById('quiz-score').className = 'score-box';
+}
+
+// 初始化
+buildMatch();
+buildMeta();
+buildQuiz();
+</script>
+</body>
+</html>

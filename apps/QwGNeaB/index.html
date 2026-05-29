@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G10 L7 單字分組練習</title>
+<style>
+:root {
+  --teal:      #1a6b5f;
+  --teal-mid:  #2a9d8f;
+  --teal-light:#52c9bb;
+  --teal-pale: #e0f5f3;
+  --teal-bg:   #f0faf9;
+  --green:     #57cc99;
+  --amber:     #c9a227;
+  --coral:     #e76f51;
+  --gray:      #6b8f8c;
+  --dark:      #1a2e2c;
+  --mid:       #3a5552;
+  --light:     #7a9896;
+  --white:     #ffffff;
+  --shadow:    0 2px 10px rgba(26,107,95,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--teal-bg);color:var(--dark);min-height:100vh;}
+
+header{background:var(--teal);padding:20px 18px 16px;text-align:center;}
+header h1{color:#fff;font-size:20px;font-weight:700;margin-bottom:4px;}
+header p{color:rgba(255,255,255,0.75);font-size:13px;}
+
+.progress-wrap{background:var(--white);padding:12px 18px;border-bottom:1px solid var(--teal-pale);}
+.prog-label{font-size:12px;color:var(--light);margin-bottom:6px;display:flex;justify-content:space-between;}
+.prog-bar{height:6px;background:#d0ecea;border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--teal-mid);border-radius:99px;transition:width 0.4s;}
+
+.group-tabs{display:flex;overflow-x:auto;background:var(--white);border-bottom:1px solid var(--teal-pale);}
+.group-tab{flex:0 0 auto;padding:10px 18px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;}
+.group-tab.active{color:var(--teal);border-bottom-color:var(--teal-mid);background:var(--teal-pale);}
+.group-tab.locked{color:#ccc;cursor:not-allowed;}
+
+main{padding:16px 14px 56px;max-width:700px;margin:0 auto;}
+
+.phase-bar{display:flex;gap:6px;margin-bottom:16px;}
+.phase-step{flex:1;padding:8px 4px;border-radius:8px;text-align:center;font-size:12px;font-weight:700;}
+.phase-step.done{background:var(--green);color:#fff;}
+.phase-step.current{background:var(--teal);color:#fff;}
+.phase-step.pending{background:#e8f5f4;color:var(--gray);}
+
+/* Learn cards */
+.learn-card{background:var(--white);border-radius:14px;padding:16px 16px 12px;margin-bottom:12px;box-shadow:var(--shadow);border-left:4px solid var(--teal-light);}
+.card-top{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.card-en{font-size:20px;font-weight:700;color:var(--teal);font-family:'Courier New',monospace;}
+.card-ph{font-size:12px;color:var(--light);}
+.pos-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.pos-n{background:#ddf0ed;color:var(--teal);}
+.pos-v{background:#fdefd0;color:#7a5000;}
+.pos-adj{background:#e0f0d0;color:#3a6a00;}
+.pos-adv{background:#fce0d8;color:#7a2000;}
+.card-zh{font-size:18px;font-weight:700;margin-bottom:6px;}
+.card-colloc{font-size:13px;color:var(--teal-mid);background:var(--teal-pale);display:inline-block;padding:2px 10px;border-radius:20px;margin-bottom:6px;}
+.card-ex{font-size:13px;color:var(--light);font-style:italic;}
+.card-ex b{color:var(--teal);font-style:normal;}
+
+/* MCQ */
+.mcq-block{margin-bottom:14px;}
+.mcq-q{background:var(--white);border-radius:12px;padding:14px 16px 10px;box-shadow:var(--shadow);}
+.mcq-qtext{font-size:15px;font-weight:600;margin-bottom:10px;}
+.mcq-options{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.mcq-opt{padding:10px 12px;border:2px solid var(--teal-pale);border-radius:10px;background:var(--white);font-family:inherit;font-size:14px;color:var(--dark);cursor:pointer;transition:all 0.15s;text-align:left;}
+.mcq-opt:hover:not(:disabled){background:var(--teal-pale);border-color:var(--teal-light);}
+.mcq-opt.correct{background:#d4f5e5;border-color:#57cc99;color:#1a5c35;}
+.mcq-opt.wrong{background:#fde4de;border-color:var(--coral);color:#7a2000;}
+.mcq-opt:disabled{cursor:default;}
+.feedback{font-size:13px;margin-top:6px;padding:5px 10px;border-radius:7px;display:none;}
+.feedback.ok{background:#d4f5e5;color:#1a5c35;display:block;}
+.feedback.ng{background:#fde4de;color:#7a2000;display:block;}
+
+/* Matching */
+.match-wrap{background:var(--white);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px;}
+.match-instruct{font-size:13px;color:var(--light);margin-bottom:14px;text-align:center;}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;}
+.match-col-label{font-size:12px;font-weight:700;color:var(--teal);text-align:center;padding:4px 0 8px;letter-spacing:1px;}
+.match-col{display:flex;flex-direction:column;gap:7px;}
+.match-item{padding:10px 12px;border:2px solid var(--teal-pale);border-radius:10px;background:var(--white);font-family:inherit;font-size:14px;color:var(--dark);cursor:pointer;transition:all 0.15s;text-align:center;user-select:none;}
+.match-item:hover:not(.matched):not(.locked){background:var(--teal-pale);border-color:var(--teal-light);}
+.match-item.selected{background:var(--teal);color:#fff;border-color:var(--teal);}
+.match-item.matched{background:#d4f5e5;border-color:#57cc99;color:#1a5c35;cursor:default;}
+.match-item.wrong-flash{background:#fde4de;border-color:var(--coral);color:#7a2000;}
+.match-item.locked{cursor:default;}
+.match-score{text-align:center;font-size:14px;font-weight:700;color:var(--teal);margin-top:12px;min-height:22px;}
+
+/* Buttons */
+.next-btn,.unlock-btn{display:block;width:100%;padding:14px;margin-top:16px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.next-btn:hover,.unlock-btn:hover{background:var(--teal-mid);}
+.next-btn:disabled{background:#ccc;cursor:not-allowed;}
+
+.score-wrap{text-align:center;padding:28px 0 12px;}
+.score-circle{width:90px;height:90px;border-radius:50%;border:5px solid var(--teal-mid);display:inline-flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:var(--teal);margin-bottom:10px;}
+.score-msg{font-size:16px;font-weight:600;color:var(--mid);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>L7 TED Talks · 單字分組練習</h1>
+  <p>共 21 個單字 · 分 4 組 · 每組三關</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="prog-label">
+    <span>整體進度</span>
+    <span id="prog-text">0 / 4 組完成</span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="group-tabs" id="group-tabs">
+  <button class="group-tab active" id="tab-0">組 1：#1–5</button>
+  <button class="group-tab locked" id="tab-1">組 2：#6–10 🔒</button>
+  <button class="group-tab locked" id="tab-2">組 3：#11–16 🔒</button>
+  <button class="group-tab locked" id="tab-3">組 4：#17–21 🔒</button>
+</div>
+
+<main id="main-area"></main>
+
+<script>
+const W=[
+  {en:'seek',ph:'[siːk]',pos:'vt.',zh:'尋求；尋找',col:'seek help',ex:'She <b>seeks</b> help.',ans:['seek','sought','seeks']},
+  {en:'audience',ph:'[ˈɔːdiəns]',pos:'n.',zh:'觀眾；聽眾',col:'audience of…',ex:'The <b>audience</b> claps.',ans:['audience']},
+  {en:'series',ph:'[ˈsɪriz]',pos:'n.',zh:'系列',col:'a series of…',ex:'a <b>series</b> of books',ans:['series']},
+  {en:'technology',ph:'[tɛkˈnɑlədʒi]',pos:'n.',zh:'科技',col:'medical technology',ex:'New <b>technology</b> helps us.',ans:['technology']},
+  {en:'worth',ph:'[wɜːrθ]',pos:'adj.',zh:'值得……的',col:'worth + V-ing',ex:'This film is <b>worth</b> watching.',ans:['worth']},
+  {en:'foundation',ph:'[faʊnˈdeʃən]',pos:'n.',zh:'基金會；基礎',col:'set up a foundation',ex:'He set up a <b>foundation</b>.',ans:['foundation']},
+  {en:'conference',ph:'[ˈkɑnfərəns]',pos:'n.',zh:'會議；研討會',col:'attend a conference',ex:'We attend a <b>conference</b>.',ans:['conference']},
+  {en:'increasingly',ph:'[ɪnˈkrisiŋli]',pos:'adv.',zh:'愈來愈……',col:'反義：decreasingly',ex:'It gets <b>increasingly</b> hot.',ans:['increasingly']},
+  {en:'organizer',ph:'[ˈɔrgənaɪzər]',pos:'n.',zh:'組織者；籌辦者',col:'organize / organization',ex:'She is the <b>organizer</b>.',ans:['organizer']},
+  {en:'broad',ph:'[brɔːd]',pos:'adj.',zh:'廣泛的；寬闊的',col:'a broad range of',ex:'He has <b>broad</b> knowledge.',ans:['broad']},
+  {en:'range',ph:'[reɪndʒ]',pos:'n.',zh:'種類；範圍',col:'a range of…',ex:'a <b>range</b> of topics',ans:['range']},
+  {en:'field',ph:'[fiːld]',pos:'n.',zh:'領域；田地',col:'in the field of',ex:'She works in the <b>field</b> of art.',ans:['field']},
+  {en:'philosophy',ph:'[fəˈlɑsəfi]',pos:'n.',zh:'哲學',col:'philosopher',ex:'She studies <b>philosophy</b>.',ans:['philosophy']},
+  {en:'launch',ph:'[lɔːntʃ]',pos:'vt.',zh:'發行；發起；發射',col:'launch a product',ex:'They <b>launched</b> a new app.',ans:['launch','launched']},
+  {en:'collection',ph:'[kəˈlɛkʃən]',pos:'n.',zh:'一批；收藏品',col:'a collection of…',ex:'a <b>collection</b> of stamps',ans:['collection']},
+  {en:'numerous',ph:'[ˈnjuːmərəs]',pos:'adj.',zh:'許多的',col:'同：many',ex:'There are <b>numerous</b> books.',ans:['numerous']},
+  {en:'celebrity',ph:'[səˈlɛbrəti]',pos:'n.',zh:'名人',col:'international celebrity',ex:'He is a <b>celebrity</b>.',ans:['celebrity']},
+  {en:'fascination',ph:'[ˌfæsnˈeʃən]',pos:'n.',zh:'著迷；吸引力',col:'in fascination / fascinate',ex:'He watched in <b>fascination</b>.',ans:['fascination']},
+  {en:'fiction',ph:'[ˈfɪkʃən]',pos:'n.',zh:'小說',col:'science fiction / fictional',ex:'I love science <b>fiction</b>.',ans:['fiction']},
+  {en:'discuss',ph:'[dɪˈskʌs]',pos:'vt.',zh:'探討；討論（不加 about！）',col:'discuss sth. in detail',ex:'We <b>discuss</b> the plan.',ans:['discuss','discussed','discusses']},
+  {en:'method',ph:'[ˈmɛθəd]',pos:'n.',zh:'方式；方法',col:'adopt a method of',ex:'This is a good <b>method</b>.',ans:['method']},
+];
+
+const GROUPS=[
+  {label:'組 1：#1–5',  idx:[0,1,2,3,4]},
+  {label:'組 2：#6–10', idx:[5,6,7,8,9]},
+  {label:'組 3：#11–16',idx:[10,11,12,13,14,15]},
+  {label:'組 4：#17–21',idx:[16,17,18,19,20]},
+];
+
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function posClass(pos){return pos.startsWith('n')?'pos-n':pos.startsWith('v')?'pos-v':pos.startsWith('adj')?'pos-adj':'pos-adv';}
+
+const S={group:0,phase:0,done:[false,false,false,false],matchState:[null,null,null,null],mcqAnswered:[0,0,0,0]};
+
+// init tabs
+document.querySelectorAll('.group-tab').forEach((t,i)=>{
+  t.addEventListener('click',()=>{if(!t.classList.contains('locked'))setGroup(i);});
+});
+
+function setGroup(g){
+  S.group=g; S.phase=S.done[g]?3:0;
+  document.querySelectorAll('.group-tab').forEach((t,i)=>t.classList.toggle('active',i===g));
+  render();
+}
+
+function setPhase(p){S.phase=p;render();}
+
+function updateProg(){
+  const d=S.done.filter(Boolean).length;
+  document.getElementById('prog-text').textContent=`${d} / 4 組完成`;
+  document.getElementById('prog-fill').style.width=`${d*25}%`;
+}
+
+function phaseBar(cur){
+  return['📖 學習','❓ 選擇題','🔗 配對'].map((s,i)=>{
+    const c=i<cur?'done':i===cur?'current':'pending';
+    return`<div class="phase-step ${c}">${i<cur?'✓ ':''}${s}</div>`;
+  }).join('');
+}
+
+function render(){
+  const g=S.group,p=S.phase,area=document.getElementById('main-area');
+  const gWords=GROUPS[g].idx.map(i=>W[i]);
+  if(p===0) renderLearn(g,gWords,area);
+  else if(p===1) renderMcq(g,gWords,area);
+  else if(p===2) renderMatch(g,gWords,area);
+  else renderDone(g,area);
+}
+
+// ── LEARN ──
+function renderLearn(g,gWords,area){
+  const cards=gWords.map((w,i)=>`
+    <div class="learn-card">
+      <div class="card-top">
+        <span class="card-en">${w.en}</span>
+        <span class="card-ph">${w.ph}</span>
+        <span class="pos-badge ${posClass(w.pos)}">${w.pos}</span>
+      </div>
+      <div class="card-zh">${w.zh}</div>
+      <div class="card-colloc">搭配：${w.col}</div><br>
+      <div class="card-ex">例：${w.ex}</div>
+    </div>`).join('');
+  area.innerHTML=`<div class="phase-bar">${phaseBar(0)}</div>${cards}
+    <button class="next-btn" onclick="setPhase(1)">記住了！去做選擇題 →</button>`;
+}
+
+// ── MCQ ──
+function renderMcq(g,gWords,area){
+  const total=gWords.length;
+  // build distractor pool from same group
+  const items=gWords.map((w,qi)=>{
+    const pool=shuf(gWords.filter((_,j)=>j!==qi)).slice(0,3).map(d=>d.zh);
+    const opts=shuf([w.zh,...pool]);
+    const btns=opts.map(o=>`<button class="mcq-opt" onclick="pickMcq(this,${g},${qi},'${o.replace(/['"]/g,'')}')">${o}</button>`).join('');
+    return`<div class="mcq-block" id="mq${g}_${qi}">
+      <div class="mcq-q">
+        <div class="mcq-qtext">Q${qi+1}. "${w.en}" 的中文是？</div>
+        <div class="mcq-options">${btns}</div>
+        <div class="feedback" id="mfb${g}_${qi}"></div>
+      </div></div>`;
+  }).join('');
+  area.innerHTML=`<div class="phase-bar">${phaseBar(1)}</div>${items}
+    <button class="next-btn" id="toFill" onclick="setPhase(2)" disabled>全部作答後繼續 →</button>`;
+  S.mcqAnswered[g]=0;
+}
+
+function pickMcq(btn,g,qi,chosen){
+  const block=document.getElementById(`mq${g}_${qi}`);
+  if(block.querySelector('.correct,.wrong')) return;
+  const w=W[GROUPS[g].idx[qi]];
+  const correct=w.zh;
+  block.querySelectorAll('.mcq-opt').forEach(o=>o.disabled=true);
+  const isOk=chosen===correct;
+  btn.classList.add(isOk?'correct':'wrong');
+  if(!isOk) block.querySelectorAll('.mcq-opt').forEach(o=>{if(o.textContent===correct)o.classList.add('correct');});
+  const fb=document.getElementById(`mfb${g}_${qi}`);
+  fb.className=`feedback ${isOk?'ok':'ng'}`;
+  fb.textContent=isOk?'✓ 正確！':`✗ 答案：${correct}`;
+  S.mcqAnswered[g]++;
+  if(S.mcqAnswered[g]===GROUPS[g].idx.length) document.getElementById('toFill').disabled=false;
+}
+
+// ── MATCH ──
+function renderMatch(g,gWords,area){
+  const enItems=gWords.map((w,i)=>({id:i,text:w.en,zh:w.zh}));
+  const zhItems=shuf(gWords.map((w,i)=>({id:i,text:w.zh})));
+  S.matchState[g]={enItems,zhItems,selectedEn:null,matched:new Set(),total:gWords.length};
+
+  const enCol=enItems.map(item=>`
+    <div class="match-item" id="men_${g}_${item.id}" onclick="pickEn(${g},${item.id})">${item.text}</div>
+  `).join('');
+  const zhCol=zhItems.map(item=>`
+    <div class="match-item" id="mzh_${g}_${item.id}" onclick="pickZh(${g},${item.id})">${item.text}</div>
+  `).join('');
+
+  area.innerHTML=`<div class="phase-bar">${phaseBar(2)}</div>
+    <div class="match-wrap">
+      <div class="match-instruct">點選左欄英文，再點右欄中文完成配對</div>
+      <div class="match-grid">
+        <div><div class="match-col-label">英文</div><div class="match-col">${enCol}</div></div>
+        <div><div class="match-col-label">中文</div><div class="match-col">${zhCol}</div></div>
+      </div>
+      <div class="match-score" id="mscore_${g}"></div>
+    </div>
+    <button class="next-btn" id="toDone" onclick="finishGroup(${g})" disabled>全部配對後繼續 →</button>`;
+}
+
+function pickEn(g,id){
+  const ms=S.matchState[g];
+  if(!ms||ms.matched.has(id)) return;
+  ms.selectedEn=id;
+  document.querySelectorAll(`[id^="men_${g}_"]`).forEach(el=>{
+    el.classList.toggle('selected', el.id===`men_${g}_${id}` && !ms.matched.has(id));
+  });
+}
+
+function pickZh(g,id){
+  const ms=S.matchState[g];
+  if(!ms||ms.selectedEn===null) return;
+  const enId=ms.selectedEn;
+  if(ms.matched.has(enId)) return;
+
+  const isCorrect=(enId===id);
+  const enEl=document.getElementById(`men_${g}_${enId}`);
+  const zhEl=document.getElementById(`mzh_${g}_${id}`);
+
+  if(isCorrect){
+    enEl.classList.remove('selected');
+    enEl.classList.add('matched','locked');
+    zhEl.classList.add('matched','locked');
+    ms.matched.add(enId);
+    ms.selectedEn=null;
+    const score=document.getElementById(`mscore_${g}`);
+    score.textContent=`✓ ${ms.matched.size} / ${ms.total} 配對完成`;
+    if(ms.matched.size===ms.total){
+      score.textContent='🎉 全部配對完成！';
+      document.getElementById('toDone').disabled=false;
+    }
+  } else {
+    enEl.classList.add('wrong-flash');
+    zhEl.classList.add('wrong-flash');
+    setTimeout(()=>{
+      enEl.classList.remove('wrong-flash');
+      zhEl.classList.remove('wrong-flash');
+    },600);
+  }
+}
+
+function finishGroup(g){
+  S.done[g]=true;
+  if(g<3){
+    const nt=document.getElementById(`tab-${g+1}`);
+    nt.classList.remove('locked');
+    nt.textContent=GROUPS[g+1].label;
+  }
+  updateProg();
+  S.phase=3;
+  render();
+}
+
+function renderDone(g,area){
+  const allDone=S.done.every(Boolean);
+  area.innerHTML=`<div class="phase-bar">${phaseBar(3)}</div>
+    <div class="score-wrap">
+      <div class="score-circle">✓</div>
+      <div class="score-msg" style="margin-bottom:8px">第 ${g+1} 組完成！</div>
+      ${allDone?'<div style="font-size:15px;color:var(--teal);font-weight:700;margin-top:8px">🎉 全部 21 個單字完成！</div>':''}
+    </div>
+    ${g<3?`<button class="unlock-btn" onclick="setGroup(${g+1})">去第 ${g+2} 組 →</button>`:''}`;
+}
+
+updateProg();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大同與小康 — 孔子思想</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=LXGW+WenKai+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink-black: #1a1a1a;
+            --ink-dark: #2d2d2d;
+            --ink-gray: #5a5a5a;
+            --paper-cream: #f7f3eb;
+            --paper-light: #faf8f3;
+            --vermillion: #c23a2e;
+            --vermillion-light: #e85a4f;
+            --gold-dark: #8b7355;
+            --gold-light: #c4a574;
+            --jade: #4a7c6f;
+            --jade-light: #6b9e8f;
+            --shadow-soft: rgba(26, 26, 26, 0.08);
+            --shadow-medium: rgba(26, 26, 26, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+            background: var(--paper-cream);
+            color: var(--ink-black);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* 頁首設計 */
+        header {
+            background: linear-gradient(135deg, var(--ink-black) 0%, var(--ink-dark) 100%);
+            color: var(--paper-cream);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 25H55L39 37L45 57L30 45L15 57L21 37L5 25H25L30 5Z' fill='none' stroke='%23c4a574' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .era-tag {
+            display: inline-block;
+            background: var(--vermillion);
+            color: var(--paper-cream);
+            padding: 0.3rem 1rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            border-radius: 2px;
+        }
+
+        h1 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            letter-spacing: 0.15em;
+        }
+
+        /* 導覽列 */
+        nav {
+            background: var(--paper-light);
+            border-bottom: 1px solid var(--gold-light);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px var(--shadow-soft);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--ink-gray);
+            color: var(--ink-dark);
+            padding: 0.6rem 1.2rem;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--vermillion);
+            border-color: var(--vermillion);
+            color: var(--paper-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194, 58, 46, 0.3);
+        }
+
+        /* 主要內容區 */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片樣式 */
+        .card {
+            background: var(--paper-light);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px var(--shadow-soft);
+            border-left: 4px solid var(--vermillion);
+        }
+
+        .card-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink-black);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px dashed var(--gold-light);
+        }
+
+        /* 孔子介紹區塊 */
+        .confucius-intro {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .confucius-intro {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .portrait-frame {
+            background: linear-gradient(145deg, var(--ink-dark) 0%, var(--ink-black) 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .portrait-symbol {
+            font-size: 6rem;
+            color: var(--gold-light);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .portrait-name {
+            color: var(--paper-cream);
+            font-size: 1.5rem;
+            letter-spacing: 0.3em;
+        }
+
+        .portrait-dates {
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(196, 165, 116, 0.1);
+            border-radius: 6px;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: var(--vermillion);
+            min-width: 80px;
+        }
+
+        /* 課文區塊 */
+        .text-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-badge {
+            background: var(--jade);
+            color: var(--paper-cream);
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.8rem;
+            color: var(--ink-black);
+        }
+
+        .classical-text {
+            background: var(--paper-light);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--gold-light);
+            position: relative;
+        }
+
+        .classical-text::before {
+            content: '「';
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 3rem;
+            color: var(--vermillion);
+            opacity: 0.3;
+        }
+
+        .text-line {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            padding-left: 2rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .text-line:hover {
+            color: var(--vermillion);
+            background: rgba(194, 58, 46, 0.05);
+            border-radius: 4px;
+        }
+
+        .text-line .char {
+            display: inline;
+            position: relative;
+        }
+
+        .text-line .char:hover::after {
+            content: attr(data-note);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--ink-black);
+            color: var(--paper-cream);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            z-index: 10;
+            box-shadow: 0 4px 12px var(--shadow-medium);
+        }
+
+        /* 翻譯對照 */
+        .translation-box {
+            background: rgba(74, 124, 111, 0.1);
+            border-left: 4px solid var(--jade);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .translation-title {
+            color: var(--jade);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 比較表格 */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--paper-light);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow-soft);
+        }
+
+        .comparison-table th {
+            background: var(--ink-dark);
+            color: var(--paper-cream);
+            padding: 1rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .comparison-table th:first-child {
+            background: var(--ink-gray);
+        }
+
+        .comparison-table th.datong {
+            background: var(--vermillion);
+        }
+
+        .comparison-table th.xiaokang {
+            background: var(--jade);
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--shadow-soft);
+            vertical-align: top;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(196, 165, 116, 0.1);
+        }
+
+        .aspect-label {
+            font-weight: 700;
+            color: var(--gold-dark);
+        }
+
+        /* 互動練習 */
+        .quiz-container {
+            margin-top: 2rem;
+        }
+
+        .quiz-question {
+            background: var(--paper-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-question.correct {
+            border-color: var(--jade);
+            background: rgba(74, 124, 111, 0.1);
+        }
+
+        .quiz-question.incorrect {
+            border-color: var(--vermillion);
+            background: rgba(194, 58, 46, 0.1);
+        }
+
+        .question-num {
+            display: inline-block;
+            background: var(--vermillion);
+            color: var(--paper-cream);
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+
+        .options {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .option-btn {
+            background: var(--paper-cream);
+            border: 2px solid var(--gold-light);
+            padding: 1rem;
+            text-align: left;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            border-color: var(--vermillion);
+            transform: translateX(5px);
+        }
+
+        .option-btn.selected {
+            background: var(--vermillion);
+            border-color: var(--vermillion);
+            color: var(--paper-cream);
+        }
+
+        .option-btn.correct-answer {
+            background: var(--jade);
+            border-color: var(--jade);
+            color: var(--paper-cream);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: rgba(74, 124, 111, 0.2);
+            color: var(--jade);
+        }
+
+        .feedback.incorrect {
+            background: rgba(194, 58, 46, 0.2);
+            color: var(--vermillion);
+        }
+
+        /* 思想核心區 */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .concept-card {
+            background: linear-gradient(145deg, var(--paper-light) 0%, var(--paper-cream) 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-top: 4px solid var(--vermillion);
+            box-shadow: 0 4px 15px var(--shadow-soft);
+            transition: transform 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .concept-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .concept-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--ink-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .concept-desc {
+            color: var(--ink-gray);
+            font-size: 0.95rem;
+        }
+
+        /* 音訊控制 */
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .audio-btn {
+            background: var(--ink-dark);
+            color: var(--paper-cream);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background: var(--vermillion);
+            transform: scale(1.05);
+        }
+
+        /* 重點筆記 */
+        .key-points {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
+            color: var(--paper-cream);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .key-points h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .key-points li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--paper-cream);
+        }
+
+        /* 分數顯示 */
+        .score-display {
+            text-align: center;
+            padding: 2rem;
+            background: var(--paper-light);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--vermillion);
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            color: var(--ink-gray);
+        }
+
+        /* 提交按鈕 */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--vermillion) 0%, var(--vermillion-light) 100%);
+            color: var(--paper-cream);
+            border: none;
+            padding: 1rem 3rem;
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 8px;
+            display: block;
+            margin: 2rem auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(194, 58, 46, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(194, 58, 46, 0.4);
+        }
+
+        /* 頁尾 */
+        footer {
+            background: var(--ink-black);
+            color: var(--paper-cream);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* 字詞解釋彈出框 */
+        .tooltip {
+            position: fixed;
+            background: var(--ink-black);
+            color: var(--paper-cream);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            max-width: 300px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .tooltip.show {
+            display: block;
+            animation: tooltipIn 0.3s ease;
+        }
+
+        @keyframes tooltipIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tooltip-word {
+            color: var(--gold-light);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 600px) {
+            header {
+                padding: 2rem 1rem;
+            }
+            
+            h1 {
+                letter-spacing: 0.15em;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .text-line {
+                font-size: 1.1rem;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <span class="era-tag">先秦儒學經典</span>
+            <h1>大同與小康</h1>
+            <p class="subtitle">《禮記・禮運》選文 ── 孔子理想社會論</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <button class="nav-btn active" onclick="showSection('intro')">孔子簡介</button>
+            <button class="nav-btn" onclick="showSection('text')">課文原文</button>
+            <button class="nav-btn" onclick="showSection('analysis')">段落解析</button>
+            <button class="nav-btn" onclick="showSection('compare')">大同小康比較</button>
+            <button class="nav-btn" onclick="showSection('concepts')">核心思想</button>
+            <button class="nav-btn" onclick="showSection('quiz')">互動練習</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- 孔子簡介 -->
+        <section id="intro" class="active">
+            <div class="card">
+                <h2 class="card-title">📜 至聖先師 ── 孔子</h2>
+                <div class="confucius-intro">
+                    <div class="portrait-frame">
+                        <div class="portrait-symbol">孔</div>
+                        <div class="portrait-name">孔丘</div>
+                        <div class="portrait-dates">西元前551年 — 西元前479年</div>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">姓名</span>
+                            <span>孔丘，字仲尼</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">時代</span>
+                            <span>春秋末期，魯國人（今山東曲阜）</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">身分</span>
+                            <span>思想家、教育家、儒家學派創始人</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">尊稱</span>
+                            <span>至聖先師、萬世師表</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">貢獻</span>
+                            <span>整理六經、創辦私學、有教無類、因材施教</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">核心思想</span>
+                            <span>以「仁」為本，推行禮樂教化，追求社會和諧</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">著作</span>
+                            <span>弟子記錄其言行為《論語》；整理《詩》《書》《禮》《樂》《易》《春秋》</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">📚 課文背景</h2>
+                <p>本文選自《禮記・禮運》篇。孔子與弟子子游談論禮的本質與社會理想，提出「大同」與「小康」兩種社會型態，表達其對理想世界的嚮往。</p>
+                <br>
+                <p><strong>《禮記》</strong>是儒家十三經之一，記載先秦至秦漢時期儒家關於禮制、禮義的論述，由西漢戴聖編纂。</p>
+            </div>
+
+            <div class="key-points">
+                <h3>📌 學習重點</h3>
+                <ul>
+                    <li>理解「大同」與「小康」社會的特徵與差異</li>
+                    <li>掌握重要文言詞彙與句式</li>
+                    <li>體會孔子的社會理想與人文關懷</li>
+                    <li>思考理想社會對現代社會的啟示</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 課文原文 -->
+        <section id="text">
+            <div class="text-section">
+                <div class="section-header">
+                    <span class="section-badge">壹</span>
+                    <h2 class="section-title">大同世界</h2>
+                </div>
+                <div class="classical-text">
+                    <p class="text-line">
+                        <span class="char" data-note="大道：政治上的最高理想">大道</span>之行也，天下為公。
+                    </p>
+                    <p class="text-line">
+                        <span class="char" data-note="選：選拔">選</span>賢與<span class="char" data-note="能：有才能的人">能</span>，講信<span class="char" data-note="修睦：培養和睦">修睦</span>。
+                    </p>
+                    <p class="text-line">
+                        故人不<span class="char" data-note="獨：只">獨</span>親其親，不獨子其子。
+                    </p>
+                    <p class="text-line">
+                        使老有所<span class="char" data-note="終：善終、安養">終</span>，壯有所用，幼有所長。
+                    </p>
+                    <p class="text-line">
+                        <span class="char" data-note="矜：同「鰥」，老而無妻的人">矜</span>、寡、孤、獨、廢疾者，皆有所養。
+                    </p>
+                    <p class="text-line">
+                        男有<span class="char" data-note="分：職業">分</span>，女有<span class="char" data-note="歸：歸宿、丈夫">歸</span>。
+                    </p>
+                    <p class="text-line">
+                        貨<span class="char" data-note="惡：音「務」，厭惡、不願意">惡</span>其棄於地也，不必藏於己。
+                    </p>
+                    <p class="text-line">
+                        力惡其不出於身也，不必為己。
+                    </p>
+                    <p class="text-line">
+                        是故<span class="char" data-note="謀：奸詐的計謀">謀</span>閉而不興，盜竊亂賊而不作。
+                    </p>
+                    <p class="text-line">
+                        故外戶而不閉，是謂<span class="char" data-note="大同：天下太平、人人和諧的理想社會">大同</span>。
+                    </p>
+                </div>
+                <div class="translation-box">
+                    <p class="translation-title">【白話翻譯】</p>
+                    <p>在大道實行的時代，天下是人們所共有的。選拔賢能的人來治理，講求誠信，培養和睦。所以人們不只把自己的父母當親人，不只把自己的孩子當孩子。使老年人能得到安養，壯年人能發揮所長，幼童能得到撫養成長。鰥夫、寡婦、孤兒、無子女的老人、殘疾之人，都能得到照顧。男子有職業，女子有歸宿。人們厭惡財貨被丟棄在地上，但不必據為己有。厭惡勞力不是出於自己，也不必是為了自己。因此奸詐的計謀不會產生，偷竊作亂也不會發生。所以門戶不用關閉，這就叫做大同。</p>
+                </div>
+            </div>
+
+            <div class="text-section">
+                <div class="section-header">
+                    <span class="section-badge" style="background: var(--jade);">貳</span>
+                    <h2 class="section-title">小康社會</h2>
+                </div>
+                <div class="classical-text">
+                    <p class="text-line">
+                        今大道既隱，天下為家。
+                    </p>
+                    <p class="text-line">
+                        各親其親，各子其子，貨力為己。
+                    </p>
+                    <p class="text-line">
+                        大人<span class="char" data-note="世及：父傳子">世及</span>以為禮，城郭溝池以為固。
+                    </p>
+                    <p class="text-line">
+                        <span class="char" data-note="禮義：禮法道義">禮義</span>以為<span class="char" data-note="紀：綱紀、準則">紀</span>。
+                    </p>
+                    <p class="text-line">
+                        以正君臣，以<span class="char" data-note="篤：使……親厚">篤</span>父子，以睦兄弟，以和夫婦。
+                    </p>
+                    <p class="text-line">
+                        以設制度，以立田里，以<span class="char" data-note="賢：以……為賢">賢</span>勇知，以功為己。
+                    </p>
+                    <p class="text-line">
+                        故謀用是作，而兵由此起。
+                    </p>
+                    <p class="text-line">
+                        禹、湯、文、武、成王、周公，由此其選也。
+                    </p>
+                    <p class="text-line">
+                        此六君子者，未有不<span class="char" data-note="謹：謹慎遵守">謹</span>於禮者也。
+                    </p>
+                    <p class="text-line">
+                        以<span class="char" data-note="著：彰顯">著</span>其義，以<span class="char" data-note="考：成就">考</span>其信，<span class="char" data-note="著有過：揭發過失">著有過</span>。
+                    </p>
+                    <p class="text-line">
+                        <span class="char" data-note="刑仁講讓：以仁為法則、講求謙讓">刑仁講讓</span>，示民有<span class="char" data-note="常：法則">常</span>。
+                    </p>
+                    <p class="text-line">
+                        如有不由此者，在<span class="char" data-note="埶：同「勢」，權位">埶</span>者去，眾以為殃。
+                    </p>
+                    <p class="text-line">
+                        是謂小康。
+                    </p>
+                </div>
+                <div class="translation-box">
+                    <p class="translation-title">【白話翻譯】</p>
+                    <p>如今大道已經隱沒，天下成為一家一姓所私有。人們各自親愛自己的父母，各自疼愛自己的孩子，財貨和勞力都是為了自己。天子諸侯將世襲當作禮制，築城郭挖護城河來鞏固統治。以禮義作為綱紀，用來端正君臣關係，使父子親厚，使兄弟和睦，使夫婦和諧，設立制度，劃分田畝，以勇敢有智謀的人為賢，以功勞歸於自己。所以陰謀詭詐由此產生，戰爭也由此興起。夏禹、商湯、周文王、周武王、周成王、周公，就是在這時代中被選出的賢者。這六位君子，沒有不謹守禮制的。用禮來彰顯道義，成就誠信，揭發過失，以仁為法則、講求謙讓，向百姓展示常法。如果有人不遵循這些，在位者就會被罷黜，百姓也會把他當作禍害。這就叫做小康。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 段落解析 -->
+        <section id="analysis">
+            <div class="card">
+                <h2 class="card-title">📝 重要字詞解釋</h2>
+                <table class="comparison-table">
+                    <tr>
+                        <th style="width: 20%;">字詞</th>
+                        <th style="width: 20%;">讀音</th>
+                        <th>解釋</th>
+                    </tr>
+                    <tr>
+                        <td><strong>與</strong></td>
+                        <td>ㄐㄩˇ</td>
+                        <td>通「舉」，選拔、推舉</td>
+                    </tr>
+                    <tr>
+                        <td><strong>矜</strong></td>
+                        <td>ㄍㄨㄢ</td>
+                        <td>通「鰥」，老而無妻的人</td>
+                    </tr>
+                    <tr>
+                        <td><strong>惡</strong></td>
+                        <td>ㄨˋ</td>
+                        <td>厭惡、不願意</td>
+                    </tr>
+                    <tr>
+                        <td><strong>分</strong></td>
+                        <td>ㄈㄣˋ</td>
+                        <td>職分、職業</td>
+                    </tr>
+                    <tr>
+                        <td><strong>歸</strong></td>
+                        <td>ㄍㄨㄟ</td>
+                        <td>女子出嫁；此指歸宿</td>
+                    </tr>
+                    <tr>
+                        <td><strong>世及</strong></td>
+                        <td>ㄕˋ ㄐㄧˊ</td>
+                        <td>世代相傳、父傳子</td>
+                    </tr>
+                    <tr>
+                        <td><strong>埶</strong></td>
+                        <td>ㄕˋ</td>
+                        <td>通「勢」，權勢、權位</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">🔍 句式分析</h2>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--vermillion); margin-bottom: 0.5rem;">一、排比句式</h4>
+                    <p style="background: rgba(194, 58, 46, 0.1); padding: 1rem; border-radius: 6px;">
+                        「老有所終，壯有所用，幼有所長」<br>
+                        「矜、寡、孤、獨、廢疾者，皆有所養」<br>
+                        → 強調大同社會對各類人群的全面照顧
+                    </p>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--jade); margin-bottom: 0.5rem;">二、對比句式</h4>
+                    <p style="background: rgba(74, 124, 111, 0.1); padding: 1rem; border-radius: 6px;">
+                        「不獨親其親，不獨子其子」vs「各親其親，各子其子」<br>
+                        → 大同與小康在人際關係上的根本差異
+                    </p>
+                </div>
+                <div>
+                    <h4 style="color: var(--gold-dark); margin-bottom: 0.5rem;">三、判斷句式</h4>
+                    <p style="background: rgba(196, 165, 116, 0.1); padding: 1rem; border-radius: 6px;">
+                        「是謂大同」「是謂小康」<br>
+                        → 「是謂」為古文判斷句標誌，意為「這就叫做」
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 大同小康比較 -->
+        <section id="compare">
+            <div class="card">
+                <h2 class="card-title">⚖️ 大同與小康社會比較</h2>
+                <table class="comparison-table">
+                    <tr>
+                        <th>面向</th>
+                        <th class="datong">大同世界</th>
+                        <th class="xiaokang">小康社會</th>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">政治體制</td>
+                        <td>天下為公，選賢與能</td>
+                        <td>天下為家，世襲制度</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">人際關係</td>
+                        <td>不獨親其親，不獨子其子</td>
+                        <td>各親其親，各子其子</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">社會風氣</td>
+                        <td>講信修睦</td>
+                        <td>禮義以為紀</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">財貨勞力</td>
+                        <td>不必藏於己，不必為己</td>
+                        <td>貨力為己</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">社會治安</td>
+                        <td>謀閉而不興，盜竊亂賊不作</td>
+                        <td>謀用是作，兵由此起</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">治理方式</td>
+                        <td>自然道德</td>
+                        <td>禮義制度、設防固守</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">社會現象</td>
+                        <td>外戶而不閉</td>
+                        <td>城郭溝池以為固</td>
+                    </tr>
+                    <tr>
+                        <td class="aspect-label">代表人物</td>
+                        <td>堯、舜</td>
+                        <td>禹、湯、文、武、成王、周公</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="key-points">
+                <h3>💡 核心差異</h3>
+                <ul>
+                    <li><strong>公與私：</strong>大同是「公天下」，小康是「家天下」</li>
+                    <li><strong>自然與制度：</strong>大同靠道德自覺，小康靠禮義約束</li>
+                    <li><strong>理想與現實：</strong>大同是最高理想，小康是退而求其次的可行目標</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 核心思想 -->
+        <section id="concepts">
+            <div class="card">
+                <h2 class="card-title">💎 孔子的核心思想</h2>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-icon">🤝</div>
+                        <h3 class="concept-title">仁</h3>
+                        <p class="concept-desc">愛人之心，推己及人。「不獨親其親，不獨子其子」體現仁的精神。</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon">📜</div>
+                        <h3 class="concept-title">禮</h3>
+                        <p class="concept-desc">社會秩序與行為規範。小康以禮義維持秩序，彌補大道隱沒後的不足。</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon">⚖️</div>
+                        <h3 class="concept-title">義</h3>
+                        <p class="concept-desc">合宜的行為準則。「以著其義」，用禮來彰顯道義。</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon">🎯</div>
+                        <h3 class="concept-title">信</h3>
+                        <p class="concept-desc">誠實守信。「講信修睦」「以考其信」，信是社會和諧的基石。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">🌏 現代意義</h2>
+                <p style="margin-bottom: 1rem;">孔子的「大同」理想，與現代社會追求的價值不謀而合：</p>
+                <div style="display: grid; gap: 1rem;">
+                    <div style="display: flex; gap: 1rem; padding: 1rem; background: rgba(194, 58, 46, 0.1); border-radius: 6px;">
+                        <span style="font-size: 1.5rem;">🏛️</span>
+                        <div>
+                            <strong>民主政治</strong><br>
+                            「選賢與能」→ 選舉制度、人才選拔
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; padding: 1rem; background: rgba(74, 124, 111, 0.1); border-radius: 6px;">
+                        <span style="font-size: 1.5rem;">🏥</span>
+                        <div>
+                            <strong>社會福利</strong><br>
+                            「矜、寡、孤、獨、廢疾者皆有所養」→ 社會安全網
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; padding: 1rem; background: rgba(196, 165, 116, 0.1); border-radius: 6px;">
+                        <span style="font-size: 1.5rem;">🤲</span>
+                        <div>
+                            <strong>公益精神</strong><br>
+                            「貨惡其棄於地也，不必藏於己」→ 資源共享、減少浪費
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 互動練習 -->
+        <section id="quiz">
+            <div class="card">
+                <h2 class="card-title">✍️ 課後練習</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" id="q1">
+                        <span class="question-num">1</span>
+                        <p class="question-text">「大道之行也，天下為公」中的「公」意指：</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(1, this, 'B')">（A）公平</button>
+                            <button class="option-btn" onclick="selectOption(1, this, 'B')">（B）共有</button>
+                            <button class="option-btn" onclick="selectOption(1, this, 'B')">（C）公開</button>
+                            <button class="option-btn" onclick="selectOption(1, this, 'B')">（D）公正</button>
+                        </div>
+                        <div class="feedback" id="fb1"></div>
+                    </div>
+
+                    <div class="quiz-question" id="q2">
+                        <span class="question-num">2</span>
+                        <p class="question-text">下列哪一項是「小康」社會的特徵？</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(2, this, 'C')">（A）天下為公</button>
+                            <button class="option-btn" onclick="selectOption(2, this, 'C')">（B）外戶而不閉</button>
+                            <button class="option-btn" onclick="selectOption(2, this, 'C')">（C）天下為家</button>
+                            <button class="option-btn" onclick="selectOption(2, this, 'C')">（D）選賢與能</button>
+                        </div>
+                        <div class="feedback" id="fb2"></div>
+                    </div>
+
+                    <div class="quiz-question" id="q3">
+                        <span class="question-num">3</span>
+                        <p class="question-text">「矜、寡、孤、獨」所指的對象不包括：</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(3, this, 'D')">（A）老而無妻者</button>
+                            <button class="option-btn" onclick="selectOption(3, this, 'D')">（B）老而無夫者</button>
+                            <button class="option-btn" onclick="selectOption(3, this, 'D')">（C）幼而無父者</button>
+                            <button class="option-btn" onclick="selectOption(3, this, 'D')">（D）壯而無業者</button>
+                        </div>
+                        <div class="feedback" id="fb3"></div>
+                    </div>
+
+                    <div class="quiz-question" id="q4">
+                        <span class="question-num">4</span>
+                        <p class="question-text">「貨惡其棄於地也，不必藏於己」表達的意涵是：</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(4, this, 'B')">（A）厭惡財物，不願擁有</button>
+                            <button class="option-btn" onclick="selectOption(4, this, 'B')">（B）珍惜資源，不求私佔</button>
+                            <button class="option-btn" onclick="selectOption(4, this, 'B')">（C）囤積財貨，以備不時之需</button>
+                            <button class="option-btn" onclick="selectOption(4, this, 'B')">（D）隱藏財物，避免被奪</button>
+                        </div>
+                        <div class="feedback" id="fb4"></div>
+                    </div>
+
+                    <div class="quiz-question" id="q5">
+                        <span class="question-num">5</span>
+                        <p class="question-text">文中提到的「六君子」屬於哪個時代？</p>
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption(5, this, 'C')">（A）大同時代</button>
+                            <button class="option-btn" onclick="selectOption(5, this, 'C')">（B）堯舜時代</button>
+                            <button class="option-btn" onclick="selectOption(5, this, 'C')">（C）小康時代</button>
+                            <button class="option-btn" onclick="selectOption(5, this, 'C')">（D）春秋時代</button>
+                        </div>
+                        <div class="feedback" id="fb5"></div>
+                    </div>
+                </div>
+
+                <button class="submit-btn" onclick="checkAnswers()">提交答案</button>
+                
+                <div class="score-display" id="scoreDisplay" style="display: none;">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-label">/ 5 題答對</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>大同與小康 — 高中國文教材 | 適用於資源班差異化教學</p>
+    </footer>
+
+    <!-- 字詞提示框 -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-word" id="tooltipWord"></div>
+        <div id="tooltipContent"></div>
+    </div>
+
+    <script>
+        // 答案記錄
+        const correctAnswers = {
+            1: 'B',
+            2: 'C',
+            3: 'D',
+            4: 'B',
+            5: 'C'
+        };
+
+        const explanations = {
+            1: '「公」在此指天下為人們所共有，而非某家族私有。',
+            2: '小康社會的特徵是「天下為家」，即政權成為一家一姓所私有，實行世襲制度。',
+            3: '矜（鰥）：老而無妻；寡：老而無夫；孤：幼而無父；獨：老而無子。不包含「無業者」。',
+            4: '這句話表示人們愛惜資源、不願浪費，但也不自私地據為己有，體現大同社會的公共精神。',
+            5: '禹、湯、文、武、成王、周公六位賢君是在「大道既隱」之後的小康時代出現的。'
+        };
+
+        let userAnswers = {};
+
+        // 區塊切換
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // 選擇答案
+        function selectOption(questionNum, button, correctAnswer) {
+            const questionDiv = document.getElementById('q' + questionNum);
+            const buttons = questionDiv.querySelectorAll('.option-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            
+            const selectedAnswer = button.textContent.charAt(1);
+            userAnswers[questionNum] = selectedAnswer;
+        }
+
+        // 檢查答案
+        function checkAnswers() {
+            let score = 0;
+
+            for (let i = 1; i <= 5; i++) {
+                const questionDiv = document.getElementById('q' + i);
+                const feedback = document.getElementById('fb' + i);
+                const buttons = questionDiv.querySelectorAll('.option-btn');
+
+                if (userAnswers[i] === correctAnswers[i]) {
+                    score++;
+                    questionDiv.classList.add('correct');
+                    questionDiv.classList.remove('incorrect');
+                    feedback.className = 'feedback show correct';
+                    feedback.innerHTML = '✓ 正確！' + explanations[i];
+                } else {
+                    questionDiv.classList.add('incorrect');
+                    questionDiv.classList.remove('correct');
+                    feedback.className = 'feedback show incorrect';
+                    feedback.innerHTML = '✗ 正確答案是（' + correctAnswers[i] + '）。' + explanations[i];
+                }
+
+                // 標示正確答案
+                buttons.forEach(btn => {
+                    if (btn.textContent.charAt(1) === correctAnswers[i]) {
+                        btn.classList.add('correct-answer');
+                    }
+                });
+            }
+
+            // 顯示分數
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const scoreNumber = document.getElementById('scoreNumber');
+            scoreDisplay.style.display = 'block';
+            scoreNumber.textContent = score;
+
+            // 滾動到分數位置
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 字詞提示功能
+        document.querySelectorAll('.char').forEach(char => {
+            char.style.cursor = 'help';
+            char.style.borderBottom = '2px dotted var(--vermillion)';
+            
+            char.addEventListener('click', function(e) {
+                const tooltip = document.getElementById('tooltip');
+                const tooltipWord = document.getElementById('tooltipWord');
+                const tooltipContent = document.getElementById('tooltipContent');
+                
+                tooltipWord.textContent = this.textContent;
+                tooltipContent.textContent = this.dataset.note;
+                
+                tooltip.style.left = e.pageX + 'px';
+                tooltip.style.top = (e.pageY - 80) + 'px';
+                tooltip.classList.add('show');
+            });
+        });
+
+        // 點擊其他地方關閉提示框
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('char')) {
+                document.getElementById('tooltip').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

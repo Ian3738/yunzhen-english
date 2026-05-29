@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學測文法練習系統</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap');
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    :root {
+        --primary: #6366F1;
+        --primary-dark: #4F46E5;
+        --success: #10B981;
+        --error: #EF4444;
+        --warning: #F59E0B;
+        --bg: #F1F5F9;
+        --card: #FFFFFF;
+        --text: #1E293B;
+        --text-light: #64748B;
+        --border: #E2E8F0;
+    }
+    
+    body {
+        font-family: 'Noto Sans TC', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+    }
+    
+    /* Header */
+    .header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 25px 20px;
+        text-align: center;
+    }
+    
+    .header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.6rem;
+        margin-bottom: 5px;
+    }
+    
+    .header p {
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+    
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    /* Navigation Tabs */
+    .nav-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-tab {
+        padding: 10px 16px;
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .nav-tab:hover {
+        border-color: var(--primary);
+        background: #F5F3FF;
+    }
+    
+    .nav-tab.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+    
+    /* Main Content Area */
+    .main-content {
+        display: none;
+    }
+    
+    .main-content.active {
+        display: block;
+    }
+    
+    /* Home Screen */
+    .home-screen {
+        text-align: center;
+        padding: 30px 0;
+    }
+    
+    .unit-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .unit-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 20px;
+        text-align: left;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid transparent;
+    }
+    
+    .unit-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: var(--primary);
+    }
+    
+    .unit-card .unit-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .unit-card .unit-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+    }
+    
+    .unit-card .unit-desc {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        line-height: 1.5;
+    }
+    
+    .unit-card .unit-questions {
+        margin-top: 12px;
+        font-size: 0.8rem;
+        color: var(--primary);
+        font-weight: 500;
+    }
+    
+    /* Formula Display */
+    .formula-section {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    
+    .formula-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .formula-title .icon {
+        font-size: 1.5rem;
+    }
+    
+    .formula-box {
+        background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid var(--primary);
+    }
+    
+    .formula-box h4 {
+        font-size: 0.9rem;
+        color: var(--primary-dark);
+        margin-bottom: 10px;
+    }
+    
+    .formula-box .formula {
+        font-family: 'Poppins', monospace;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+    
+    .formula-box .example {
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+    
+    .formula-box .example strong {
+        color: var(--primary);
+    }
+    
+    /* Sound button in formula */
+    .formula-sound-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        margin-left: 8px;
+        transition: all 0.2s;
+        vertical-align: middle;
+    }
+    
+    .formula-sound-btn:hover {
+        background: var(--primary-dark);
+        transform: scale(1.05);
+    }
+    
+    .formula-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        font-size: 0.9rem;
+    }
+    
+    .formula-table th, .formula-table td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .formula-table th {
+        background: #F8FAFC;
+        font-weight: 600;
+        color: var(--text);
+    }
+    
+    .formula-table tr:hover {
+        background: #FAFAFE;
+    }
+    
+    /* Quiz Section */
+    .quiz-section {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    
+    .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .quiz-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+    
+    .quiz-progress {
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+    
+    .quiz-score {
+        background: #F0FDF4;
+        color: var(--success);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .question-card {
+        background: #FAFBFC;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .question-text {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin-bottom: 15px;
+    }
+    
+    .question-text .blank {
+        display: inline-block;
+        min-width: 100px;
+        border-bottom: 2px solid var(--primary);
+        margin: 0 5px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    /* Question sound button - 答題後才顯示 */
+    .question-sound-btn {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+        transition: all 0.2s;
+    }
+    
+    .question-sound-btn.show {
+        display: inline-flex;
+    }
+    
+    .question-sound-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    
+    .question-sound-btn.playing {
+        animation: pulse 0.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    @media (max-width: 500px) {
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .option-btn {
+        padding: 12px 16px;
+        background: white;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        text-align: left;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .option-btn:hover:not(.disabled) {
+        border-color: var(--primary);
+        background: #FAFAFF;
+    }
+    
+    .option-btn .letter {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+    
+    .option-btn.correct {
+        background: #ECFDF5;
+        border-color: var(--success);
+    }
+    
+    .option-btn.correct .letter {
+        background: var(--success);
+        color: white;
+    }
+    
+    .option-btn.wrong {
+        background: #FEF2F2;
+        border-color: var(--error);
+    }
+    
+    .option-btn.wrong .letter {
+        background: var(--error);
+        color: white;
+    }
+    
+    .option-btn.disabled {
+        cursor: default;
+    }
+    
+    /* Explanation */
+    .explanation {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        display: none;
+    }
+    
+    .explanation.show {
+        display: block;
+    }
+    
+    .explanation.correct {
+        background: #ECFDF5;
+        border: 1px solid #A7F3D0;
+    }
+    
+    .explanation.wrong {
+        background: #FEF2F2;
+        border: 1px solid #FECACA;
+    }
+    
+    .explanation-title {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .explanation.correct .explanation-title {
+        color: #047857;
+    }
+    
+    .explanation.wrong .explanation-title {
+        color: #B91C1C;
+    }
+    
+    .explanation-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--text);
+    }
+    
+    .correct-sentence {
+        margin-top: 12px;
+        padding: 10px 15px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        color: var(--primary-dark);
+    }
+    
+    .correct-sentence strong {
+        color: var(--success);
+    }
+    
+    /* Navigation Buttons */
+    .nav-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .nav-btn {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .nav-btn.secondary {
+        background: var(--bg);
+        color: var(--text);
+    }
+    
+    .nav-btn.secondary:hover {
+        background: #E2E8F0;
+    }
+    
+    .nav-btn.primary {
+        background: var(--primary);
+        color: white;
+    }
+    
+    .nav-btn.primary:hover {
+        background: var(--primary-dark);
+    }
+    
+    .nav-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    /* Result Screen */
+    .result-screen {
+        text-align: center;
+        padding: 40px 20px;
+        display: none;
+    }
+    
+    .result-screen.show {
+        display: block;
+    }
+    
+    .result-icon {
+        font-size: 4rem;
+        margin-bottom: 15px;
+    }
+    
+    .result-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .result-score-big {
+        font-family: 'Poppins', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 15px 0;
+    }
+    
+    .result-message {
+        color: var(--text-light);
+        margin-bottom: 25px;
+    }
+    
+    .result-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .result-btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .result-btn.primary {
+        background: var(--primary);
+        color: white;
+    }
+    
+    .result-btn.secondary {
+        background: var(--bg);
+        color: var(--text);
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+        .container {
+            padding: 15px;
+        }
+        
+        .formula-section, .quiz-section {
+            padding: 18px;
+        }
+        
+        .nav-tabs {
+            gap: 6px;
+        }
+        
+        .nav-tab {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="header">
+        <h1>📖 學測文法練習系統</h1>
+        <p>先看公式 → 再做練習 → 答對後聽正確發音 🔊</p>
+    </div>
+
+```
+<div class="container">
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-view="home">🏠 選擇單元</button>
+        <button class="nav-tab" data-view="tense">⏰ 時態</button>
+        <button class="nav-tab" data-view="passive">🔄 被動</button>
+        <button class="nav-tab" data-view="relative">🔗 關係詞</button>
+        <button class="nav-tab" data-view="conjunction">➕ 連接詞</button>
+        <button class="nav-tab" data-view="comparison">📊 比較級</button>
+        <button class="nav-tab" data-view="subjunctive">💭 假設語氣</button>
+    </div>
+    
+    <!-- Home Screen -->
+    <div class="main-content active" id="home">
+        <div class="home-screen">
+            <h2 style="margin-bottom: 10px;">選擇要練習的文法單元</h2>
+            <p style="color: var(--text-light);">每個單元都有公式說明 + 練習題 + 🔊 語音</p>
+            
+            <div class="unit-grid">
+                <div class="unit-card" data-unit="tense">
+                    <div class="unit-icon">⏰</div>
+                    <div class="unit-title">時態</div>
+                    <div class="unit-desc">現在式、過去式、未來式、完成式的用法與判斷</div>
+                    <div class="unit-questions">10 題練習</div>
+                </div>
+                
+                <div class="unit-card" data-unit="passive">
+                    <div class="unit-icon">🔄</div>
+                    <div class="unit-title">被動語態</div>
+                    <div class="unit-desc">主動改被動、be + p.p. 的各種時態變化</div>
+                    <div class="unit-questions">8 題練習</div>
+                </div>
+                
+                <div class="unit-card" data-unit="relative">
+                    <div class="unit-icon">🔗</div>
+                    <div class="unit-title">關係代名詞</div>
+                    <div class="unit-desc">who、which、that、whose 的選擇與用法</div>
+                    <div class="unit-questions">8 題練習</div>
+                </div>
+                
+                <div class="unit-card" data-unit="conjunction">
+                    <div class="unit-icon">➕</div>
+                    <div class="unit-title">連接詞</div>
+                    <div class="unit-desc">because/because of、although/but、if/when</div>
+                    <div class="unit-questions">8 題練習</div>
+                </div>
+                
+                <div class="unit-card" data-unit="comparison">
+                    <div class="unit-icon">📊</div>
+                    <div class="unit-title">比較級與最高級</div>
+                    <div class="unit-desc">-er/-est、more/most、不規則變化</div>
+                    <div class="unit-questions">8 題練習</div>
+                </div>
+                
+                <div class="unit-card" data-unit="subjunctive">
+                    <div class="unit-icon">💭</div>
+                    <div class="unit-title">假設語氣</div>
+                    <div class="unit-desc">與現在/過去事實相反的假設句</div>
+                    <div class="unit-questions">6 題練習</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tense Unit -->
+    <div class="main-content" id="tense">
+        <div class="formula-section">
+            <div class="formula-title">
+                <span class="icon">⏰</span>
+                時態公式
+            </div>
+            
+            <div class="formula-box">
+                <h4>現在簡單式（習慣、事實）</h4>
+                <div class="formula">S + V（第三人稱單數 +s）</div>
+                <div class="example">
+                    He <strong>plays</strong> basketball every day. 他每天打籃球。
+                    <button class="formula-sound-btn" onclick="speak('He plays basketball every day.')">🔊</button>
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>現在進行式（正在做）</h4>
+                <div class="formula">S + am/is/are + V-ing</div>
+                <div class="example">
+                    He <strong>is playing</strong> basketball now. 他現在正在打籃球。
+                    <button class="formula-sound-btn" onclick="speak('He is playing basketball now.')">🔊</button>
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>過去簡單式（過去的事）</h4>
+                <div class="formula">S + V-ed（或不規則變化）</div>
+                <div class="example">
+                    He <strong>played</strong> basketball yesterday. 他昨天打了籃球。
+                    <button class="formula-sound-btn" onclick="speak('He played basketball yesterday.')">🔊</button>
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>現在完成式（從過去到現在）</h4>
+                <div class="formula">S + have/has + p.p.</div>
+                <div class="example">
+                    He <strong>has played</strong> basketball since 2020. 他從2020年就開始打籃球。
+                    <button class="formula-sound-btn" onclick="speak('He has played basketball since 2020.')">🔊</button>
+                </div>
+            </div>
+            
+            <table class="formula-table">
+                <tr>
+                    <th>看到這些字</th>
+                    <th>用這個時態</th>
+                </tr>
+                <tr>
+                    <td>every day, always, usually, often</td>
+                    <td>現在簡單式</td>
+                </tr>
+                <tr>
+                    <td>now, right now, at the moment</td>
+                    <td>現在進行式</td>
+                </tr>
+                <tr>
+                    <td>yesterday, last week, ago, in 2020</td>
+                    <td>過去簡單式</td>
+                </tr>
+                <tr>
+                    <td>since, for, already, yet, ever</td>
+                    <td>現在完成式</td>
+                </tr>
+                <tr>
+                    <td>tomorrow, next week, will</td>
+                    <td>未來式</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="quiz-section" id="tense-quiz"></div>
+    </div>
+    
+    <!-- Passive Unit -->
+    <div class="main-content" id="passive">
+        <div class="formula-section">
+            <div class="formula-title">
+                <span class="icon">🔄</span>
+                被動語態公式
+            </div>
+            
+            <div class="formula-box">
+                <h4>被動語態基本公式</h4>
+                <div class="formula">S + be + p.p.（+ by 執行者）</div>
+                <div class="example">
+                    The window <strong>was broken</strong> by Tom. 窗戶被 Tom 打破了。
+                    <button class="formula-sound-btn" onclick="speak('The window was broken by Tom.')">🔊</button>
+                </div>
+            </div>
+            
+            <table class="formula-table">
+                <tr>
+                    <th>時態</th>
+                    <th>被動公式</th>
+                    <th>例句 <button class="formula-sound-btn" onclick="speak('English is spoken here. The book was written in 2010. The work has been done. The problem will be solved.')">🔊 全部</button></th>
+                </tr>
+                <tr>
+                    <td>現在簡單</td>
+                    <td>am/is/are + p.p.</td>
+                    <td>English <strong>is spoken</strong> here.</td>
+                </tr>
+                <tr>
+                    <td>過去簡單</td>
+                    <td>was/were + p.p.</td>
+                    <td>The book <strong>was written</strong> in 2010.</td>
+                </tr>
+                <tr>
+                    <td>現在完成</td>
+                    <td>have/has been + p.p.</td>
+                    <td>The work <strong>has been done</strong>.</td>
+                </tr>
+                <tr>
+                    <td>未來</td>
+                    <td>will be + p.p.</td>
+                    <td>The problem <strong>will be solved</strong>.</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="quiz-section" id="passive-quiz"></div>
+    </div>
+    
+    <!-- Relative Pronoun Unit -->
+    <div class="main-content" id="relative">
+        <div class="formula-section">
+            <div class="formula-title">
+                <span class="icon">🔗</span>
+                關係代名詞公式
+            </div>
+            
+            <table class="formula-table">
+                <tr>
+                    <th>先行詞</th>
+                    <th>主格</th>
+                    <th>受格</th>
+                    <th>所有格</th>
+                </tr>
+                <tr>
+                    <td>人</td>
+                    <td>who</td>
+                    <td>whom / who</td>
+                    <td>whose</td>
+                </tr>
+                <tr>
+                    <td>事物</td>
+                    <td>which</td>
+                    <td>which</td>
+                    <td>whose / of which</td>
+                </tr>
+                <tr>
+                    <td>人或事物</td>
+                    <td>that</td>
+                    <td>that</td>
+                    <td>—</td>
+                </tr>
+            </table>
+            
+            <div class="formula-box" style="margin-top: 20px;">
+                <h4>⚠️ 重要規則</h4>
+                <div class="example">
+                    有逗號的句子 → <strong>不能用 that</strong><br>
+                    ✅ My father, <strong>who</strong> is a doctor, works hard.
+                    <button class="formula-sound-btn" onclick="speak('My father, who is a doctor, works hard.')">🔊</button><br>
+                    ❌ My father, that is a doctor, works hard.
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-section" id="relative-quiz"></div>
+    </div>
+    
+    <!-- Conjunction Unit -->
+    <div class="main-content" id="conjunction">
+        <div class="formula-section">
+            <div class="formula-title">
+                <span class="icon">➕</span>
+                連接詞公式
+            </div>
+            
+            <div class="formula-box">
+                <h4>because vs. because of</h4>
+                <div class="formula">because + 句子 ／ because of + 名詞</div>
+                <div class="example">
+                    <strong>Because</strong> it rained, I stayed home. （後面是句子）
+                    <button class="formula-sound-btn" onclick="speak('Because it rained, I stayed home.')">🔊</button><br>
+                    <strong>Because of</strong> the rain, I stayed home. （後面是名詞）
+                    <button class="formula-sound-btn" onclick="speak('Because of the rain, I stayed home.')">🔊</button>
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>although / though（雖然）</h4>
+                <div class="formula">Although + 子句, 主要子句（不能再加 but）</div>
+                <div class="example">
+                    ✅ <strong>Although</strong> he is young, he is smart.
+                    <button class="formula-sound-btn" onclick="speak('Although he is young, he is smart.')">🔊</button><br>
+                    ❌ Although he is young, <strong>but</strong> he is smart.
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>常見從屬連接詞</h4>
+                <div class="example">
+                    <strong>when</strong>（當...時）、<strong>before</strong>（在...之前）、<strong>after</strong>（在...之後）<br>
+                    <strong>if</strong>（如果）、<strong>unless</strong>（除非）、<strong>until</strong>（直到）
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-section" id="conjunction-quiz"></div>
+    </div>
+    
+    <!-- Comparison Unit -->
+    <div class="main-content" id="comparison">
+        <div class="formula-section">
+            <div class="formula-title">
+                <span class="icon">📊</span>
+                比較級與最高級公式
+            </div>
+            
+            <table class="formula-table">
+                <tr>
+                    <th>類型</th>
+                    <th>比較級</th>
+                    <th>最高級</th>
+                </tr>
+                <tr>
+                    <td>單音節（tall）</td>
+                    <td>tall<strong>er</strong></td>
+                    <td>tall<strong>est</strong></td>
+                </tr>
+                <tr>
+                    <td>雙音節以上（beautiful）</td>
+                    <td><strong>more</strong> beautiful</td>
+                    <td><strong>most</strong> beautiful</td>
+                </tr>
+                <tr>
+                    <td>good / well</td>
+                    <td>better</td>
+                    <td>best</td>
+                </tr>
+                <tr>
+                    <td>bad</td>
+                    <td>worse</td>
+                    <td>worst</td>
+                </tr>
+                <tr>
+                    <td>many / much</td>
+                    <td>more</td>
+                    <td>most</td>
+                </tr>
+            </table>
+            
+            <div class="formula-box" style="margin-top: 20px;">
+                <h4>比較句型</h4>
+                <div class="example">
+                    A is <strong>比較級 + than</strong> B → He is <strong>taller than</strong> me.
+                    <button class="formula-sound-btn" onclick="speak('He is taller than me.')">🔊</button><br>
+                    A is <strong>the + 最高級</strong> → He is <strong>the tallest</strong> in the class.
+                    <button class="formula-sound-btn" onclick="speak('He is the tallest in the class.')">🔊</button><br>
+                    A is <strong>as + 原級 + as</strong> B → He is <strong>as tall as</strong> me.
+                    <button class="formula-sound-btn" onclick="speak('He is as tall as me.')">🔊</button><br>
+                    <strong>one of the + 最高級 + 複數名詞</strong> → one of the <strong>tallest students</strong>
+                    <button class="formula-sound-btn" onclick="speak('He is one of the tallest students.')">🔊</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-section" id="comparison-quiz"></div>
+    </div>
+    
+    <!-- Subjunctive Unit -->
+    <div class="main-content" id="subjunctive">
+        <div class="formula-section">
+            <div class="formula-title">
+                <span class="icon">💭</span>
+                假設語氣公式
+            </div>
+            
+            <div class="formula-box">
+                <h4>與現在事實相反</h4>
+                <div class="formula">If + S + 過去式（be 用 were）, S + would/could + V</div>
+                <div class="example">
+                    If I <strong>were</strong> rich, I <strong>would buy</strong> a house.
+                    <button class="formula-sound-btn" onclick="speak('If I were rich, I would buy a house.')">🔊</button><br>
+                    （事實：我現在不有錢）
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>與過去事實相反</h4>
+                <div class="formula">If + S + had + p.p., S + would/could + have + p.p.</div>
+                <div class="example">
+                    If I <strong>had studied</strong> hard, I <strong>would have passed</strong> the exam.
+                    <button class="formula-sound-btn" onclick="speak('If I had studied hard, I would have passed the exam.')">🔊</button><br>
+                    （事實：我過去沒認真讀，所以沒通過）
+                </div>
+            </div>
+            
+            <div class="formula-box">
+                <h4>口訣記憶</h4>
+                <div class="formula" style="color: var(--primary);">「現在假過去，過去假完成」</div>
+                <div class="example">
+                    講現在的假設 → 用過去式<br>
+                    講過去的假設 → 用過去完成式
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-section" id="subjunctive-quiz"></div>
+    </div>
+</div>
+
+<script>
+    // 語音合成
+    const synth = window.speechSynthesis;
+    
+    // 播放英文語音
+    function speak(text) {
+        synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        utterance.pitch = 1;
+        synth.speak(utterance);
+    }
+    
+    // 題庫（包含完整句子供語音使用）
+    const quizData = {
+        tense: [
+            {
+                question: "He _____ basketball every day.",
+                fullSentence: "He plays basketball every day.",
+                answerWord: "plays",
+                options: ["play", "plays", "is playing", "played"],
+                answer: 1,
+                explanation: "every day 表示「每天」，是習慣性動作，用現在簡單式。主詞是 He（第三人稱單數），動詞要加 s。"
+            },
+            {
+                question: "Look! The children _____ in the park now.",
+                fullSentence: "Look! The children are playing in the park now.",
+                answerWord: "are playing",
+                options: ["play", "plays", "are playing", "played"],
+                answer: 2,
+                explanation: "now 表示「現在」，Look! 暗示正在發生的事，用現在進行式 are playing。"
+            },
+            {
+                question: "I _____ to Taipei yesterday.",
+                fullSentence: "I went to Taipei yesterday.",
+                answerWord: "went",
+                options: ["go", "goes", "am going", "went"],
+                answer: 3,
+                explanation: "yesterday 表示「昨天」，是過去的時間，用過去簡單式 went（go 的過去式）。"
+            },
+            {
+                question: "She _____ here since 2020.",
+                fullSentence: "She has lived here since 2020.",
+                answerWord: "has lived",
+                options: ["lives", "lived", "has lived", "is living"],
+                answer: 2,
+                explanation: "since 2020 表示「從 2020 年到現在」，用現在完成式 has lived。"
+            },
+            {
+                question: "Tom _____ his homework last night.",
+                fullSentence: "Tom finished his homework last night.",
+                answerWord: "finished",
+                options: ["finish", "finishes", "finished", "has finished"],
+                answer: 2,
+                explanation: "last night 表示「昨晚」，是過去的時間，用過去簡單式 finished。"
+            },
+            {
+                question: "My mother _____ dinner now. Don't bother her.",
+                fullSentence: "My mother is cooking dinner now. Don't bother her.",
+                answerWord: "is cooking",
+                options: ["cooks", "cooked", "is cooking", "has cooked"],
+                answer: 2,
+                explanation: "now 表示「現在正在做」，用現在進行式 is cooking。"
+            },
+            {
+                question: "I _____ never _____ to Japan.",
+                fullSentence: "I have never been to Japan.",
+                answerWord: "have, been",
+                options: ["have, been", "has, been", "have, gone", "did, go"],
+                answer: 0,
+                explanation: "never（從不）搭配現在完成式，表示「經驗」。have been to = 去過（已經回來）。"
+            },
+            {
+                question: "He _____ TV when I came home.",
+                fullSentence: "He was watching TV when I came home.",
+                answerWord: "was watching",
+                options: ["watches", "watched", "was watching", "has watched"],
+                answer: 2,
+                explanation: "when I came home 是過去的時間點，強調那時「正在做」的動作，用過去進行式 was watching。"
+            },
+            {
+                question: "Water _____ at 100 degrees Celsius.",
+                fullSentence: "Water boils at 100 degrees Celsius.",
+                answerWord: "boils",
+                options: ["boil", "boils", "is boiling", "boiled"],
+                answer: 1,
+                explanation: "這是科學事實，永遠不變的真理，用現在簡單式。Water 是第三人稱單數，動詞加 s。"
+            },
+            {
+                question: "By the time I arrived, they _____ already _____.",
+                fullSentence: "By the time I arrived, they had already left.",
+                answerWord: "had, left",
+                options: ["have, left", "had, left", "were, leaving", "are, leaving"],
+                answer: 1,
+                explanation: "By the time I arrived（在我到達之前）暗示「過去的過去」，用過去完成式 had left。"
+            }
+        ],
+        passive: [
+            {
+                question: "English _____ in many countries.",
+                fullSentence: "English is spoken in many countries.",
+                answerWord: "is spoken",
+                options: ["speaks", "spoke", "is spoken", "is speaking"],
+                answer: 2,
+                explanation: "英文「被說」→ 被動語態。現在的事實，用現在簡單被動：is + p.p.（spoken）。"
+            },
+            {
+                question: "The window _____ by Tom yesterday.",
+                fullSentence: "The window was broken by Tom yesterday.",
+                answerWord: "was broken",
+                options: ["broke", "was broken", "is broken", "has broken"],
+                answer: 1,
+                explanation: "yesterday 是過去時間，窗戶「被打破」→ 過去簡單被動：was + p.p.（broken）。"
+            },
+            {
+                question: "The work _____ already _____ finished.",
+                fullSentence: "The work has already been finished.",
+                answerWord: "has, been",
+                options: ["has, been", "have, been", "was, been", "is, been"],
+                answer: 0,
+                explanation: "already 暗示現在完成式，工作「被完成」→ 現在完成被動：has been + p.p.。"
+            },
+            {
+                question: "A new hospital _____ next year.",
+                fullSentence: "A new hospital will be built next year.",
+                answerWord: "will be built",
+                options: ["will build", "will be built", "is built", "was built"],
+                answer: 1,
+                explanation: "next year 是未來，醫院「被建造」→ 未來被動：will be + p.p.（built）。"
+            },
+            {
+                question: "The letter _____ by my secretary every day.",
+                fullSentence: "The letter is typed by my secretary every day.",
+                answerWord: "is typed",
+                options: ["types", "is typed", "was typed", "typed"],
+                answer: 1,
+                explanation: "every day 是現在習慣，信「被打字」→ 現在簡單被動：is typed。"
+            },
+            {
+                question: "The thief _____ by the police last night.",
+                fullSentence: "The thief was caught by the police last night.",
+                answerWord: "was caught",
+                options: ["caught", "was caught", "is caught", "catches"],
+                answer: 1,
+                explanation: "last night 是過去，小偷「被抓」→ 過去簡單被動：was caught。"
+            },
+            {
+                question: "This book _____ by millions of people.",
+                fullSentence: "This book has been read by millions of people.",
+                answerWord: "has been read",
+                options: ["has read", "has been read", "was read", "is reading"],
+                answer: 1,
+                explanation: "這本書「被閱讀」過（到現在的經驗）→ 現在完成被動：has been read。"
+            },
+            {
+                question: "The room _____ cleaned right now.",
+                fullSentence: "The room is being cleaned right now.",
+                answerWord: "is being",
+                options: ["is", "is being", "was", "has been"],
+                answer: 1,
+                explanation: "right now 正在進行，房間「正在被打掃」→ 現在進行被動：is being cleaned。"
+            }
+        ],
+        relative: [
+            {
+                question: "The man _____ is standing there is my father.",
+                fullSentence: "The man who is standing there is my father.",
+                answerWord: "who",
+                options: ["who", "which", "whose", "whom"],
+                answer: 0,
+                explanation: "先行詞是 the man（人），在子句中當主詞（is standing 的主詞），用 who。"
+            },
+            {
+                question: "The book _____ I bought yesterday is interesting.",
+                fullSentence: "The book which I bought yesterday is interesting.",
+                answerWord: "which",
+                options: ["who", "which", "whose", "whom"],
+                answer: 1,
+                explanation: "先行詞是 the book（事物），用 which。也可以用 that。"
+            },
+            {
+                question: "The girl _____ bag is red is my sister.",
+                fullSentence: "The girl whose bag is red is my sister.",
+                answerWord: "whose",
+                options: ["who", "which", "whose", "whom"],
+                answer: 2,
+                explanation: "需要表示「所有格」（她的包包），用 whose。whose bag = her bag。"
+            },
+            {
+                question: "My mother, _____ is a teacher, works hard.",
+                fullSentence: "My mother, who is a teacher, works hard.",
+                answerWord: "who",
+                options: ["who", "which", "that", "whose"],
+                answer: 0,
+                explanation: "有逗號的非限定用法，先行詞是人，用 who。注意：有逗號不能用 that！"
+            },
+            {
+                question: "The movie _____ we saw last night was exciting.",
+                fullSentence: "The movie which we saw last night was exciting.",
+                answerWord: "which",
+                options: ["who", "which", "whose", "whom"],
+                answer: 1,
+                explanation: "先行詞是 the movie（事物），用 which。也可以用 that。"
+            },
+            {
+                question: "I met a man _____ son is a doctor.",
+                fullSentence: "I met a man whose son is a doctor.",
+                answerWord: "whose",
+                options: ["who", "which", "whose", "whom"],
+                answer: 2,
+                explanation: "需要表示「所有格」（他的兒子），用 whose。whose son = his son。"
+            },
+            {
+                question: "This is the house _____ I was born.",
+                fullSentence: "This is the house where I was born.",
+                answerWord: "where",
+                options: ["which", "where", "who", "whose"],
+                answer: 1,
+                explanation: "先行詞是 the house（地點），後面表示「在那裡」，用關係副詞 where。"
+            },
+            {
+                question: "The woman _____ I spoke to was very kind.",
+                fullSentence: "The woman whom I spoke to was very kind.",
+                answerWord: "whom",
+                options: ["who", "which", "whose", "whom"],
+                answer: 3,
+                explanation: "先行詞是 the woman（人），在子句中當受詞（spoke to 的對象），用 whom。口語也可用 who。"
+            }
+        ],
+        conjunction: [
+            {
+                question: "I stayed home _____ it was raining.",
+                fullSentence: "I stayed home because it was raining.",
+                answerWord: "because",
+                options: ["because", "because of", "although", "but"],
+                answer: 0,
+                explanation: "後面是完整句子（it was raining），用 because。because of 後面要接名詞。"
+            },
+            {
+                question: "I stayed home _____ the rain.",
+                fullSentence: "I stayed home because of the rain.",
+                answerWord: "because of",
+                options: ["because", "because of", "although", "but"],
+                answer: 1,
+                explanation: "後面是名詞（the rain），用 because of。because 後面要接句子。"
+            },
+            {
+                question: "_____ he is old, he is still strong.",
+                fullSentence: "Although he is old, he is still strong.",
+                answerWord: "Although",
+                options: ["Although", "Because", "But", "So"],
+                answer: 0,
+                explanation: "「雖然他老了，他仍然很強壯」→ 用 Although（雖然）。"
+            },
+            {
+                question: "Although it rained, _____ we went out.",
+                fullSentence: "Although it rained, we went out.",
+                answerWord: "（不需要）",
+                options: ["but", "so", "（不需要）", "because"],
+                answer: 2,
+                explanation: "although 和 but 不能同時用！用了 although 就不需要再加 but。"
+            },
+            {
+                question: "I will call you _____ I arrive.",
+                fullSentence: "I will call you when I arrive.",
+                answerWord: "when",
+                options: ["when", "but", "because of", "although"],
+                answer: 0,
+                explanation: "「當我到達時」→ 用 when（當...時）。"
+            },
+            {
+                question: "_____ you study hard, you will fail the exam.",
+                fullSentence: "Unless you study hard, you will fail the exam.",
+                answerWord: "Unless",
+                options: ["If", "Unless", "When", "Although"],
+                answer: 1,
+                explanation: "「除非你努力讀書，否則你會不及格」→ 用 unless（除非）。"
+            },
+            {
+                question: "He was tired, _____ he kept working.",
+                fullSentence: "He was tired, but he kept working.",
+                answerWord: "but",
+                options: ["so", "but", "because", "although"],
+                answer: 1,
+                explanation: "「他很累，但他繼續工作」→ 用 but（但是）表示轉折。"
+            },
+            {
+                question: "She left early _____ catch the train.",
+                fullSentence: "She left early in order to catch the train.",
+                answerWord: "in order to",
+                options: ["in order to", "because", "although", "but"],
+                answer: 0,
+                explanation: "「為了趕上火車」→ 用 in order to + V（為了...）。"
+            }
+        ],
+        comparison: [
+            {
+                question: "Tom is _____ than Mary.",
+                fullSentence: "Tom is taller than Mary.",
+                answerWord: "taller",
+                options: ["tall", "taller", "tallest", "more tall"],
+                answer: 1,
+                explanation: "比較兩個人，用比較級 + than。tall 是單音節，比較級是 taller。"
+            },
+            {
+                question: "She is the _____ student in the class.",
+                fullSentence: "She is the smartest student in the class.",
+                answerWord: "smartest",
+                options: ["smart", "smarter", "smartest", "more smart"],
+                answer: 2,
+                explanation: "「在班上最...」用最高級 the + -est。smart 是單音節，最高級是 smartest。"
+            },
+            {
+                question: "This book is _____ than that one.",
+                fullSentence: "This book is more interesting than that one.",
+                answerWord: "more interesting",
+                options: ["interesting", "more interesting", "most interesting", "interestinger"],
+                answer: 1,
+                explanation: "interesting 是多音節，比較級用 more interesting。"
+            },
+            {
+                question: "He is as _____ as his brother.",
+                fullSentence: "He is as tall as his brother.",
+                answerWord: "tall",
+                options: ["tall", "taller", "tallest", "more tall"],
+                answer: 0,
+                explanation: "as...as 中間用原級。as tall as = 和...一樣高。"
+            },
+            {
+                question: "My English is _____ than before.",
+                fullSentence: "My English is better than before.",
+                answerWord: "better",
+                options: ["good", "better", "best", "more good"],
+                answer: 1,
+                explanation: "good 的比較級是 better（不規則變化），不是 more good。"
+            },
+            {
+                question: "This is one of the _____ movies I have ever seen.",
+                fullSentence: "This is one of the best movies I have ever seen.",
+                answerWord: "best",
+                options: ["good", "better", "best", "most good"],
+                answer: 2,
+                explanation: "one of the + 最高級 + 複數名詞。good 的最高級是 best。"
+            },
+            {
+                question: "The weather is getting _____ and _____.",
+                fullSentence: "The weather is getting colder and colder.",
+                answerWord: "colder, colder",
+                options: ["cold, cold", "colder, colder", "coldest, coldest", "more cold, more cold"],
+                answer: 1,
+                explanation: "「越來越冷」用 比較級 + and + 比較級。cold 的比較級是 colder。"
+            },
+            {
+                question: "The _____ you practice, the _____ you become.",
+                fullSentence: "The more you practice, the better you become.",
+                answerWord: "more, better",
+                options: ["more, better", "most, best", "much, good", "many, well"],
+                answer: 0,
+                explanation: "The + 比較級..., the + 比較級... = 越...就越...。"
+            }
+        ],
+        subjunctive: [
+            {
+                question: "If I _____ rich, I would buy a car.",
+                fullSentence: "If I were rich, I would buy a car.",
+                answerWord: "were",
+                options: ["am", "was", "were", "be"],
+                answer: 2,
+                explanation: "與現在事實相反的假設，用過去式。be 動詞在假設語氣中一律用 were。"
+            },
+            {
+                question: "If I had studied hard, I _____ the exam.",
+                fullSentence: "If I had studied hard, I would have passed the exam.",
+                answerWord: "would have passed",
+                options: ["will pass", "would pass", "would have passed", "passed"],
+                answer: 2,
+                explanation: "與過去事實相反，主要子句用 would have + p.p.。"
+            },
+            {
+                question: "I wish I _____ a bird.",
+                fullSentence: "I wish I were a bird.",
+                answerWord: "were",
+                options: ["am", "was", "were", "be"],
+                answer: 2,
+                explanation: "wish 後面接與現在相反的假設，用過去式，be 動詞用 were。"
+            },
+            {
+                question: "If she _____ here now, she could help us.",
+                fullSentence: "If she were here now, she could help us.",
+                answerWord: "were",
+                options: ["is", "was", "were", "be"],
+                answer: 2,
+                explanation: "now 暗示與現在事實相反（她現在不在這裡），用 were。"
+            },
+            {
+                question: "If I had known the truth, I _____ you.",
+                fullSentence: "If I had known the truth, I would have told you.",
+                answerWord: "would have told",
+                options: ["will tell", "would tell", "would have told", "told"],
+                answer: 2,
+                explanation: "If 子句用 had known（過去完成），主要子句用 would have + p.p.。"
+            },
+            {
+                question: "He talks as if he _____ everything.",
+                fullSentence: "He talks as if he knew everything.",
+                answerWord: "knew",
+                options: ["knows", "knew", "has known", "know"],
+                answer: 1,
+                explanation: "as if（好像）後面接與現在相反的假設，用過去式 knew。"
+            }
+        ]
+    };
+
+    // 狀態管理
+    let currentUnit = null;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = false;
+    let questions = [];
+    let currentFullSentence = '';
+
+    // DOM 元素
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const mainContents = document.querySelectorAll('.main-content');
+    const unitCards = document.querySelectorAll('.unit-card');
+
+    // 切換 Tab
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const view = tab.dataset.view;
+            showView(view);
+        });
+    });
+
+    // 點擊單元卡片
+    unitCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const unit = card.dataset.unit;
+            showView(unit);
+        });
+    });
+
+    // 顯示視圖
+    function showView(view) {
+        synth.cancel(); // 停止語音
+        
+        navTabs.forEach(t => t.classList.remove('active'));
+        mainContents.forEach(c => c.classList.remove('active'));
+        
+        document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
+        document.getElementById(view)?.classList.add('active');
+        
+        if (view !== 'home' && quizData[view]) {
+            currentUnit = view;
+            initQuiz(view);
+        }
+    }
+
+    // 初始化測驗
+    function initQuiz(unit) {
+        questions = [...quizData[unit]];
+        currentQuestionIndex = 0;
+        score = 0;
+        answered = false;
+        
+        renderQuiz();
+    }
+
+    // 播放完整句子語音（答題後才能用）
+    function speakFullSentence() {
+        if (!currentFullSentence || !answered) return;
+        
+        synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(currentFullSentence);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        utterance.pitch = 1;
+        
+        const btn = document.querySelector('.question-sound-btn');
+        if (btn) {
+            btn.classList.add('playing');
+            setTimeout(() => btn.classList.remove('playing'), 500);
+        }
+        
+        synth.speak(utterance);
+    }
+
+    // 渲染測驗
+    function renderQuiz() {
+        const quizSection = document.getElementById(`${currentUnit}-quiz`);
+        if (!quizSection) return;
+        
+        const total = questions.length;
+        const current = questions[currentQuestionIndex];
+        currentFullSentence = current.fullSentence;
+        
+        quizSection.innerHTML = `
+            <div class="quiz-header">
+                <div class="quiz-title">📝 練習題</div>
+                <div class="quiz-progress">第 ${currentQuestionIndex + 1} 題 / 共 ${total} 題</div>
+                <div class="quiz-score">✓ ${score} 分</div>
+            </div>
+            
+            <div class="question-card">
+                <button class="question-sound-btn" id="sound-btn" onclick="speakFullSentence()">
+                    🔊 聽正確句子發音
+                </button>
+                
+                <div class="question-text">
+                    ${formatQuestion(current.question)}
+                </div>
+                
+                <div class="options-grid">
+                    ${current.options.map((opt, i) => `
+                        <button class="option-btn" data-index="${i}">
+                            <span class="letter">${String.fromCharCode(65 + i)}</span>
+                            <span>${opt}</span>
+                        </button>
+                    `).join('')}
+                </div>
+                
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">
+                        <span id="explanation-icon"></span>
+                        <span id="explanation-status"></span>
+                    </div>
+                    <div class="explanation-text" id="explanation-text"></div>
+                    <div class="correct-sentence" id="correct-sentence"></div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="showView('home')">← 返回選單</button>
+                <button class="nav-btn primary" id="next-btn" disabled onclick="nextQuestion()">下一題 →</button>
+            </div>
+            
+            <div class="result-screen" id="result-screen">
+                <div class="result-icon" id="result-icon">🎉</div>
+                <div class="result-title" id="result-title">練習完成！</div>
+                <div class="result-score-big" id="result-score">${score}/${total}</div>
+                <div class="result-message" id="result-message">做得好！</div>
+                <div class="result-buttons">
+                    <button class="result-btn secondary" onclick="showView('home')">選其他單元</button>
+                    <button class="result-btn primary" onclick="initQuiz('${currentUnit}')">再練一次</button>
+                </div>
+            </div>
+        `;
+        
+        // 綁定選項點擊
+        quizSection.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', () => checkAnswer(parseInt(btn.dataset.index)));
+        });
+    }
+
+    // 格式化題目（把 _____ 變成視覺化的空格）
+    function formatQuestion(q) {
+        return q.replace(/_____/g, '<span class="blank">&nbsp;&nbsp;?&nbsp;&nbsp;</span>');
+    }
+
+    // 檢查答案
+    function checkAnswer(selectedIndex) {
+        if (answered) return;
+        answered = true;
+        
+        const current = questions[currentQuestionIndex];
+        const isCorrect = selectedIndex === current.answer;
+        
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, i) => {
+            btn.classList.add('disabled');
+            if (i === current.answer) {
+                btn.classList.add('correct');
+            } else if (i === selectedIndex && !isCorrect) {
+                btn.classList.add('wrong');
+            }
+        });
+        
+        // 顯示發音按鈕
+        document.getElementById('sound-btn').classList.add('show');
+        
+        // 顯示解釋
+        const explanation = document.getElementById('explanation');
+        const explanationIcon = document.getElementById('explanation-icon');
+        const explanationStatus = document.getElementById('explanation-status');
+        const explanationText = document.getElementById('explanation-text');
+        const correctSentence = document.getElementById('correct-sentence');
+        
+        explanation.classList.add('show');
+        
+        if (isCorrect) {
+            score++;
+            explanation.classList.add('correct');
+            explanationIcon.textContent = '✓';
+            explanationStatus.textContent = '正確！';
+        } else {
+            explanation.classList.add('wrong');
+            explanationIcon.textContent = '✗';
+            explanationStatus.textContent = '答錯了';
+        }
+        
+        explanationText.textContent = current.explanation;
+        
+        // 顯示正確句子（標記答案）
+        const highlightedSentence = current.fullSentence.replace(
+            new RegExp(`(${current.answerWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'i'),
+            '<strong>$1</strong>'
+        );
+        correctSentence.innerHTML = '✅ 正確句子：' + highlightedSentence;
+        
+        // 更新分數
+        document.querySelector('.quiz-score').textContent = `✓ ${score} 分`;
+        
+        // 啟用下一題按鈕
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.disabled = false;
+        
+        if (currentQuestionIndex >= questions.length - 1) {
+            nextBtn.textContent = '看結果';
+        }
+        
+        // 自動播放正確句子
+        setTimeout(() => speakFullSentence(), 300);
+    }
+
+    // 下一題
+    function nextQuestion() {
+        synth.cancel();
+        currentQuestionIndex++;
+        answered = false;
+        
+        if (currentQuestionIndex >= questions.length) {
+            showResult();
+        } else {
+            renderQuiz();
+        }
+    }
+
+    // 顯示結果
+    function showResult() {
+        const quizSection = document.getElementById(`${currentUnit}-quiz`);
+        const total = questions.length;
+        const percent = Math.round(score / total * 100);
+        
+        // 隱藏題目區塊
+        quizSection.querySelector('.quiz-header').style.display = 'none';
+        quizSection.querySelector('.question-card').style.display = 'none';
+        quizSection.querySelector('.nav-buttons').style.display = 'none';
+        
+        // 顯示結果
+        const resultScreen = document.getElementById('result-screen');
+        resultScreen.classList.add('show');
+        
+        document.getElementById('result-score').textContent = `${score}/${total}`;
+        
+        const resultIcon = document.getElementById('result-icon');
+        const resultTitle = document.getElementById('result-title');
+        const resultMessage = document.getElementById('result-message');
+        
+        if (percent >= 80) {
+            resultIcon.textContent = '🏆';
+            resultTitle.textContent = '太棒了！';
+            resultMessage.textContent = '這個單元你已經掌握得很好了！';
+        } else if (percent >= 60) {
+            resultIcon.textContent = '👍';
+            resultTitle.textContent = '不錯喔！';
+            resultMessage.textContent = '大部分都對了，再練習一下會更好！';
+        } else {
+            resultIcon.textContent = '💪';
+            resultTitle.textContent = '繼續加油！';
+            resultMessage.textContent = '建議再看一次上面的公式，然後重新練習。';
+        }
+    }
+
+    // 初始化
+    showView('home');
+</script>
+```
+
+</body>
+</html>

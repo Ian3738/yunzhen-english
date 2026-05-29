@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>高中龍騰版英文單字練習 - 分階段練習</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            touch-action: pan-y;
+        }
+        
+        .main-container {
+            background-color: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 2rem 2rem 0 0;
+            text-align: center;
+        }
+        
+        .stage-card {
+            background: white;
+            border: 3px solid #e5e7eb;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-color: #16a34a;
+        }
+        
+        .stage-card.completed {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: #22c55e;
+        }
+        
+        .word-group {
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #10b981;
+        }
+        
+        .word-group-title {
+            font-weight: bold;
+            color: #059669;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .option-btn {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #166534;
+            transition: all 0.3s ease;
+            border: 4px solid transparent;
+            min-height: 80px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .option-btn:hover {
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+        }
+        
+        .option-btn.selected {
+            border-color: #22C55E;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+        }
+        
+        .option-btn.selected::before {
+            content: '✓';
+            position: absolute;
+            left: 15px;
+            font-size: 1.5rem;
+            color: #166534;
+            font-weight: bold;
+        }
+        
+        .option-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .correct {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+            color: white !important;
+            border-color: #15803d !important;
+            animation: correctPulse 0.5s ease;
+        }
+        
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .correct::after {
+            content: '✓';
+            position: absolute;
+            right: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .incorrect-reveal {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: white !important;
+            border-color: #b91c1c !important;
+        }
+        
+        .speaker-btn {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #16a34a;
+            border-radius: 50%;
+            min-width: 70px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid #16a34a;
+        }
+        
+        .speaker-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .speaker-btn:hover {
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 9999px;
+            overflow: hidden;
+            height: 1.5rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+            border-radius: 9999px;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .question-text-area {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: inset 0 2px 8px rgba(16, 185, 129, 0.1);
+            border: 3px solid #6ee7b7;
+        }
+        
+        .big-button {
+            min-height: 70px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 1.5rem 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .big-button:active {
+            transform: scale(0.95);
+        }
+        
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score-display {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.6; transform: scale(1.2) rotate(10deg); }
+        }
+        
+        .star-icon {
+            display: inline-block;
+            font-size: 4rem;
+            animation: twinkle 1.5s ease-in-out infinite;
+            margin: 0 0.5rem;
+        }
+        
+        .star-icon:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .star-icon:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        .stage-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e5e7eb;
+        }
+        
+        .progress-dot.completed {
+            background: #22c55e;
+        }
+        
+        .overview-table {
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .table-group {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .table-group:last-child {
+            border-bottom: none;
+        }
+        
+        .table-group-header {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 1rem;
+            font-weight: bold;
+            color: #0c4a6e;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .table-group-header:hover {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        }
+        
+        .table-group-content {
+            display: none;
+            padding: 0;
+        }
+        
+        .table-group-content.expanded {
+            display: block;
+        }
+        
+        .table-word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .table-word-item:hover {
+            background: #f9fafb;
+        }
+        
+        .table-word-item:last-child {
+            border-bottom: none;
+        }
+        
+        .word-english {
+            font-weight: 600;
+            color: #1f2937;
+            flex: 1;
+        }
+        
+        .word-chinese {
+            color: #6b7280;
+            text-align: right;
+            flex: 1;
+            margin-left: 1rem;
+        }
+        
+        .expand-icon {
+            font-size: 1.2rem;
+            color: #6b7280;
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-icon.rotated {
+            transform: rotate(90deg);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="main-container">
+        <!-- 總表頁面 -->
+        <div id="overview-container">
+            <div class="header-section">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">📚 高中龍騰版英文</h1>
+                <h2 class="text-xl md:text-2xl font-semibold">單字總表與複習</h2>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <div class="mb-6 text-center">
+                    <p class="text-lg text-gray-700 mb-4">共 <span class="font-bold text-green-600" id="total-words-count">72</span> 個單字與片語，分為 <span class="font-bold text-green-600">16</span> 個詞組</p>
+                </div>
+                
+                <div id="overview-table" class="mb-8">
+                    <!-- 總表內容將由JavaScript生成 -->
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="start-stage-practice-btn" class="big-button bg-gradient-to-r from-green-500 to-green-700 text-white">
+                        🎯 開始分階段練習
+                    </button>
+                    <button id="overview-practice-all-btn" class="big-button bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+                        📝 直接練習全部
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 階段選擇頁面 -->
+        <div id="stage-select-container">
+            <div class="header-section">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">📚 高中龍騰版英文</h1>
+                <h2 class="text-xl md:text-2xl font-semibold">單字練習 - 分階段學習</h2>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <h3 class="text-2xl md:text-3xl font-bold text-center text-green-700 mb-6">選擇練習階段</h3>
+                <div id="stages-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                    <button id="practice-all-btn" class="big-button bg-gradient-to-r from-green-500 to-green-700 text-white">
+                        🎯 練習全部單字
+                    </button>
+                    <button id="download-btn" class="big-button bg-gradient-to-r from-purple-500 to-purple-700 text-white">
+                        📥 下載測驗卷
+                    </button>
+                    <button id="back-to-overview-btn" class="big-button bg-gradient-to-r from-gray-500 to-gray-700 text-white">
+                        📋 返回總表
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 測驗頁面 -->
+        <div id="quiz-container" class="hidden">
+            <div class="header-section">
+                <div class="flex justify-between items-center mb-4">
+                    <div id="question-counter" class="text-xl md:text-2xl font-bold"></div>
+                    <div id="score-counter" class="score-display"></div>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <div class="question-text-area mb-6">
+                    <div class="flex items-center justify-center gap-4">
+                        <h3 id="question-text" class="text-3xl md:text-4xl font-bold text-center text-gray-800 flex-1"></h3>
+                        <button id="speak-question-btn" class="speaker-btn flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                </div>
+                
+                <div id="control-buttons" class="text-center">
+                    <button id="check-answer-btn" class="big-button bg-gradient-to-r from-blue-500 to-blue-700 text-white w-full md:w-auto">
+                        🔍 檢查答案
+                    </button>
+                    <button id="next-question-btn" class="hidden big-button bg-gradient-to-r from-green-500 to-green-700 text-white w-full md:w-auto">
+                        ➡️ 下一題
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果頁面 -->
+        <div id="result-container" class="hidden">
+            <div class="header-section">
+                <div class="mb-4">
+                    <span class="star-icon">⭐</span>
+                    <span class="star-icon">⭐</span>
+                    <span class="star-icon">⭐</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">🎊 測驗完成！</h2>
+            </div>
+            
+            <div class="p-8 text-center">
+                <p class="text-2xl md:text-3xl text-gray-600 mb-2">你的最終分數</p>
+                <p id="final-score" class="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-8"></p>
+                <div id="result-buttons" class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center p-4 text-white mt-8">
+        <div class="flex items-center justify-center gap-3">
+            <span class="font-semibold text-lg">💻 @spedmix2025 📚</span>
+        </div>
+    </footer>
+
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md">
+            <div class="text-6xl mb-4">📄</div>
+            <p id="export-status" class="text-xl font-semibold text-gray-800">正在產生 PDF...</p>
+            <div class="mt-4 w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full animate-pulse" style="width: 60%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="export-render-container" style="position: absolute; left: -9999px; top: -9999px;"></div>
+
+    <script>
+        // 將單字按詞根分組
+        const wordGroups = [
+            {
+                name: 'debate 系列',
+                words: [
+                    { chinese: '辯論（動詞）', english: 'debate' },
+                    { chinese: '辯論（名詞）', english: 'debate' },
+                    { chinese: '與某人辯論', english: 'debate with sb.' },
+                    { chinese: '針對某議題進行辯論', english: 'have a debate on sth.' }
+                ]
+            },
+            {
+                name: 'penalty/prison 系列',
+                words: [
+                    { chinese: '懲罰；刑罰', english: 'penalty' },
+                    { chinese: '監禁（名詞）', english: 'imprisonment' },
+                    { chinese: '監禁；關押（動詞）', english: 'imprison' },
+                    { chinese: '監獄', english: 'prison' },
+                    { chinese: '囚犯；犯人', english: 'prisoner' }
+                ]
+            },
+            {
+                name: 'claim 系列',
+                words: [
+                    { chinese: '說法；宣稱', english: 'claim' },
+                    { chinese: '所有權', english: 'claim' },
+                    { chinese: '宣稱；聲稱擁有', english: 'claim' },
+                    { chinese: '對...做不實說法', english: 'make a false claim about' },
+                    { chinese: '宣稱擁有某件事的功勞', english: 'claim credit for sth.' }
+                ]
+            },
+            {
+                name: 'insist 系列',
+                words: [
+                    { chinese: '堅持', english: 'insist' },
+                    { chinese: '堅持...', english: 'insist that' },
+                    { chinese: '堅持（做）...', english: 'insist on' }
+                ]
+            },
+            {
+                name: 'property/companion 系列',
+                words: [
+                    { chinese: '地產；房地產', english: 'property' },
+                    { chinese: '所有物；財產', english: 'property' },
+                    { chinese: '同伴；夥伴', english: 'companion' }
+                ]
+            },
+            {
+                name: 'mental/devour 系列',
+                words: [
+                    { chinese: '心理的；精神上的', english: 'mental' },
+                    { chinese: '熱切地讀；狼吞虎嚥', english: 'devour' }
+                ]
+            },
+            {
+                name: 'volume 系列',
+                words: [
+                    { chinese: '書籍', english: 'volume' },
+                    { chinese: '總額；總量', english: 'volume' },
+                    { chinese: '銷售量', english: 'sales volume' }
+                ]
+            },
+            {
+                name: 'acquire 系列',
+                words: [
+                    { chinese: '學到；習得；取得', english: 'acquire' },
+                    { chinese: '取得；獲得', english: 'acquisition' },
+                    { chinese: '獲得...的名聲', english: 'acquire a reputation for' }
+                ]
+            },
+            {
+                name: 'profound/wealthy 系列',
+                words: [
+                    { chinese: '深厚的；見解深遠的', english: 'profound' },
+                    { chinese: '富有的；富裕的', english: 'wealthy' },
+                    { chinese: '財富', english: 'wealth' }
+                ]
+            },
+            {
+                name: 'murder 系列',
+                words: [
+                    { chinese: '謀殺（動詞）', english: 'murder' },
+                    { chinese: '謀殺（案）', english: 'murder' },
+                    { chinese: '謀殺犯；兇手', english: 'murderer' },
+                    { chinese: '企圖謀殺', english: 'attempted murder' }
+                ]
+            },
+            {
+                name: 'disgust 系列',
+                words: [
+                    { chinese: '厭惡；反感（名詞）', english: 'disgust' },
+                    { chinese: '使厭惡；使反感', english: 'disgust' }
+                ]
+            },
+            {
+                name: 'vain/worship 系列',
+                words: [
+                    { chinese: '無用的；枉然的', english: 'vain' },
+                    { chinese: '徒勞無功', english: 'in vain' },
+                    { chinese: '崇拜；愛慕', english: 'worship' }
+                ]
+            },
+            {
+                name: 'intention 系列',
+                words: [
+                    { chinese: '打算；意圖', english: 'intention' },
+                    { chinese: '打算；想要', english: 'intend' },
+                    { chinese: '故意的；有意的', english: 'intentional' },
+                    { chinese: '打算做...', english: 'intend to' }
+                ]
+            },
+            {
+                name: 'abandon/surrender 系列',
+                words: [
+                    { chinese: '中止；放棄；拋棄', english: 'abandon' },
+                    { chinese: '交出；放棄；投降', english: 'surrender' },
+                    { chinese: '向某人投降', english: 'surrender to sb.' }
+                ]
+            },
+            {
+                name: 'guilt 系列',
+                words: [
+                    { chinese: '內疚；犯罪；罪行', english: 'guilt' },
+                    { chinese: '有罪的', english: 'guilty' },
+                    { chinese: '內疚感', english: 'sense of guilt' },
+                    { chinese: '犯了...罪', english: 'be guilty of' }
+                ]
+            },
+            {
+                name: 'rumor 系列',
+                words: [
+                    { chinese: '謠言；傳聞', english: 'rumor' },
+                    { chinese: '到處傳聞...', english: 'Rumors are flying that' },
+                    { chinese: '傳聞說...', english: 'Rumor has it that' }
+                ]
+            }
+        ];
+
+        // 將單字組分成階段，每3組為一個階段
+        const stages = [];
+        for (let i = 0; i < wordGroups.length; i += 3) {
+            stages.push({
+                name: `階段 ${Math.floor(i / 3) + 1}`,
+                groups: wordGroups.slice(i, Math.min(i + 3, wordGroups.length)),
+                completed: false
+            });
+        }
+        
+        // 獲取所有單字的平面列表
+        function getAllWords() {
+            const allWords = [];
+            wordGroups.forEach(group => {
+                group.words.forEach(word => {
+                    allWords.push(word);
+                });
+            });
+            return allWords;
+        }
+        
+        const stageSelectContainer = document.getElementById('stage-select-container');
+        const overviewContainer = document.getElementById('overview-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        const stagesGrid = document.getElementById('stages-grid');
+        const overviewTable = document.getElementById('overview-table');
+        const startStagePracticeBtn = document.getElementById('start-stage-practice-btn');
+        const overviewPracticeAllBtn = document.getElementById('overview-practice-all-btn');
+        const backToOverviewBtn = document.getElementById('back-to-overview-btn');
+        const practiceAllBtn = document.getElementById('practice-all-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const questionCounter = document.getElementById('question-counter');
+        const scoreCounter = document.getElementById('score-counter');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const checkAnswerBtn = document.getElementById('check-answer-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const speakQuestionBtn = document.getElementById('speak-question-btn');
+        const finalScore = document.getElementById('final-score');
+        const progressBar = document.getElementById('progress-bar');
+        const resultButtonsContainer = document.getElementById('result-buttons');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const exportStatus = document.getElementById('export-status');
+
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let attempts = 0;
+        let selectedButton = null;
+        let synth = window.speechSynthesis;
+        let incorrectlyAnswered = [];
+        let currentStage = null;
+        let allVocabulary = getAllWords();
+
+        function speak(text, lang) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 0.9;
+            synth.speak(utterance);
+        }
+
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+        
+        function showOverview() {
+            overviewContainer.classList.remove('hidden');
+            stageSelectContainer.classList.add('hidden');
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            generateOverviewTable();
+        }
+        
+        function showStageSelect() {
+            stageSelectContainer.classList.remove('hidden');
+            overviewContainer.classList.add('hidden');
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            renderStages();
+        }
+        
+        function generateOverviewTable() {
+            overviewTable.innerHTML = '';
+            
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'overview-table';
+            
+            wordGroups.forEach((group, groupIndex) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'table-group';
+                
+                const groupHeader = document.createElement('div');
+                groupHeader.className = 'table-group-header';
+                groupHeader.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span>${group.name} (${group.words.length} 個)</span>
+                        <span class="expand-icon">▶</span>
+                    </div>
+                `;
+                
+                const groupContent = document.createElement('div');
+                groupContent.className = 'table-group-content';
+                
+                group.words.forEach(word => {
+                    const wordItem = document.createElement('div');
+                    wordItem.className = 'table-word-item';
+                    wordItem.innerHTML = `
+                        <div class="word-english">${word.english}</div>
+                        <div class="word-chinese">${word.chinese}</div>
+                    `;
+                    
+                    // 添加點擊朗讀功能
+                    wordItem.addEventListener('click', () => {
+                        const utteranceEn = new SpeechSynthesisUtterance(word.english);
+                        utteranceEn.lang = 'en-US';
+                        utteranceEn.rate = 0.9;
+                        const utteranceZh = new SpeechSynthesisUtterance(word.chinese);
+                        utteranceZh.lang = 'zh-TW';
+                        utteranceZh.rate = 0.9;
+                        utteranceEn.onend = () => { setTimeout(() => synth.speak(utteranceZh), 200); };
+                        synth.cancel();
+                        synth.speak(utteranceEn);
+                        
+                        // 添加點擊效果
+                        wordItem.style.background = '#e0f2fe';
+                        setTimeout(() => {
+                            wordItem.style.background = '';
+                        }, 300);
+                    });
+                    
+                    groupContent.appendChild(wordItem);
+                });
+                
+                // 添加展開/收縮功能
+                groupHeader.addEventListener('click', () => {
+                    const isExpanded = groupContent.classList.contains('expanded');
+                    const icon = groupHeader.querySelector('.expand-icon');
+                    
+                    if (isExpanded) {
+                        groupContent.classList.remove('expanded');
+                        icon.classList.remove('rotated');
+                    } else {
+                        groupContent.classList.add('expanded');
+                        icon.classList.add('rotated');
+                    }
+                });
+                
+                groupDiv.appendChild(groupHeader);
+                groupDiv.appendChild(groupContent);
+                tableContainer.appendChild(groupDiv);
+            });
+            
+            overviewTable.appendChild(tableContainer);
+            
+            // 添加統計信息
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'stats-card';
+            statsDiv.innerHTML = `
+                <h3 class="text-lg font-bold text-blue-800 mb-2">📊 學習統計</h3>
+                <div class="grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <div class="font-semibold text-blue-600">總詞組數</div>
+                        <div class="text-xl font-bold">${wordGroups.length}</div>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-blue-600">總單字數</div>
+                        <div class="text-xl font-bold">${getAllWords().length}</div>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-blue-600">學習階段</div>
+                        <div class="text-xl font-bold">${stages.length}</div>
+                    </div>
+                </div>
+                <p class="text-blue-700 mt-2 text-sm">💡 點擊詞組標題可展開內容，點擊單字可聽發音</p>
+            `;
+            
+            overviewTable.insertBefore(statsDiv, overviewTable.firstChild);
+        }
+        
+        function renderStages() {
+            stagesGrid.innerHTML = '';
+            
+            stages.forEach((stage, index) => {
+                const stageCard = document.createElement('div');
+                stageCard.className = `stage-card ${stage.completed ? 'completed' : ''}`;
+                
+                let stageHTML = `
+                    <h4 class="text-xl font-bold mb-3">${stage.name}</h4>
+                `;
+                
+                stage.groups.forEach(group => {
+                    stageHTML += `
+                        <div class="word-group">
+                            <div class="word-group-title">${group.name}</div>
+                    `;
+                    
+                    group.words.forEach((word, idx) => {
+                        if (idx < 3) { // 只顯示前三個作為預覽
+                            stageHTML += `
+                                <div class="word-item">
+                                    <span class="text-gray-700">${word.english}</span>
+                                    <span class="text-gray-500 text-sm">${word.chinese.substring(0, 10)}${word.chinese.length > 10 ? '...' : ''}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    if (group.words.length > 3) {
+                        stageHTML += `<div class="text-gray-400 text-sm mt-1">...還有 ${group.words.length - 3} 個</div>`;
+                    }
+                    
+                    stageHTML += `</div>`;
+                });
+                
+                stageHTML += `
+                    <div class="stage-progress">
+                        ${stage.completed ? '<span class="text-green-600 font-bold">✓ 已完成</span>' : '<span class="text-gray-500">未完成</span>'}
+                    </div>
+                `;
+                
+                stageCard.innerHTML = stageHTML;
+                stageCard.addEventListener('click', () => startStageQuiz(index));
+                
+                stagesGrid.appendChild(stageCard);
+            });
+        }
+        
+        function startStageQuiz(stageIndex) {
+            currentStage = stageIndex;
+            const stage = stages[stageIndex];
+            const stageWords = [];
+            
+            stage.groups.forEach(group => {
+                group.words.forEach(word => {
+                    stageWords.push(word);
+                });
+            });
+            
+            startQuiz(stageWords, `階段 ${stageIndex + 1}`);
+        }
+        
+        function startQuiz(words, title = '') {
+            stageSelectContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+            
+            shuffledQuestions = shuffleArray([...words]);
+            incorrectlyAnswered = [];
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreCounter.textContent = `⭐ ${score} 分`;
+            
+            if (title) {
+                const counter = document.getElementById('question-counter');
+                counter.setAttribute('data-stage-title', title);
+            }
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            attempts = 0;
+            selectedButton = null;
+            optionsContainer.innerHTML = '';
+            checkAnswerBtn.classList.remove('hidden');
+            nextQuestionBtn.classList.add('hidden');
+
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const progressPercentage = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            
+            const stageTitle = questionCounter.getAttribute('data-stage-title');
+            const prefix = stageTitle ? `${stageTitle} - ` : '';
+            questionCounter.textContent = `${prefix}第 ${currentQuestionIndex + 1} 題 / 共 ${shuffledQuestions.length} 題`;
+            
+            // 顯示英文單字
+            questionText.textContent = currentQuestion.english;
+            
+            // 朗讀英文單字
+            speak(currentQuestion.english, 'en-US');
+
+            let options = [{...currentQuestion}];
+            let tempVocab = [...allVocabulary].filter(v => v.chinese !== currentQuestion.chinese);
+            while (options.length < 4) {
+                const randomIndex = Math.floor(Math.random() * tempVocab.length);
+                options.push(tempVocab[randomIndex]);
+                tempVocab.splice(randomIndex, 1);
+            }
+            
+            // 顯示中文選項
+            shuffleArray(options).forEach(optionData => {
+                const button = document.createElement('button');
+                button.classList.add('option-btn', 'rounded-2xl');
+                button.textContent = optionData.chinese;
+                // 滑鼠經過時朗讀中文
+                button.addEventListener('mouseenter', () => speak(optionData.chinese, 'zh-TW'));
+                button.addEventListener('click', () => {
+                    if (button.disabled) return;
+                    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                    selectedButton = button;
+                });
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer() {
+            if (!selectedButton) return;
+            
+            attempts++;
+            const allButtons = Array.from(optionsContainer.children);
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const correctAnswer = currentQuestion.chinese;
+            const selectedAnswer = selectedButton.textContent;
+            
+            const correctFeedbacks = ['Good', 'Nice', 'Awesome', 'Excellent', 'Great job', 'Well done'];
+            const incorrectFeedbacks = ['No worries', 'Almost there', 'Keep trying', 'Not quite'];
+
+            if (selectedAnswer === correctAnswer) {
+                if (attempts === 1) {
+                    score++;
+                    scoreCounter.textContent = `⭐ ${score} 分`;
+                }
+                selectedButton.classList.add('correct');
+                speak(correctFeedbacks[Math.floor(Math.random() * correctFeedbacks.length)], 'en-US');
+                allButtons.forEach(btn => btn.disabled = true);
+                checkAnswerBtn.classList.add('hidden');
+                nextQuestionBtn.classList.remove('hidden');
+            } else {
+                if (attempts === 1) {
+                    selectedButton.style.visibility = 'hidden';
+                    if (!incorrectlyAnswered.some(q => q.english === currentQuestion.english)) {
+                       incorrectlyAnswered.push(currentQuestion);
+                    }
+                    speak(incorrectFeedbacks[Math.floor(Math.random() * incorrectFeedbacks.length)], 'en-US');
+                    selectedButton = null;
+                } else {
+                    selectedButton.classList.add('incorrect-reveal');
+                    allButtons.forEach(btn => {
+                        btn.disabled = true;
+                        if (btn.textContent === correctAnswer) {
+                            btn.classList.add('correct');
+                            // 朗讀正確的中文答案
+                            speak(correctAnswer, 'zh-TW');
+                        }
+                    });
+                    checkAnswerBtn.classList.add('hidden');
+                    nextQuestionBtn.classList.remove('hidden');
+                }
+            }
+        }
+
+        function showResults() {
+            const totalQuestions = shuffledQuestions.length;
+            const finalScoreValue = score;
+            
+            // 如果是階段練習且全對，標記為完成
+            if (currentStage !== null && score === totalQuestions) {
+                stages[currentStage].completed = true;
+            }
+            
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            finalScore.textContent = `${finalScoreValue} / ${totalQuestions}`;
+            resultButtonsContainer.innerHTML = '';
+
+            if (incorrectlyAnswered.length > 0) {
+                const redoIncorrectBtn = document.createElement('button');
+                redoIncorrectBtn.className = 'big-button bg-gradient-to-r from-orange-500 to-orange-700 text-white w-full sm:w-auto';
+                redoIncorrectBtn.textContent = `🔄 重做錯題 (${incorrectlyAnswered.length} 題)`;
+                redoIncorrectBtn.addEventListener('click', () => {
+                    startQuiz(incorrectlyAnswered, '錯題練習');
+                });
+                resultButtonsContainer.appendChild(redoIncorrectBtn);
+            }
+
+            if (currentStage !== null) {
+                const nextStageBtn = document.createElement('button');
+                nextStageBtn.className = 'big-button bg-gradient-to-r from-indigo-500 to-indigo-700 text-white w-full sm:w-auto';
+                
+                if (currentStage < stages.length - 1) {
+                    nextStageBtn.textContent = '➡️ 下一階段';
+                    nextStageBtn.addEventListener('click', () => {
+                        startStageQuiz(currentStage + 1);
+                    });
+                } else {
+                    nextStageBtn.textContent = '🏁 已完成所有階段';
+                    nextStageBtn.disabled = true;
+                    nextStageBtn.style.opacity = '0.5';
+                }
+                resultButtonsContainer.appendChild(nextStageBtn);
+            }
+            
+            const backToStagesBtn = document.createElement('button');
+            backToStagesBtn.className = 'big-button bg-gradient-to-r from-blue-500 to-blue-700 text-white w-full sm:w-auto';
+            backToStagesBtn.textContent = '📚 返回階段選擇';
+            backToStagesBtn.addEventListener('click', () => {
+                currentStage = null;
+                showStageSelect();
+            });
+            resultButtonsContainer.appendChild(backToStagesBtn);
+            
+            const backToOverviewBtn = document.createElement('button');
+            backToOverviewBtn.className = 'big-button bg-gradient-to-r from-gray-500 to-gray-700 text-white w-full sm:w-auto';
+            backToOverviewBtn.textContent = '📋 返回總表';
+            backToOverviewBtn.addEventListener('click', () => {
+                currentStage = null;
+                showOverview();
+            });
+            resultButtonsContainer.appendChild(backToOverviewBtn);
+            
+            speak(`Quiz finished! Your final score is ${finalScoreValue} out of ${totalQuestions}.`, 'en-US');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        async function exportPdf() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Longteng Senior High - Vocabulary Practice', 105, 10, { align: 'center' });
+            doc.text('Staged Practice Quiz', 105, 20, { align: 'center' });
+            
+            doc.save('Vocabulary_Practice_Staged_Quiz.pdf');
+        }
+
+        async function handleDownload() {
+            loadingOverlay.classList.remove('hidden');
+            setTimeout(async () => {
+                try {
+                    await exportPdf();
+                } catch (error) {
+                    console.error("PDF generation failed:", error);
+                    exportStatus.textContent = '產生失敗!';
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                } finally {
+                    loadingOverlay.classList.add('hidden');
+                }
+            }, 100);
+        }
+
+        // Event listeners
+        startStagePracticeBtn.addEventListener('click', () => {
+            showStageSelect();
+        });
+        
+        overviewPracticeAllBtn.addEventListener('click', () => {
+            startQuiz(allVocabulary, '全部單字');
+        });
+        
+        backToOverviewBtn.addEventListener('click', () => {
+            showOverview();
+        });
+        
+        practiceAllBtn.addEventListener('click', () => {
+            startQuiz(allVocabulary, '全部單字');
+        });
+        
+        downloadBtn.addEventListener('click', handleDownload);
+        checkAnswerBtn.addEventListener('click', checkAnswer);
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        
+        speakQuestionBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                speak(shuffledQuestions[currentQuestionIndex].english, 'en-US');
+            }
+        });
+
+        // 初始化顯示總表
+        document.addEventListener('DOMContentLoaded', showOverview);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第九味 ── 資源班學習單</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+  :root {
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --amber-mid: #FDE68A;
+    --brown: #78350F;
+    --red: #B91C1C;
+    --green: #065F46;
+    --green-light: #D1FAE5;
+    --blue: #1E3A5F;
+    --blue-light: #DBEAFE;
+    --bg: #FFFBF0;
+    --card: #FFFFFF;
+    --text: #1C1917;
+    --muted: #78716C;
+    --border: #E7E5E4;
+    --success: #059669;
+    --error: #DC2626;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ── */
+  .hero {
+    background: linear-gradient(135deg, #78350F 0%, #D97706 60%, #F59E0B 100%);
+    padding: 40px 24px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '🍜';
+    position: absolute;
+    font-size: 120px;
+    opacity: .08;
+    right: -20px;
+    top: -10px;
+  }
+  .hero-label {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #FDE68A;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: #FFFBF0;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: #FEF3C7;
+    opacity: .85;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 3px solid var(--amber-mid);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 14px 8px;
+    border: none;
+    background: transparent;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+  }
+  .tab-btn.active {
+    color: var(--brown);
+    border-bottom-color: var(--amber);
+    background: var(--amber-light);
+  }
+  .tab-btn:hover:not(.active) { background: #F5F5F4; }
+
+  /* ── Sections ── */
+  .section { display: none; padding: 24px 16px; max-width: 680px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    border: 1.5px solid var(--border);
+  }
+  .card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed var(--amber-mid);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── Story Section ── */
+  .story-para {
+    font-size: 17px;
+    line-height: 2.1;
+    color: var(--text);
+    background: var(--amber-light);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--amber);
+  }
+  .story-para .para-num {
+    display: inline-block;
+    background: var(--amber);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-bottom: 8px;
+  }
+  .highlight {
+    background: #FCD34D;
+    border-radius: 4px;
+    padding: 0 3px;
+    font-weight: 700;
+  }
+  .red-highlight { background: #FCA5A5; border-radius: 4px; padding: 0 3px; }
+
+  /* ── Who is Zeng ── */
+  .person-box {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .person-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    background: var(--amber-mid);
+  }
+  .person-text { flex: 1; }
+  .person-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--brown);
+    margin-bottom: 4px;
+  }
+  .person-desc { font-size: 14px; line-height: 1.9; color: var(--text); }
+
+  .diff-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .diff-table th {
+    background: var(--brown);
+    color: #fff;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+  }
+  .diff-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.8;
+  }
+  .diff-table tr:nth-child(even) td { background: var(--amber-light); }
+  .diff-table .label { font-weight: 700; color: var(--brown); }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: var(--amber-mid);
+    border-radius: 3px;
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 18px;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -24px;
+    top: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .tl-body {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .tl-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--brown);
+    margin-bottom: 4px;
+  }
+
+  /* ── Taste Cards ── */
+  .taste-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .taste-card {
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .taste-card .taste-emoji { font-size: 32px; margin-bottom: 6px; }
+  .taste-card .taste-name { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+  .taste-card .taste-symbol { font-size: 13px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .taste-card .taste-life { font-size: 13px; line-height: 1.8; }
+  .spicy { background: #FEE2E2; border: 2px solid #F87171; }
+  .spicy .taste-name { color: #B91C1C; }
+  .sweet { background: #FCE7F3; border: 2px solid #F9A8D4; }
+  .sweet .taste-name { color: #9D174D; }
+  .salty { background: #E0F2FE; border: 2px solid #7DD3FC; }
+  .salty .taste-name { color: #075985; }
+  .bitter { background: #D1FAE5; border: 2px solid #6EE7B7; }
+  .bitter .taste-name { color: #065F46; }
+
+  /* ── Quiz Section ── */
+  .quiz-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    border: 2px solid var(--border);
+  }
+  .quiz-q {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.9;
+    color: var(--blue);
+    margin-bottom: 14px;
+    background: var(--blue-light);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .quiz-num {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    padding: 13px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: #FAFAF9;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: all .15s;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--amber); background: var(--amber-light); }
+  .opt-btn.selected-choice { background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8; font-weight: 700; }
+  .opt-btn.correct { background: var(--green-light); border-color: var(--success); color: var(--green); font-weight: 700; }
+  .opt-btn.wrong { background: #FEE2E2; border-color: var(--error); color: var(--red); }
+  .opt-btn:disabled { cursor: default; }
+  .feedback {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.9;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-light); color: var(--green); border-left: 4px solid var(--success); }
+  .feedback.ng { background: #FEE2E2; color: var(--red); border-left: 4px solid var(--error); }
+
+  /* ── Match Game ── */
+  .match-area {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .match-col { flex: 1; }
+  .match-col-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .match-item {
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .15s;
+    line-height: 1.7;
+    user-select: none;
+  }
+  .match-left {
+    background: var(--amber-light);
+    border-color: var(--amber-mid);
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--brown);
+  }
+  .match-right {
+    background: var(--blue-light);
+    border-color: #BFDBFE;
+    color: var(--blue);
+  }
+  .match-item.selected { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(217,119,6,.2); }
+  .match-item.matched { opacity: .5; cursor: default; pointer-events: none; }
+  .match-item.correct-match { background: var(--green-light); border-color: var(--success); color: var(--green); }
+  .match-item.wrong-match { background: #FEE2E2; border-color: var(--error); color: var(--red); }
+  .match-connector { display: flex; flex-direction: column; justify-content: flex-start; padding-top: 38px; gap: 22px; }
+  .conn-line { height: 48px; width: 24px; border-top: 2px dashed var(--border); border-right: 2px dashed var(--border); margin-top: 10px; }
+
+  .match-result {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    display: none;
+  }
+  .match-result.show { display: block; }
+
+  /* ── Score ── */
+  .score-bar {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--amber-mid);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .score-icon { font-size: 32px; }
+  .score-label { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+  .score-num { font-size: 28px; font-weight: 900; color: var(--brown); }
+
+  /* ── Reset ── */
+  .submit-btn {
+    display: block;
+    margin: 20px auto 10px;
+    padding: 16px 36px;
+    background: linear-gradient(135deg, #059669, #065F46);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    box-shadow: 0 4px 14px rgba(5,150,105,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(5,150,105,0.5); }
+  .submit-btn:disabled { background: #9CA3AF; box-shadow: none; cursor: not-allowed; }
+
+  .reset-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: var(--brown);
+    color: #fff;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background .15s;
+  }
+  .reset-btn:hover { background: #92400E; }
+
+  /* ── Vocab ── */
+  .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vocab-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1.5px solid var(--border);
+  }
+  .vocab-word { font-size: 22px; font-weight: 900; color: var(--brown); margin-bottom: 4px; }
+  .vocab-note { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .vocab-def { font-size: 13px; line-height: 1.8; color: var(--text); }
+
+  /* ── Summary Box ── */
+  .summary-box {
+    background: linear-gradient(135deg, var(--amber-light), #fff);
+    border-radius: 16px;
+    padding: 20px;
+    border: 2px solid var(--amber-mid);
+    margin-bottom: 16px;
+  }
+  .summary-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--brown);
+    margin-bottom: 14px;
+  }
+  .summary-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.9;
+  }
+  .summary-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--amber);
+    flex-shrink: 0;
+    margin-top: 10px;
+  }
+
+  /* responsive */
+  @media(max-width: 480px) {
+    .taste-grid { grid-template-columns: 1fr; }
+    .vocab-grid { grid-template-columns: 1fr; }
+    .match-area { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">高二國文・資源班</div>
+  <h1>第九味</h1>
+  <div class="hero-sub">作者：徐國能 ── 跟著我們一起品嘗文字的滋味</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('story')">📖 故事</button>
+  <button class="tab-btn" onclick="switchTab('people')">👨‍🍳 人物</button>
+  <button class="tab-btn" onclick="switchTab('taste')">🌶️ 味覺</button>
+  <button class="tab-btn" onclick="switchTab('quiz')">✏️ 練習</button>
+  <button class="tab-btn" onclick="switchTab('match')">🎯 配對</button>
+  <button class="tab-btn" onclick="switchTab('vocab')">📚 詞彙</button>
+</div>
+
+<!-- ═══════════════════════════════ STORY ═══════════════════════════════ -->
+<div id="story" class="section active">
+
+  <div class="card">
+    <div class="card-title">🍲 這篇文章在說什麼？</div>
+    <div class="story-para">
+      作者小時候，爸爸開了一間叫「<span class="highlight">健樂園</span>」的餐廳。<br>
+      餐廳裡有一位很厲害的大廚，叫做「<span class="highlight">曾先生</span>」。<br>
+      曾先生不只會做菜，還很會說<span class="highlight">人生的道理</span>。
+    </div>
+    <div class="story-para">
+      中國傳統說味道有八種：<br>
+      辣、甜、鹹、苦（主味）<br>
+      酸、澀、腥、沖（副味）<br><br>
+      <span class="highlight">那第九味是什麼？</span><br>
+      作者沒有說答案，要我們自己想。
+    </div>
+    <div class="story-para">
+      後來餐廳倒閉，曾先生不見了。<br>
+      很多年後，作者在澎湖偶然遇見他——<br>
+      他已經<span class="highlight">又老又落寞</span>了。<br>
+      作者感受到：人生就像一場筵席，<span class="highlight">聚了又散</span>。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗺️ 故事順序</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">1</div>
+        <div class="tl-body">
+          <div class="tl-title">餐廳的開始</div>
+          爸爸花大錢請曾先生來「健樂園」當大廚。曾先生只負責<span class="highlight">試菜、品味</span>，不用親手做菜。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">2</div>
+        <div class="tl-body">
+          <div class="tl-title">曾先生說味道</div>
+          曾先生跟作者說了很多味道的故事，把<span class="highlight">吃的味道</span>比喻成<span class="highlight">人生的道理</span>。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">3</div>
+        <div class="tl-body">
+          <div class="tl-title">餐廳倒閉</div>
+          曾先生喜歡<span class="red-highlight">賭博</span>，有次重要宴席失蹤，餐廳因此關門，大家都很傷心。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">4</div>
+        <div class="tl-body">
+          <div class="tl-title">澎湖重逢</div>
+          多年後，作者在澎湖麵攤偶然遇到曾先生。他已經<span class="highlight">又老又滄桑</span>，但還是談著味道，舉杯的手在顫抖。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">5</div>
+        <div class="tl-body">
+          <div class="tl-title">再也找不到了</div>
+          之後作者再去找曾先生，門上貼著休息。從此<span class="highlight">再也見不到</span>他了。
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ PEOPLE ═══════════════════════════════ -->
+<div id="people" class="section">
+
+  <div class="card">
+    <div class="card-title">👨‍🍳 曾先生是什麼人？</div>
+    <div class="person-box">
+      <div class="person-icon">👴</div>
+      <div class="person-text">
+        <div class="person-name">曾先生（大廚）</div>
+        <div class="person-desc">
+          • 矮矮的，但是很有精神、眼神銳利<br>
+          • 穿長袍，<span class="highlight">不穿廚師的圍裙</span><br>
+          • 外表乾淨，不沾油煙<br>
+          • 只負責<span class="highlight">試菜</span>，不用親手做菜<br>
+          • 喜歡喝白金龍高粱酒（自己帶的）<br>
+          • 缺點：喜歡賭博，常常失蹤
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 曾先生跟普通廚師的差別</div>
+    <table class="diff-table">
+      <tr>
+        <th>比較</th>
+        <th>曾先生</th>
+        <th>普通廚師</th>
+      </tr>
+      <tr>
+        <td class="label">稱呼</td>
+        <td>「先生」（表示尊重）</td>
+        <td>某廚、老李、小張</td>
+      </tr>
+      <tr>
+        <td class="label">穿著</td>
+        <td>長袍、麻紗斜衫</td>
+        <td>圍裙、廚師帽</td>
+      </tr>
+      <tr>
+        <td class="label">工作</td>
+        <td>只試菜，不做菜</td>
+        <td>親手煮食物</td>
+      </tr>
+      <tr>
+        <td class="label">外表</td>
+        <td>乾淨，不染油煙</td>
+        <td>沾滿廚房油煙</td>
+      </tr>
+      <tr>
+        <td class="label">身價</td>
+        <td>花大錢、套交情才請來</td>
+        <td>普通薪水</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👨‍👦 作者的爸爸</div>
+    <div class="person-box">
+      <div class="person-icon">👨</div>
+      <div class="person-text">
+        <div class="person-name">父親</div>
+        <div class="person-desc">
+          • 開了「健樂園」餐廳<br>
+          • 自己也很會做菜，刀工精準<br>
+          • 非常<span class="highlight">佩服曾先生</span>，曾先生說的話他都認真抄筆記<br>
+          • 後來說：「平凡人有其平凡的樂趣，自有甘醇的真味」
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎭 曾先生的「白金龍」出現三次</div>
+    <div style="font-size:14px; line-height:1.9; color:var(--text);">
+      <p style="margin-bottom:10px;">文章裡「<strong>白金龍高粱酒</strong>」出現三次，代表曾先生在不同時期的樣子：</p>
+      <div style="background:var(--amber-light); border-radius:10px; padding:14px; margin-bottom:8px;">
+        <strong>第一次（年輕時）</strong><br>
+        悠閒地坐在餐廳，喝著自己帶的白金龍，很有風骨。
+      </div>
+      <div style="background:#E0F2FE; border-radius:10px; padding:14px; margin-bottom:8px;">
+        <strong>第二次（失蹤後）</strong><br>
+        他不見了，只留下半瓶白金龍被趙胖子砸爛——象徵他的地位崩潰了。
+      </div>
+      <div style="background:var(--green-light); border-radius:10px; padding:14px;">
+        <strong>第三次（老年時）</strong><br>
+        在澎湖重逢，他用顫抖的手舉起白金龍，兩人喝到夜深。很讓人感傷。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ TASTE ═══════════════════════════════ -->
+<div id="taste" class="section">
+
+  <div class="card">
+    <div class="card-title">🌶️ 八種味道，兩類</div>
+    <div style="font-size:15px; line-height:2; margin-bottom:14px;">
+      <div style="background:var(--amber-light); border-radius:10px; padding:14px; margin-bottom:10px;">
+        <strong>✅ 主味（正味）4種</strong>：辣、甜、鹹、苦<br>
+        <span style="font-size:13px; color:var(--muted);">好的菜餚要以這四種為主軸</span>
+      </div>
+      <div style="background:var(--blue-light); border-radius:10px; padding:14px;">
+        <strong>🔸 副味（賓味）4種</strong>：酸、澀、腥、沖<br>
+        <span style="font-size:13px; color:var(--muted);">用來輔助，不能搶過主味</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎭 四種主味的人生道理</div>
+    <div class="taste-grid">
+      <div class="taste-card spicy">
+        <div class="taste-emoji">🌶️</div>
+        <div class="taste-name">辣</div>
+        <div class="taste-symbol">王者</div>
+        <div class="taste-life">辣是百味之王，不與其他味道混合。<br><br>人生道理：<strong>君子要有自尊，不能讓別人隨便欺負</strong></div>
+      </div>
+      <div class="taste-card sweet">
+        <div class="taste-emoji">🍯</div>
+        <div class="taste-name">甜</div>
+        <div class="taste-symbol">后妃</div>
+        <div class="taste-life">甜最宜人，能解辣，但過甜令人厭。<br><br>人生道理：<strong>待人應溫和，但不能太諂媚</strong></div>
+      </div>
+      <div class="taste-card salty">
+        <div class="taste-emoji">🧂</div>
+        <div class="taste-name">鹹</div>
+        <div class="taste-symbol">舊時王謝</div>
+        <div class="taste-life">鹹最平常，每天都要，但極致的鹹反而變成苦。<br><br>人生道理：<strong>尋常中可能藏著不尋常</strong></div>
+      </div>
+      <div class="taste-card bitter">
+        <div class="taste-emoji">🍵</div>
+        <div class="taste-name">苦</div>
+        <div class="taste-symbol">隱逸者</div>
+        <div class="taste-life">苦最高深，要等其他味道散盡才能感覺。<br><br>人生道理：<strong>有些珍貴的東西，需要時間才能發現</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏆 三種「喫」的層次</div>
+    <div style="font-size:14px; line-height:1.9;">
+      <div style="background:#FEE2E2; border-radius:10px; padding:14px; margin-bottom:10px;">
+        <strong>第一層：一般人</strong>「食之無味」<br>
+        只是為了填飽肚子，無法細細品味。
+      </div>
+      <div style="background:#FEF3C7; border-radius:10px; padding:14px; margin-bottom:10px;">
+        <strong>第二層：能粗辨味者</strong>「始可言喫」<br>
+        能分辨食物好不好，才可以談「吃」。
+      </div>
+      <div style="background:var(--green-light); border-radius:10px; padding:14px;">
+        <strong>第三層：能入味之人</strong>「不在乎喫」<br>
+        能從味道中體悟人生道理，反而不在乎吃不吃了。這是最高境界。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ QUIZ ═══════════════════════════════ -->
+<div id="quiz" class="section">
+
+  <div class="score-bar">
+    <div class="score-icon">🏅</div>
+    <div>
+      <div class="score-label">目前得分</div>
+      <div class="score-num" id="scoreDisplay">尚未提交</div>
+    </div>
+  </div>
+
+  <div id="quizContainer"></div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">📋 送出答案，看解說</button>
+  <button class="reset-btn" id="resetBtn" style="display:none;" onclick="resetQuiz()">🔄 重新作答</button>
+</div>
+
+<!-- ═══════════════════════════════ MATCH ═══════════════════════════════ -->
+<div id="match" class="section">
+
+  <div class="card">
+    <div class="card-title">🎯 配對遊戲：味道與人生</div>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:16px; line-height:1.8;">
+      點左邊的「味道」，再點右邊符合的「人生道理」，看看你能配對幾題！
+    </p>
+    <div class="match-area">
+      <div class="match-col">
+        <div class="match-col-title">🌶️ 味道</div>
+        <div id="leftItems"></div>
+      </div>
+      <div class="match-col">
+        <div class="match-col-title">💡 人生道理</div>
+        <div id="rightItems"></div>
+      </div>
+    </div>
+    <div id="matchResult" class="match-result"></div>
+    <button class="reset-btn" onclick="resetMatch()">🔄 重新挑戰</button>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ VOCAB ═══════════════════════════════ -->
+<div id="vocab" class="section">
+
+  <div class="card">
+    <div class="card-title">📚 重要詞彙</div>
+    <div class="vocab-grid">
+      <div class="vocab-item">
+        <div class="vocab-word">況味</div>
+        <div class="vocab-note">ㄎㄨㄤˋ ㄨㄟˋ</div>
+        <div class="vocab-def">處境和感受；指一種難以言說的感覺</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">鄙薄</div>
+        <div class="vocab-note">ㄅㄧˇ ㄅㄛˊ</div>
+        <div class="vocab-def">看不起、輕視的意思</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">始作俑者</div>
+        <div class="vocab-note">成語</div>
+        <div class="vocab-def">第一個做某件壞事的人（成語）</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">中飽私囊</div>
+        <div class="vocab-note">成語</div>
+        <div class="vocab-def">把公家的錢放進自己口袋（成語）</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">滄桑</div>
+        <div class="vocab-note">ㄘㄤ ㄙㄤ</div>
+        <div class="vocab-def">經歷很多事情後，變得滄老的感覺</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">自出機杼</div>
+        <div class="vocab-note">成語</div>
+        <div class="vocab-def">有自己的創意、不照別人的方法做</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">今昔對比</div>
+        <div class="vocab-note">修辭</div>
+        <div class="vocab-def">把「以前」和「現在」放在一起比較</div>
+      </div>
+      <div class="vocab-item">
+        <div class="vocab-word">筵席</div>
+        <div class="vocab-note">ㄧㄢˊ ㄒㄧˊ</div>
+        <div class="vocab-def">宴會、辦桌的場合</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💡 本課核心句</div>
+    <div class="summary-box">
+      <div class="summary-title">📌 這幾句要記起來</div>
+      <div class="summary-row">
+        <div class="summary-dot"></div>
+        <div>「喫是為己，穿是為人」──吃飯是為自己，穿衣是給別人看</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-dot"></div>
+        <div>「一根舌頭九樣味」──一個舌頭可以品嘗九種味道（八種＋第九味）</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-dot"></div>
+        <div>「平凡人有其平凡的樂趣，自有其甘醇的真味」──平凡的生活也有它美好的地方</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-dot"></div>
+        <div>「只今未醉已先悲」──還沒醉，心裡已經先難過了（引用杜甫詩）</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ──────────── TABS ────────────
+function switchTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ──────────── QUIZ ────────────
+const quizData = [
+  {
+    q: "曾先生在「健樂園」的工作是什麼？",
+    opts: ["A. 親手炒菜做飯", "B. 只負責試菜品味", "C. 打掃廚房", "D. 採買食材"],
+    ans: 1,
+    exp: "正確！曾先生只負責試菜，廚房再怎麼忙他都只是坐在那裡喝酒看報紙。"
+  },
+  {
+    q: "別人叫廚師通常說「某廚」，為什麼大家叫他「曾先生」？",
+    opts: ["A. 因為他姓曾很特別", "B. 因為他比廚師年紀大", "C. 表示對他的尊敬", "D. 因為他不是廚師"],
+    ans: 2,
+    exp: "正確！用「先生」稱呼是一種尊重，代表他的地位比一般廚師高。"
+  },
+  {
+    q: "曾先生說「辣」這個味道像什麼？",
+    opts: ["A. 后妃", "B. 王者", "C. 隱逸者", "D. 舊時王謝"],
+    ans: 1,
+    exp: "正確！辣是百味之王，不與其他味道混合，象徵君子應有自尊、不被人欺負。"
+  },
+  {
+    q: "「甜」的人生道理是什麼？",
+    opts: ["A. 要很強硬，不讓步", "B. 要藏在心裡，默默等待", "C. 待人溫和，但不能太諂媚", "D. 尋常中有不尋常"],
+    ans: 2,
+    exp: "正確！甜最宜人，能解辣，但過甜就會令人反感，就像過於諂媚的人一樣。"
+  },
+  {
+    q: "「健樂園」餐廳為什麼倒閉？",
+    opts: ["A. 因為食物不好吃", "B. 因為曾先生在重要宴席失蹤，之後再也找不到", "C. 因為爸爸生病了", "D. 因為附近開了更好的餐廳"],
+    ans: 1,
+    exp: "正確！曾先生喜歡賭博，在羅中將婚宴那晚失蹤，之後餐廳再也沒接到大生意，最後倒閉。"
+  },
+  {
+    q: "作者在澎湖偶然看到曾先生的背影，是因為桌上有什麼？",
+    opts: ["A. 他的廚師帽", "B. 一瓶白金龍高粱酒和中央日報", "C. 一碗牛肉麵", "D. 爸爸留下的筆記"],
+    ans: 1,
+    exp: "正確！桌上有曾先生愛看的中央日報，還有他常喝的白金龍高粱酒，作者才認出這個熟悉的背影。"
+  },
+  {
+    q: "曾先生說「能入味之人」有什麼特色？",
+    opts: ["A. 吃東西吃很多", "B. 很會做菜", "C. 能從飲食中體悟人生道理，反而不在乎吃不吃", "D. 只吃貴的食物"],
+    ans: 2,
+    exp: "正確！能入味之人不在乎吃本身，而是能從味道體悟人生的道理，這是最高的境界。"
+  },
+  {
+    q: "「第九味」在文章裡指的是什麼？",
+    opts: ["A. 酸甜苦辣以外的一種特殊食材", "B. 作者沒有明說，留給讀者自己想，可能是人生滄桑的滋味", "C. 白金龍高粱酒的味道", "D. 健樂園最厲害的一道菜"],
+    ans: 1,
+    exp: "正確！作者故意不說第九味是什麼，讓我們自己感受。可能是人生歷練的滋味、家鄉味，或味外之味。"
+  }
+];
+
+let score = 0;
+let answered = new Array(quizData.length).fill(null); // null=未答, 數字=選的選項
+
+function buildQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-card';
+    div.innerHTML = `
+      <div class="quiz-q"><span class="quiz-num">${i+1}</span>${q.q}</div>
+      <div class="options">
+        ${q.opts.map((opt, j) => `
+          <button class="opt-btn" onclick="selectAnswer(${i},${j},this)" id="opt-${i}-${j}">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+  document.getElementById('scoreDisplay').textContent = '尚未提交';
+  document.getElementById('submitBtn').style.display = 'block';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('resetBtn').style.display = 'none';
+}
+
+function selectAnswer(qi, oi, btn) {
+  // 送出後就不能再改
+  if (document.getElementById('submitBtn').style.display === 'none') return;
+  // 取消同題其他選項的selected樣式
+  quizData[qi].opts.forEach((_, j) => {
+    document.getElementById(`opt-${qi}-${j}`).classList.remove('selected-choice');
+  });
+  btn.classList.add('selected-choice');
+  answered[qi] = oi;
+}
+
+function submitQuiz() {
+  // 檢查是否全部作答
+  const unanswered = answered.findIndex(a => a === null);
+  if (unanswered !== -1) {
+    alert(`第 ${unanswered + 1} 題還沒有選答案喔！請全部作答後再送出。`);
+    return;
+  }
+  score = 0;
+  quizData.forEach((q, i) => {
+    const oi = answered[i];
+    const fb = document.getElementById(`fb-${i}`);
+    // 鎖定所有按鈕
+    q.opts.forEach((_, j) => {
+      const b = document.getElementById(`opt-${i}-${j}`);
+      b.disabled = true;
+      b.classList.remove('selected-choice');
+    });
+    if (oi === q.ans) {
+      document.getElementById(`opt-${i}-${oi}`).classList.add('correct');
+      fb.className = 'feedback show ok';
+      fb.textContent = '✅ ' + q.exp;
+      score++;
+    } else {
+      document.getElementById(`opt-${i}-${oi}`).classList.add('wrong');
+      document.getElementById(`opt-${i}-${q.ans}`).classList.add('correct');
+      fb.className = 'feedback show ng';
+      fb.textContent = '❌ 答錯了！' + q.exp;
+    }
+  });
+  document.getElementById('scoreDisplay').textContent = `${score} / ${quizData.length}`;
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'block';
+}
+
+function resetQuiz() {
+  score = 0;
+  answered = new Array(quizData.length).fill(null);
+  buildQuiz();
+}
+
+// ──────────── MATCH GAME ────────────
+const matchData = [
+  { left: '🌶️ 辣', right: '君子應自重，不讓別人欺負' },
+  { left: '🍯 甜', right: '待人溫和，但不能太諂媚' },
+  { left: '🧂 鹹', right: '尋常之中，有不尋常之處' },
+  { left: '🍵 苦', right: '要等時間過了，才能體會到的珍貴' },
+  { left: '🍜 第九味', right: '人生歷練才能體悟的滋味' },
+];
+
+let selectedLeft = null;
+let selectedRight = null;
+let matchedPairs = [];
+
+function buildMatch() {
+  const leftContainer = document.getElementById('leftItems');
+  const rightContainer = document.getElementById('rightItems');
+  leftContainer.innerHTML = '';
+  rightContainer.innerHTML = '';
+
+  const shuffledRight = [...matchData].sort(() => Math.random() - .5);
+
+  matchData.forEach((item, i) => {
+    const leftEl = document.createElement('div');
+    leftEl.className = 'match-item match-left';
+    leftEl.textContent = item.left;
+    leftEl.dataset.index = i;
+    leftEl.onclick = () => selectLeft(leftEl, i);
+    leftContainer.appendChild(leftEl);
+  });
+
+  shuffledRight.forEach((item) => {
+    const origIndex = matchData.findIndex(d => d.left === item.left);
+    const rightEl = document.createElement('div');
+    rightEl.className = 'match-item match-right';
+    rightEl.textContent = item.right;
+    rightEl.dataset.index = origIndex;
+    rightEl.onclick = () => selectRight(rightEl, origIndex);
+    rightContainer.appendChild(rightEl);
+  });
+
+  document.getElementById('matchResult').className = 'match-result';
+}
+
+function selectLeft(el, idx) {
+  if (matchedPairs.includes(idx)) return;
+  document.querySelectorAll('.match-left').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedLeft = { el, idx };
+  if (selectedRight) checkMatch();
+}
+
+function selectRight(el, idx) {
+  if (matchedPairs.includes(idx)) return;
+  document.querySelectorAll('.match-right').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedRight = { el, idx };
+  if (selectedLeft) checkMatch();
+}
+
+function checkMatch() {
+  const { el: lEl, idx: lIdx } = selectedLeft;
+  const { el: rEl, idx: rIdx } = selectedRight;
+  if (lIdx === rIdx) {
+    lEl.classList.remove('selected');
+    rEl.classList.remove('selected');
+    lEl.classList.add('correct-match', 'matched');
+    rEl.classList.add('correct-match', 'matched');
+    matchedPairs.push(lIdx);
+    if (matchedPairs.length === matchData.length) {
+      const res = document.getElementById('matchResult');
+      res.textContent = '🎉 全部配對正確！你太厲害了！';
+      res.style.background = 'var(--green-light)';
+      res.style.color = 'var(--green)';
+      res.className = 'match-result show';
+    }
+  } else {
+    lEl.classList.add('wrong-match');
+    rEl.classList.add('wrong-match');
+    setTimeout(() => {
+      lEl.classList.remove('wrong-match', 'selected');
+      rEl.classList.remove('wrong-match', 'selected');
+    }, 800);
+  }
+  selectedLeft = null;
+  selectedRight = null;
+}
+
+function resetMatch() {
+  selectedLeft = null;
+  selectedRight = null;
+  matchedPairs = [];
+  buildMatch();
+}
+
+// ──────────── INIT ────────────
+buildQuiz();
+buildMatch();
+</script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三首詞比較 - 心智圖(修訂版)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #c94b4b;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+        }
+        
+        .poems-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .poem-card {
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .poem-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        }
+        
+        .card1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .card2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .card3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .poem-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 3px solid rgba(255,255,255,0.5);
+            padding-bottom: 10px;
+        }
+        
+        .poem-author {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .poem-section {
+            margin: 15px 0;
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .poem-section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 5px;
+        }
+        
+        .poem-content {
+            line-height: 1.8;
+        }
+        
+        .famous-line {
+            background: rgba(255,255,255,0.25);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            border: 2px dashed rgba(255,255,255,0.5);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .comparison-table td {
+            padding: 20px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+            line-height: 1.8;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #fff9e6;
+        }
+        
+        .category {
+            font-weight: bold;
+            color: #764ba2;
+            background: #f0f0f0;
+            padding: 15px;
+            font-size: 1.1em;
+        }
+        
+        .key-points {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe5b4 100%);
+            border: 3px solid #ffc107;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .key-points-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #f57c00;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .key-points-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .key-point-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ff6b6b;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .key-point-item h3 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .key-point-item ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        
+        .memory-tip {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            border: 3px solid #4ecdc4;
+        }
+        
+        .memory-tip-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d3561;
+            margin-bottom: 15px;
+        }
+        
+        .memory-tip-content {
+            font-size: 1.3em;
+            color: #2d3561;
+            line-height: 2;
+        }
+        
+        @media (max-width: 1200px) {
+            .poems-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📜 三首詞比較心智圖</h1>
+        <div class="subtitle">浪淘沙 vs 一翦梅 vs 破陣子</div>
+        
+        <!-- 三首詞卡片 -->
+        <div class="poems-container">
+            <!-- 浪淘沙 -->
+            <div class="poem-card card1">
+                <div class="poem-title">浪淘沙</div>
+                <div class="poem-author">李煜(南唐後主)</div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">🎭 作者處境</div>
+                    <div class="poem-content">
+                        南唐後主<br>
+                        亡國被俘<br>
+                        從皇帝淪為階下囚
+                    </div>
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">💔 情感基調</div>
+                    <div class="poem-content">
+                        悲苦、絕望<br>
+                        懷念過往<br>
+                        <strong>亡國之痛</strong>
+                    </div>
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">🌧️ 重要意象</div>
+                    <div class="poem-content">
+                        <strong>簾外雨</strong> - 淒涼孤寂<br>
+                        <strong>羅衾不耐五更寒</strong> - 身心俱冷<br>
+                        <strong>夢裡不知身是客</strong> - 短暫逃避<br>
+                        <strong>流水落花</strong> - 一切已逝
+                    </div>
+                </div>
+                
+                <div class="famous-line">
+                    💎 名句<br>
+                    「夢裡不知身是客,一晌貪歡」<br>
+                    「流水落花春去也,天上人間」
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">✨ 修辭技巧</div>
+                    <div class="poem-content">
+                        <strong>對比</strong> - 夢中vs現實<br>
+                        <strong>象徵</strong> - 流水落花=美好已逝<br>
+                        夢醒後的悲涼與無奈
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 一翦梅 -->
+            <div class="poem-card card2">
+                <div class="poem-title">一翦梅</div>
+                <div class="poem-author">李清照(宋代女詞人)</div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">🎭 作者處境</div>
+                    <div class="poem-content">
+                        與丈夫分離<br>
+                        獨守空閨<br>
+                        新婚不久卻要分別
+                    </div>
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">💔 情感基調</div>
+                    <div class="poem-content">
+                        相思、寂寞<br>
+                        期盼重逢<br>
+                        <strong>閨怨離情</strong>
+                    </div>
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">🌸 重要意象</div>
+                    <div class="poem-content">
+                        <strong>紅藕香殘</strong> - 秋天來臨,青春消逝<br>
+                        <strong>雁字</strong> - 期待書信<br>
+                        <strong>月滿西樓</strong> - 孤獨等待<br>
+                        <strong>花自飄零水自流</strong> - 各自天涯
+                    </div>
+                </div>
+                
+                <div class="famous-line">
+                    💎 名句<br>
+                    「此情無計可消除,<br>
+                    才下眉頭,卻上心頭」
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">✨ 修辭技巧</div>
+                    <div class="poem-content">
+                        <strong>對偶</strong> - 花自飄零水自流<br>
+                        <strong>頂真</strong> - 才下眉頭,卻上心頭<br>
+                        相思無處不在
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 破陣子 -->
+            <div class="poem-card card3">
+                <div class="poem-title">破陣子</div>
+                <div class="poem-author">辛棄疾(南宋愛國詞人)</div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">🎭 作者處境</div>
+                    <div class="poem-content">
+                        南宋將領<br>
+                        主張北伐抗金<br>
+                        壯志難酬,報國無門
+                    </div>
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">💔 情感基調</div>
+                    <div class="poem-content">
+                        豪邁、悲壯<br>
+                        不甘、憤慨<br>
+                        <strong>壯志未酬</strong>
+                    </div>
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">⚔️ 重要意象</div>
+                    <div class="poem-content">
+                        <strong>醉裡挑燈看劍</strong> - 懷抱理想<br>
+                        <strong>八百里分麾下炙</strong> - 軍旅生活<br>
+                        <strong>沙場秋點兵</strong> - 戰場場景<br>
+                        <strong>了卻君王天下事</strong> - 報國心願
+                    </div>
+                </div>
+                
+                <div class="famous-line">
+                    💎 名句<br>
+                    「了卻君王天下事,<br>
+                    贏得生前身後名。<br>
+                    可憐白髮生!」
+                </div>
+                
+                <div class="poem-section">
+                    <div class="poem-section-title">✨ 修辭技巧</div>
+                    <div class="poem-content">
+                        <strong>對比</strong> - 夢境vs現實<br>
+                        <strong>轉折</strong> - 可憐白髮生<br>
+                        理想與現實的巨大落差
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 比較表格 -->
+        <h2 style="text-align: center; color: #764ba2; margin: 40px 0 20px 0; font-size: 2em;">📊 詳細比較表</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">比較項目</th>
+                    <th style="width: 26.67%;">浪淘沙(李煜)</th>
+                    <th style="width: 26.67%;">一翦梅(李清照)</th>
+                    <th style="width: 26.67%;">破陣子(辛棄疾)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category">📖 朝代</td>
+                    <td>南唐(五代)</td>
+                    <td>宋代</td>
+                    <td>南宋</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">👤 作者身分</td>
+                    <td>亡國之君<br>南唐後主</td>
+                    <td>才女詞人<br>婉約派代表</td>
+                    <td>愛國將領<br>豪放派詞人</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">🎭 寫作背景</td>
+                    <td>被俘後囚禁期間<br>從皇帝淪為階下囚</td>
+                    <td>與丈夫趙明誠分離<br>新婚燕爾卻要離別</td>
+                    <td>主張北伐不被採納<br>被閒置不得重用</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">😢 主要情感</td>
+                    <td><strong>亡國之痛</strong><br>悲苦絕望<br>懷念故國</td>
+                    <td><strong>閨怨離情</strong><br>相思寂寞<br>期盼重逢</td>
+                    <td><strong>壯志未酬</strong><br>豪邁悲壯<br>報國無門</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">🎨 核心意象</td>
+                    <td>
+                        • <strong>簾外雨</strong> - 淽涼孤寂<br>
+                        • <strong>夢裡不知身是客</strong> - 逃避現實<br>
+                        • <strong>流水落花</strong> - 美好已逝
+                    </td>
+                    <td>
+                        • <strong>紅藕香殘</strong> - 秋天/青春逝<br>
+                        • <strong>雁字</strong> - 期待書信<br>
+                        • <strong>月滿西樓</strong> - 孤獨等待<br>
+                        • <strong>花水</strong> - 各自天涯
+                    </td>
+                    <td>
+                        • <strong>醉裡挑燈看劍</strong> - 懷抱理想<br>
+                        • <strong>八百里分麾下炙</strong> - 軍旅<br>
+                        • <strong>沙場秋點兵</strong> - 戰場<br>
+                        • <strong>白髮</strong> - 年華虛度
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="category">💎 名句</td>
+                    <td>「夢裡不知身是客,一晌貪歡」<br>「流水落花春去也,天上人間」</td>
+                    <td>「此情無計可消除,<br>才下眉頭,卻上心頭」</td>
+                    <td>「了卻君王天下事,贏得生前身後名。可憐白髮生!」</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">✨ 主要修辭</td>
+                    <td>
+                        <strong>對比</strong> - 夢中vs現實<br>
+                        <strong>象徵</strong> - 流水落花=美好已逝
+                    </td>
+                    <td>
+                        <strong>對偶</strong> - 花自飄零水自流<br>
+                        <strong>頂真</strong> - 眉頭→心頭
+                    </td>
+                    <td>
+                        <strong>對比</strong> - 夢境vs現實<br>
+                        <strong>轉折</strong> - 可憐白髮生
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="category">🎵 詞風</td>
+                    <td>深沉哀婉<br>淒美動人</td>
+                    <td>細膩婉約<br>情真意切</td>
+                    <td>豪放悲壯<br>氣勢磅礡</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">🔑 關鍵主題</td>
+                    <td>失去 (Lost)<br>無法挽回的過去</td>
+                    <td>相思 (Longing)<br>期盼卻無法相見</td>
+                    <td>理想 (Dream)<br>有夢想卻無法實現</td>
+                </tr>
+                
+                <tr>
+                    <td class="category">🎯 愁的表現</td>
+                    <td>愁在夢醒時<br>夢中歡樂vs現實悲苦<br>只能在夢中逃避</td>
+                    <td>愁在眉頭心頭<br>揮之不去<br>無計可消除</td>
+                    <td>愁在白髮<br>時光虛擲<br>壯志難酬</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- 記憶口訣 -->
+        <div class="memory-tip">
+            <div class="memory-tip-title">🧠 記憶口訣</div>
+            <div class="memory-tip-content">
+                <strong>李煜夢醒愁,清照眉心愁,辛棄疾白髮愁</strong><br>
+                <strong>亡國、離情、壯志 - 三種愁,三種人生</strong>
+            </div>
+        </div>
+        
+        <!-- 考試重點 -->
+        <div class="key-points">
+            <div class="key-points-title">🎓 考試重點整理</div>
+            <div class="key-points-content">
+                <div class="key-point-item">
+                    <h3>作者身分對比</h3>
+                    <ul>
+                        <li><strong>李煜</strong>:從皇帝→階下囚(身分巨變)</li>
+                        <li><strong>李清照</strong>:女性詞人(細膩情感)</li>
+                        <li><strong>辛棄疾</strong>:愛國將領(豪放氣概)</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point-item">
+                    <h3>情感層次差異</h3>
+                    <ul>
+                        <li><strong>浪淘沙</strong>:個人→國家(最悲)</li>
+                        <li><strong>一翦梅</strong>:個人情感(最細膩)</li>
+                        <li><strong>破陣子</strong>:個人→國家(最豪邁)</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point-item">
+                    <h3>意象運用特色</h3>
+                    <ul>
+                        <li><strong>浪淘沙</strong>:夢境、雨、流水落花</li>
+                        <li><strong>一翦梅</strong>:生活情景(花、雁、月)</li>
+                        <li><strong>破陣子</strong>:戰場畫面(劍、炙、點兵)</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point-item">
+                    <h3>愁的具體化</h3>
+                    <ul>
+                        <li><strong>李煜</strong>:愁在夢醒時(只能在夢中逃避)</li>
+                        <li><strong>李清照</strong>:愁在眉頭心頭(具體位置)</li>
+                        <li><strong>辛棄疾</strong>:愁=白髮(看得見的衰老)</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point-item">
+                    <h3>修辭技巧</h3>
+                    <ul>
+                        <li><strong>浪淘沙</strong>:對比+象徵</li>
+                        <li><strong>一翦梅</strong>:對偶+頂真(結構美)</li>
+                        <li><strong>破陣子</strong>:對比+轉折(情感落差)</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point-item">
+                    <h3>考題方向</h3>
+                    <ul>
+                        <li>三首詞的情感差異</li>
+                        <li>名句默寫與賞析</li>
+                        <li>意象象徵意義</li>
+                        <li>修辭技巧判斷</li>
+                        <li>作者處境對寫作的影響</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 快速比較 -->
+        <div style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); padding: 30px; border-radius: 15px; margin-top: 30px;">
+            <h2 style="text-align: center; color: #2d3561; margin-bottom: 25px; font-size: 1.8em;">⚡ 一句話記住三首詞</h2>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5em; margin-bottom: 10px;">🌧️</div>
+                    <div style="font-weight: bold; color: #667eea; margin-bottom: 10px;">浪淘沙</div>
+                    <div style="color: #444;">失去重要東西的感覺<br>(只能在夢中逃避)</div>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5em; margin-bottom: 10px;">💌</div>
+                    <div style="font-weight: bold; color: #f5576c; margin-bottom: 10px;">一翦梅</div>
+                    <div style="color: #444;">想念someone但無法見面</div>
+                </div>
+                <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 1.5em; margin-bottom: 10px;">⚔️</div>
+                    <div style="font-weight: bold; color: #00f2fe; margin-bottom: 10px;">破陣子</div>
+                    <div style="color: #444;">有夢想但無法實現</div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

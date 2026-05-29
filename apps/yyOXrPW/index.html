@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be Seen/Heard + V-ing/to VR 句型練習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f0f0f0;
+            border-bottom: 3px solid #5e72e4;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-tab.active {
+            background: #5e72e4;
+            color: white;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #825ee4;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 解釋區塊樣式 */
+        .explanation-card {
+            background: #f8f9fa;
+            border-left: 5px solid #5e72e4;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+        }
+
+        .explanation-card h3 {
+            color: #5e72e4;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .rule-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .rule-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .example {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .example-eng {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .example-chi {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        /* 學習策略樣式 */
+        .strategy-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .tip {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .tip-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tip-icon {
+            width: 30px;
+            height: 30px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* 練習題樣式 */
+        .exercise-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            background: #5e72e4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .question-type {
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .question-content {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .chinese-translation {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .options {
+            margin: 20px 0;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #f8f9fa;
+            border-color: #5e72e4;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #e7f3ff;
+            border-color: #5e72e4;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .option-label {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .option.selected .option-label {
+            background: #5e72e4;
+            color: white;
+        }
+
+        /* 填空題樣式 */
+        .fill-blank-input {
+            padding: 10px 15px;
+            font-size: 1.1em;
+            border: 2px solid #5e72e4;
+            border-radius: 5px;
+            width: 200px;
+            margin: 0 5px;
+        }
+
+        /* 按鈕樣式 */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(94, 114, 228, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* 語音按鈕 */
+        .audio-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            background: #138496;
+            transform: scale(1.1);
+        }
+
+        /* 進度條 */
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            border-radius: 10px;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 5px;
+        }
+
+        /* 結果顯示 */
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: #5e72e4;
+            margin: 20px 0;
+        }
+
+        .result-message {
+            font-size: 1.3em;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        /* 錯題複習 */
+        .review-section {
+            background: #fff5f5;
+            border: 2px solid #dc3545;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .review-header {
+            color: #dc3545;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .mistake-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .mistake-question {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .mistake-answer {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .your-answer {
+            color: #dc3545;
+        }
+
+        .correct-answer {
+            color: #28a745;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .nav-tab {
+                font-size: 0.9em;
+                padding: 12px 5px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .fill-blank-input {
+                width: 150px;
+            }
+        }
+
+        /* 載入動畫 */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #5e72e4;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 提示訊息 */
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Be Seen/Heard + V-ing/to VR 句型練習</h1>
+            <p>掌握感官動詞的被動語態用法</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('explanation')">📚 文法解釋</button>
+            <button class="nav-tab" onclick="showSection('strategy')">💡 學習策略</button>
+            <button class="nav-tab" onclick="showSection('practice')">✍️ 開始練習</button>
+            <button class="nav-tab" onclick="showSection('review')">📝 錯題複習</button>
+        </div>
+
+        <div class="content">
+            <!-- 文法解釋區 -->
+            <div id="explanation" class="section active">
+                <div class="explanation-card">
+                    <h3>基本概念 (Basic Concept)</h3>
+                    <p style="line-height: 1.8; font-size: 1.1em;">
+                        當感官動詞（see, hear, watch, notice, observe）用於被動語態時，原本的受詞變成主詞，
+                        動詞後面可以接 <span class="highlight">V-ing</span>（進行式）或 <span class="highlight">to VR</span>（不定詞）。
+                    </p>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">🔍 句型一：be seen/heard + V-ing（被看到/聽到正在做...）</div>
+                    <p style="margin: 15px 0;">表示動作<strong>正在進行中</strong>被觀察到，強調過程。</p>
+                    
+                    <div class="example">
+                        <div class="example-eng">He was seen stealing the money.</div>
+                        <div class="example-chi">他被看到正在偷錢。（強調偷錢的過程）</div>
+                        <button class="audio-btn" onclick="speak('He was seen stealing the money')">🔊</button>
+                    </div>
+
+                    <div class="example">
+                        <div class="example-eng">The children were heard singing in the garden.</div>
+                        <div class="example-chi">孩子們被聽到在花園裡唱歌。（強調唱歌的過程）</div>
+                        <button class="audio-btn" onclick="speak('The children were heard singing in the garden')">🔊</button>
+                    </div>
+
+                    <div class="example">
+                        <div class="example-eng">She was noticed crying in the corner.</div>
+                        <div class="example-chi">她被注意到在角落哭泣。（強調哭泣的狀態）</div>
+                        <button class="audio-btn" onclick="speak('She was noticed crying in the corner')">🔊</button>
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">🔍 句型二：be seen/heard + to VR（被看到/聽到做了...）</div>
+                    <p style="margin: 15px 0;">表示動作的<strong>完整性</strong>或<strong>事實</strong>，看到整個動作完成。</p>
+                    
+                    <div class="example">
+                        <div class="example-eng">He was seen to leave the building at 10 p.m.</div>
+                        <div class="example-chi">他被看到在晚上10點離開大樓。（強調離開的事實）</div>
+                        <button class="audio-btn" onclick="speak('He was seen to leave the building at 10 p.m.')">🔊</button>
+                    </div>
+
+                    <div class="example">
+                        <div class="example-eng">The suspect was observed to enter the bank twice.</div>
+                        <div class="example-chi">嫌疑犯被觀察到進入銀行兩次。（強調完整的動作）</div>
+                        <button class="audio-btn" onclick="speak('The suspect was observed to enter the bank twice')">🔊</button>
+                    </div>
+
+                    <div class="example">
+                        <div class="example-eng">She was heard to say that she would quit.</div>
+                        <div class="example-chi">她被聽到說她要辭職。（強調說話的內容/事實）</div>
+                        <button class="audio-btn" onclick="speak('She was heard to say that she would quit')">🔊</button>
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">⚠️ 重要區別 (Key Difference)</div>
+                    <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                        <tr style="background: #f0f0f0;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">V-ing</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">to VR</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">強調進行中的動作</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">強調完整的動作或事實</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">看到動作的一部分</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">看到動作的全部</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">較常用於日常對話</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">較正式，常見於報導</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">📌 常見的感官動詞 (Common Perception Verbs)</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div class="example" style="text-align: center;">
+                            <strong>see</strong><br>看見
+                        </div>
+                        <div class="example" style="text-align: center;">
+                            <strong>hear</strong><br>聽見
+                        </div>
+                        <div class="example" style="text-align: center;">
+                            <strong>watch</strong><br>觀看
+                        </div>
+                        <div class="example" style="text-align: center;">
+                            <strong>notice</strong><br>注意到
+                        </div>
+                        <div class="example" style="text-align: center;">
+                            <strong>observe</strong><br>觀察到
+                        </div>
+                        <div class="example" style="text-align: center;">
+                            <strong>spot</strong><br>發現
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 學習策略區 -->
+            <div id="strategy" class="section">
+                <div class="strategy-card">
+                    <h3 style="color: #5e72e4; margin-bottom: 20px;">🎯 學習策略與技巧</h3>
+                    
+                    <div class="tip">
+                        <div class="tip-header">
+                            <div class="tip-icon">1</div>
+                            <strong>情境判斷法 (Context Method)</strong>
+                        </div>
+                        <p>問自己：這個動作是「正在進行」還是「已完成」？</p>
+                        <ul style="margin-left: 40px; margin-top: 10px;">
+                            <li>如果描述當時的情景 → 用 V-ing</li>
+                            <li>如果陳述一個事實 → 用 to VR</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip">
+                        <div class="tip-header">
+                            <div class="tip-icon">2</div>
+                            <strong>時態提示法 (Tense Clue)</strong>
+                        </div>
+                        <p>觀察句子的時態和時間副詞：</p>
+                        <ul style="margin-left: 40px; margin-top: 10px;">
+                            <li><strong>at that moment, while, when</strong> → 傾向用 V-ing</li>
+                            <li><strong>yesterday, last night, once</strong> → 傾向用 to VR</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip">
+                        <div class="tip-header">
+                            <div class="tip-icon">3</div>
+                            <strong>動詞性質法 (Verb Nature)</strong>
+                        </div>
+                        <p>某些動詞有偏好：</p>
+                        <ul style="margin-left: 40px; margin-top: 10px;">
+                            <li><strong>持續性動詞</strong>（cry, sing, play）→ 常用 V-ing</li>
+                            <li><strong>瞬間動詞</strong>（enter, leave, arrive）→ 常用 to VR</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip">
+                        <div class="tip-header">
+                            <div class="tip-icon">4</div>
+                            <strong>記憶口訣 (Memory Tips)</strong>
+                        </div>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            <strong>"ING = IN proGress"</strong>（進行中）<br>
+                            <strong>"TO = TOtal action"</strong>（完整動作）
+                        </div>
+                    </div>
+
+                    <div class="tip">
+                        <div class="tip-header">
+                            <div class="tip-icon">5</div>
+                            <strong>常見錯誤避免 (Common Mistakes)</strong>
+                        </div>
+                        <p style="color: #dc3545;">❌ 錯誤：He was seen to stealing.</p>
+                        <p style="color: #28a745;">✅ 正確：He was seen stealing. / He was seen to steal.</p>
+                        <p style="margin-top: 10px;">記住：to 後面永遠接原形動詞！</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);">
+                    <h3 style="color: #d63031; margin-bottom: 20px;">📝 實戰應用技巧</h3>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4>步驟一：找出被動結構</h4>
+                        <p>看到 be + 過去分詞（seen/heard/noticed）就是被動語態</p>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4>步驟二：判斷動作性質</h4>
+                        <p>是「過程」還是「結果」？是「片段」還是「全貌」？</p>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4>步驟三：選擇正確形式</h4>
+                        <p>過程/片段 → V-ing｜結果/全貌 → to VR</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 練習區 -->
+            <div id="practice" class="section">
+                <div class="exercise-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    
+                    <div id="questionContainer">
+                        <!-- 題目會動態載入 -->
+                    </div>
+
+                    <div class="btn-group" id="controlButtons">
+                        <button class="btn btn-primary" onclick="checkAnswer()" id="checkBtn">確認答案</button>
+                        <button class="btn btn-success" onclick="nextQuestion()" id="nextBtn" style="display: none;">下一題</button>
+                    </div>
+
+                    <div class="feedback" id="feedback"></div>
+                </div>
+
+                <!-- 結果顯示 -->
+                <div class="result-container" id="resultContainer">
+                    <h2>🎉 練習完成！</h2>
+                    <div class="score-display" id="scoreDisplay">0/0</div>
+                    <div class="result-message" id="resultMessage"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="startPractice()">再練習一次</button>
+                        <button class="btn btn-danger" onclick="reviewMistakes()">複習錯題</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 錯題複習區 -->
+            <div id="review" class="section">
+                <div class="review-section" id="reviewContent">
+                    <!-- 錯題會動態載入 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 題庫
+        const questions = [
+            // 選擇題
+            {
+                type: 'choice',
+                question: 'The thief was seen _____ through the window.',
+                chinese: '小偷被看到從窗戶（爬進來）。',
+                options: [
+                    'climbing',
+                    'to climb',
+                    'climbed',
+                    'climb'
+                ],
+                answer: 0,
+                explanation: '用 climbing 因為強調看到小偷正在爬窗的過程。'
+            },
+            {
+                type: 'choice',
+                question: 'She was heard _____ the door at midnight.',
+                chinese: '她被聽到在午夜（開門）。',
+                options: [
+                    'opening',
+                    'to open',
+                    'opened',
+                    'open'
+                ],
+                answer: 1,
+                explanation: '用 to open 因為強調聽到開門這個完整的動作/事實。'
+            },
+            {
+                type: 'choice',
+                question: 'The children were noticed _____ in the park.',
+                chinese: '孩子們被注意到在公園裡（玩耍）。',
+                options: [
+                    'to play',
+                    'playing',
+                    'played',
+                    'play'
+                ],
+                answer: 1,
+                explanation: '用 playing 因為強調注意到孩子們正在玩的狀態。'
+            },
+            {
+                type: 'choice',
+                question: 'He was observed _____ the building three times yesterday.',
+                chinese: '他昨天被觀察到（進入）大樓三次。',
+                options: [
+                    'entering',
+                    'to enter',
+                    'entered',
+                    'enter'
+                ],
+                answer: 1,
+                explanation: '用 to enter 因為強調觀察到完整的進入動作，且有具體次數。'
+            },
+            {
+                type: 'choice',
+                question: 'The birds were watched _____ their nests.',
+                chinese: '鳥兒們被觀察（築巢）。',
+                options: [
+                    'to build',
+                    'building',
+                    'built',
+                    'build'
+                ],
+                answer: 1,
+                explanation: '用 building 因為強調觀察築巢的過程。'
+            },
+            {
+                type: 'choice',
+                question: 'She was spotted _____ the store without paying.',
+                chinese: '她被發現沒付錢就（離開）商店。',
+                options: [
+                    'to leave',
+                    'left',
+                    'leaving',
+                    'leave'
+                ],
+                answer: 0,
+                explanation: '用 to leave 因為強調離開這個完整的動作事實。'
+            },
+            {
+                type: 'choice',
+                question: 'The students were heard _____ loudly in the classroom.',
+                chinese: '學生們被聽到在教室裡大聲（討論）。',
+                options: [
+                    'to discuss',
+                    'discussing',
+                    'discussed',
+                    'discuss'
+                ],
+                answer: 1,
+                explanation: '用 discussing 因為強調聽到討論的過程/聲音。'
+            },
+            {
+                type: 'choice',
+                question: 'The suspect was seen _____ the crime scene quickly.',
+                chinese: '嫌疑犯被看到快速（離開）犯罪現場。',
+                options: [
+                    'leaving',
+                    'to leave',
+                    'left',
+                    'leave'
+                ],
+                answer: 1,
+                explanation: '用 to leave 因為強調看到離開的完整動作。'
+            },
+
+            // 填空題
+            {
+                type: 'fill',
+                question: 'The baby was heard _____ (cry) all night long.',
+                chinese: '嬰兒被聽到整晚都在哭。',
+                answer: 'crying',
+                explanation: '用 crying 因為強調持續哭泣的狀態。'
+            },
+            {
+                type: 'fill',
+                question: 'He was seen _____ (take) the money from the drawer.',
+                chinese: '他被看到從抽屜拿錢。',
+                answer: 'to take',
+                acceptableAnswers: ['to take', 'taking'],
+                explanation: '用 to take 強調拿錢的事實；用 taking 強調看到拿錢的過程。'
+            },
+            {
+                type: 'fill',
+                question: 'They were noticed _____ (dance) at the party.',
+                chinese: '他們被注意到在派對上跳舞。',
+                answer: 'dancing',
+                explanation: '用 dancing 因為強調跳舞的進行狀態。'
+            },
+            {
+                type: 'fill',
+                question: 'The car was observed _____ (stop) at the red light.',
+                chinese: '那輛車被觀察到在紅燈前停下。',
+                answer: 'to stop',
+                explanation: '用 to stop 因為強調停車這個完整動作。'
+            },
+
+            // 改錯題
+            {
+                type: 'correction',
+                question: 'She was heard to crying in her room.',
+                chinese: '她被聽到在房間裡哭泣。',
+                answer: 'She was heard crying in her room.',
+                explanation: 'to 後面不能接 V-ing，應該用 heard crying 或 heard to cry。'
+            },
+            {
+                type: 'correction',
+                question: 'The man was seen enter the bank.',
+                chinese: '那個男人被看到進入銀行。',
+                answer: 'The man was seen to enter the bank. / The man was seen entering the bank.',
+                explanation: '被動語態後需要 to VR 或 V-ing，不能用原形動詞。'
+            },
+            {
+                type: 'correction',
+                question: 'They were noticed to playing games.',
+                chinese: '他們被注意到在玩遊戲。',
+                answer: 'They were noticed playing games.',
+                explanation: 'to 後面要接原形動詞，這裡應該用 playing 表示進行中。'
+            },
+
+            // 補充更多題目
+            {
+                type: 'choice',
+                question: 'The dog was heard _____ all night.',
+                chinese: '狗被聽到整晚（吠叫）。',
+                options: [
+                    'to bark',
+                    'barking',
+                    'barked',
+                    'bark'
+                ],
+                answer: 1,
+                explanation: '用 barking 因為強調持續吠叫的狀態。'
+            },
+            {
+                type: 'choice',
+                question: 'The manager was observed _____ the office early.',
+                chinese: '經理被觀察到提早（離開）辦公室。',
+                options: [
+                    'leaving',
+                    'to leave',
+                    'left',
+                    'leave'
+                ],
+                answer: 1,
+                explanation: '用 to leave 因為強調離開這個完整的動作。'
+            },
+            {
+                type: 'fill',
+                question: 'The birds were watched _____ (build) their nest.',
+                chinese: '鳥兒們被觀察築巢。',
+                answer: 'building',
+                explanation: '用 building 因為強調觀察築巢的過程。'
+            },
+            {
+                type: 'fill',
+                question: 'He was noticed _____ (arrive) late to the meeting.',
+                chinese: '他被注意到開會遲到。',
+                answer: 'to arrive',
+                explanation: '用 to arrive 因為強調到達這個完整動作的事實。'
+            }
+
+
+        ];
+
+        // 全域變數
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let mistakes = [];
+        let userAnswers = [];
+        let shuffledQuestions = [];
+
+        // 初始化
+        function init() {
+            loadMistakes();
+            startPractice();
+        }
+
+        // 顯示區塊
+        function showSection(sectionName) {
+            // 移除所有 active class
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // 添加 active class
+            document.getElementById(sectionName).classList.add('active');
+            event.target.classList.add('active');
+
+            // 如果切換到複習區，載入錯題
+            if (sectionName === 'review') {
+                displayMistakes();
+            }
+        }
+
+        // 開始練習
+        function startPractice() {
+            // 打亂題目順序
+            shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            // 重置顯示
+            document.getElementById('questionContainer').innerHTML = '';
+            document.getElementById('resultContainer').classList.remove('show');
+            document.getElementById('feedback').classList.remove('show');
+            
+            // 顯示第一題
+            displayQuestion();
+        }
+
+        // 顯示題目
+        function displayQuestion() {
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showResult();
+                return;
+            }
+
+            const question = shuffledQuestions[currentQuestionIndex];
+            const questionNumber = currentQuestionIndex + 1;
+            const totalQuestions = shuffledQuestions.length;
+
+            // 更新進度條
+            const progress = (questionNumber / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            let questionHTML = `
+                <div class="question-card active">
+                    <div class="question-header">
+                        <span class="question-number">第 ${questionNumber} / ${totalQuestions} 題</span>
+                        <span class="question-type">${getQuestionTypeLabel(question.type)}</span>
+                    </div>
+            `;
+
+            // 根據題型生成不同的HTML
+            switch (question.type) {
+                case 'choice':
+                    questionHTML += generateChoiceQuestion(question);
+                    break;
+                case 'fill':
+                    questionHTML += generateFillQuestion(question);
+                    break;
+                case 'correction':
+                    questionHTML += generateCorrectionQuestion(question);
+                    break;
+            }
+
+            questionHTML += '</div>';
+            document.getElementById('questionContainer').innerHTML = questionHTML;
+
+            // 重置按鈕狀態
+            document.getElementById('checkBtn').style.display = 'inline-block';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('feedback').classList.remove('show');
+        }
+
+        // 生成選擇題
+        function generateChoiceQuestion(question) {
+            let html = `
+                <div class="question-content">
+                    ${question.question}
+                    <button class="audio-btn" onclick="speak('${question.question.replace(/___/g, 'blank')}')">🔊</button>
+                </div>
+                <div class="chinese-translation">${question.chinese}</div>
+                <div class="options">
+            `;
+
+            question.options.forEach((option, index) => {
+                html += `
+                    <div class="option" onclick="selectOption(${index})">
+                        <div class="option-label">${String.fromCharCode(65 + index)}</div>
+                        <span>${option}</span>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            return html;
+        }
+
+        // 生成填空題
+        function generateFillQuestion(question) {
+            return `
+                <div class="question-content">
+                    ${question.question.replace('_____', '<input type="text" class="fill-blank-input" id="fillAnswer" placeholder="請輸入答案">')}
+                    <button class="audio-btn" onclick="speak('${question.question.replace(/_____.*?\)/, 'blank')}')">🔊</button>
+                </div>
+                <div class="chinese-translation">${question.chinese}</div>
+            `;
+        }
+
+        // 生成改錯題
+        function generateCorrectionQuestion(question) {
+            return `
+                <div class="question-content">
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <strong>請改正以下句子的錯誤：</strong>
+                    </div>
+                    <div style="font-size: 1.3em; color: #dc3545;">
+                        ${question.question}
+                        <button class="audio-btn" onclick="speak('${question.question}')">🔊</button>
+                    </div>
+                </div>
+                <div class="chinese-translation">${question.chinese}</div>
+                <div style="margin-top: 20px;">
+                    <textarea id="correctionAnswer" rows="3" style="width: 100%; padding: 10px; font-size: 1.1em; border: 2px solid #5e72e4; border-radius: 5px;" placeholder="請輸入正確的句子..."></textarea>
+                </div>
+            `;
+        }
+
+
+
+        // 選擇選項
+        function selectOption(index) {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelectorAll('.option')[index].classList.add('selected');
+        }
+
+
+
+        // 檢查答案
+        function checkAnswer() {
+            const question = shuffledQuestions[currentQuestionIndex];
+            let isCorrect = false;
+            let userAnswer = '';
+
+            switch (question.type) {
+                case 'choice':
+                    const selected = document.querySelector('.option.selected');
+                    if (!selected) {
+                        alert('請選擇一個答案！');
+                        return;
+                    }
+                    const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selected);
+                    userAnswer = question.options[selectedIndex];
+                    isCorrect = selectedIndex === question.answer;
+                    
+                    // 顯示正確/錯誤
+                    if (isCorrect) {
+                        selected.classList.add('correct');
+                    } else {
+                        selected.classList.add('incorrect');
+                        document.querySelectorAll('.option')[question.answer].classList.add('correct');
+                    }
+                    break;
+
+                case 'fill':
+                    userAnswer = document.getElementById('fillAnswer').value.trim();
+                    if (!userAnswer) {
+                        alert('請填寫答案！');
+                        return;
+                    }
+                    
+                    // 檢查主要答案或可接受的答案
+                    if (question.acceptableAnswers) {
+                        isCorrect = question.acceptableAnswers.includes(userAnswer.toLowerCase());
+                    } else {
+                        isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+                    }
+                    break;
+
+                case 'correction':
+                    userAnswer = document.getElementById('correctionAnswer').value.trim();
+                    if (!userAnswer) {
+                        alert('請輸入改正後的句子！');
+                        return;
+                    }
+                    
+                    // 比較時忽略大小寫和標點符號的細微差異
+                    const normalizedUser = userAnswer.toLowerCase().replace(/[.,!?]/g, '');
+                    const normalizedAnswer = question.answer.toLowerCase().replace(/[.,!?]/g, '');
+                    isCorrect = normalizedUser.includes(normalizedAnswer) || normalizedAnswer.includes(normalizedUser);
+                    break;
+            }
+
+            // 更新分數
+            if (isCorrect) {
+                score++;
+            } else {
+                // 記錄錯題
+                mistakes.push({
+                    question: question,
+                    userAnswer: userAnswer,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            // 儲存使用者答案
+            userAnswers.push({
+                question: question,
+                userAnswer: userAnswer,
+                isCorrect: isCorrect
+            });
+
+            // 顯示回饋
+            showFeedback(isCorrect, question.explanation);
+
+            // 顯示下一題按鈕
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        // 顯示回饋
+        function showFeedback(isCorrect, explanation) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+            feedback.innerHTML = `
+                <strong>${isCorrect ? '✅ 正確！' : '❌ 錯誤！'}</strong>
+                <p>${explanation}</p>
+            `;
+        }
+
+        // 下一題
+        function nextQuestion() {
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+
+        // 顯示結果
+        function showResult() {
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            let message = '';
+
+            if (percentage >= 90) {
+                message = '太棒了！你已經完全掌握這個句型！🎉';
+            } else if (percentage >= 70) {
+                message = '做得不錯！再練習一下就能更熟練了！💪';
+            } else if (percentage >= 50) {
+                message = '還需要加強練習，別放棄！📚';
+            } else {
+                message = '需要多複習文法解釋，加油！💡';
+            }
+
+            document.getElementById('scoreDisplay').textContent = `${score} / ${shuffledQuestions.length}`;
+            document.getElementById('resultMessage').textContent = message + ` (正確率：${percentage}%)`;
+            document.getElementById('resultContainer').classList.add('show');
+
+            // 儲存錯題到 localStorage
+            saveMistakes();
+        }
+
+        // 儲存錯題
+        function saveMistakes() {
+            const existingMistakes = JSON.parse(localStorage.getItem('beSeenHeardMistakes') || '[]');
+            const newMistakes = userAnswers.filter(a => !a.isCorrect);
+            
+            // 合併錯題（避免重複）
+            newMistakes.forEach(newMistake => {
+                const exists = existingMistakes.find(m => 
+                    m.question.question === newMistake.question.question
+                );
+                
+                if (!exists) {
+                    existingMistakes.push(newMistake);
+                }
+            });
+
+            localStorage.setItem('beSeenHeardMistakes', JSON.stringify(existingMistakes));
+        }
+
+        // 載入錯題
+        function loadMistakes() {
+            mistakes = JSON.parse(localStorage.getItem('beSeenHeardMistakes') || '[]');
+        }
+
+        // 顯示錯題
+        function displayMistakes() {
+            const reviewContent = document.getElementById('reviewContent');
+            const savedMistakes = JSON.parse(localStorage.getItem('beSeenHeardMistakes') || '[]');
+
+            if (savedMistakes.length === 0) {
+                reviewContent.innerHTML = `
+                    <div class="review-header">目前沒有錯題需要複習！</div>
+                    <p style="text-align: center; margin-top: 20px;">繼續練習，保持好成績！🎉</p>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="review-header">📝 錯題複習（共 ${savedMistakes.length} 題）</div>
+            `;
+
+            savedMistakes.forEach((mistake, index) => {
+                html += `
+                    <div class="mistake-card">
+                        <div class="mistake-question">
+                            <strong>題目 ${index + 1}:</strong> ${mistake.question.question}
+                        </div>
+                        <div class="chinese-translation">${mistake.question.chinese}</div>
+                        <div class="mistake-answer">
+                            <div class="your-answer">
+                                <strong>你的答案：</strong> ${formatAnswer(mistake.userAnswer, mistake.question.type)}
+                            </div>
+                            <div class="correct-answer">
+                                <strong>正確答案：</strong> ${formatCorrectAnswer(mistake.question)}
+                            </div>
+                        </div>
+                        <div style="background: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                            <strong>解釋：</strong> ${mistake.question.explanation}
+                        </div>
+                        <button class="btn btn-warning" onclick="practiceAgain(${index})" style="margin-top: 15px;">
+                            重新練習這題
+                        </button>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="btn-group" style="margin-top: 30px;">
+                    <button class="btn btn-danger" onclick="clearMistakes()">清除所有錯題</button>
+                    <button class="btn btn-success" onclick="practiceMistakes()">練習所有錯題</button>
+                </div>
+            `;
+
+            reviewContent.innerHTML = html;
+        }
+
+        // 格式化答案顯示
+        function formatAnswer(answer, type) {
+            return answer || '未作答';
+        }
+
+        // 格式化正確答案
+        function formatCorrectAnswer(question) {
+            switch (question.type) {
+                case 'choice':
+                    return question.options[question.answer];
+                case 'fill':
+                    return question.answer;
+                case 'correction':
+                    return question.answer;
+                default:
+                    return question.answer;
+            }
+        }
+
+        // 重新練習單題
+        function practiceAgain(index) {
+            const savedMistakes = JSON.parse(localStorage.getItem('beSeenHeardMistakes') || '[]');
+            shuffledQuestions = [savedMistakes[index].question];
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            showSection('practice');
+            displayQuestion();
+        }
+
+        // 練習所有錯題
+        function practiceMistakes() {
+            const savedMistakes = JSON.parse(localStorage.getItem('beSeenHeardMistakes') || '[]');
+            if (savedMistakes.length === 0) {
+                alert('沒有錯題可以練習！');
+                return;
+            }
+
+            shuffledQuestions = savedMistakes.map(m => m.question);
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            showSection('practice');
+            displayQuestion();
+        }
+
+        // 清除錯題
+        function clearMistakes() {
+            if (confirm('確定要清除所有錯題記錄嗎？')) {
+                localStorage.removeItem('beSeenHeardMistakes');
+                displayMistakes();
+            }
+        }
+
+        // 複習錯題（從結果頁面）
+        function reviewMistakes() {
+            showSection('review');
+            displayMistakes();
+        }
+
+        // 取得題型標籤
+        function getQuestionTypeLabel(type) {
+            const labels = {
+                'choice': '選擇題',
+                'fill': '填空題',
+                'correction': '改錯題'
+            };
+            return labels[type] || '練習題';
+        }
+
+        // 文字轉語音
+        function speak(text) {
+            // 移除特殊符號
+            text = text.replace(/_+/g, 'blank');
+            
+            if ('speechSynthesis' in window) {
+                // 取消當前的語音
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('您的瀏覽器不支援語音功能');
+            }
+        }
+
+        // 頁面載入時初始化
+        window.onload = init;
+    </script>
+</body>
+</html>

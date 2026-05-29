@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>否定句與疑問句複習</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            color: #333;
+            font-weight: bold;
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .tab-btn.active {
+            background: #e74c3c;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            border-left: 5px solid #11998e;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .sub-title {
+            font-size: 1.2rem;
+            color: #495057;
+            margin: 25px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px dashed #dee2e6;
+        }
+        .key-point {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 15px 15px 0;
+            font-size: 1.1rem;
+        }
+        .key-point .title {
+            font-weight: bold;
+            color: #856404;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .danger-box {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            border-left: 5px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 15px 15px 0;
+        }
+        .danger-box .title {
+            font-weight: bold;
+            color: #c0392b;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .success-box {
+            background: linear-gradient(135deg, #e6ffe6 0%, #ccffcc 100%);
+            border-left: 5px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 15px 15px 0;
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+        .compare-table th {
+            background: #11998e;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .compare-table td {
+            border: 2px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .compare-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .compare-table .bev-col {
+            background: #e3f2fd;
+        }
+        .compare-table .verb-col {
+            background: #fff3e0;
+        }
+        .formula-box {
+            background: #f8f9fa;
+            border: 3px solid #11998e;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .formula {
+            font-size: 1.4rem;
+            color: #333;
+            margin: 10px 0;
+        }
+        .formula .highlight {
+            background: #ffeb3b;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .formula .bev {
+            color: #1565c0;
+            font-weight: bold;
+        }
+        .formula .verb {
+            color: #e65100;
+            font-weight: bold;
+        }
+        .formula .neg {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .example-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .example-card .sentence {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .example-card .correct {
+            color: #27ae60;
+        }
+        .example-card .wrong {
+            color: #e74c3c;
+            text-decoration: line-through;
+        }
+        .example-card .translation {
+            color: #666;
+            font-size: 1rem;
+        }
+        .arrow {
+            font-size: 1.5rem;
+            color: #11998e;
+            margin: 0 10px;
+        }
+        .step-box {
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+        }
+        .step-num {
+            background: #11998e;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            font-size: 1.1rem;
+        }
+        .practice-area {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .practice-title {
+            font-size: 1.3rem;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+        .question {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .question-hint {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .option-btn {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border: 2px solid #11998e;
+            border-radius: 25px;
+            background: white;
+            color: #11998e;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option-btn:hover {
+            background: #11998e;
+            color: white;
+        }
+        .option-btn.correct {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .feedback {
+            margin-top: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 1.05rem;
+        }
+        .feedback.correct {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.wrong {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .score-area {
+            text-align: center;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .score {
+            font-size: 2.2rem;
+            color: #11998e;
+            font-weight: bold;
+        }
+        .reset-btn {
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            background: #11998e;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .reset-btn:hover {
+            background: #0d7d71;
+        }
+        .vs-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px;
+        }
+        .memory-trick {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .memory-trick .trick {
+            font-size: 1.4rem;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .tab-btn {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+            .compare-table {
+                font-size: 0.9rem;
+            }
+            .compare-table th, .compare-table td {
+                padding: 10px 5px;
+            }
+            .formula {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 否定句與疑問句複習</h1>
+
+```
+    <div class="tab-buttons">
+        <button class="tab-btn active" onclick="showTab('overview')">重點比較</button>
+        <button class="tab-btn" onclick="showTab('bev-neg')">BeV 否定句</button>
+        <button class="tab-btn" onclick="showTab('bev-ques')">BeV 疑問句</button>
+        <button class="tab-btn" onclick="showTab('verb-neg')">一般動詞否定句</button>
+        <button class="tab-btn" onclick="showTab('verb-ques')">一般動詞疑問句</button>
+        <button class="tab-btn" onclick="showTab('practice')">綜合練習</button>
+    </div>
+
+    <!-- 重點比較 -->
+    <div id="overview" class="tab-content active">
+        <h2 class="section-title">🔑 Be 動詞 vs 一般動詞：最重要的區別</h2>
+        
+        <div class="danger-box">
+            <div class="title">❌ 常見錯誤</div>
+            <div style="font-size:1.3rem; margin:10px 0;">
+                <span class="wrong">He is don't play games.</span>
+            </div>
+            <div>這是把 Be 動詞和一般動詞混在一起了！</div>
+        </div>
+
+        <div class="memory-trick">
+            <div class="trick">🧠 記住：一個句子只能有一個「動詞系統」！</div>
+            <div style="margin-top:10px; font-size:1.1rem;">
+                用了 <span style="color:#1565c0; font-weight:bold;">Be 動詞</span> 就不能用 <span style="color:#e65100; font-weight:bold;">一般動詞</span>，<br>
+                用了 <span style="color:#e65100; font-weight:bold;">一般動詞</span> 就不能用 <span style="color:#1565c0; font-weight:bold;">Be 動詞</span>！
+            </div>
+        </div>
+
+        <h3 class="sub-title">📊 否定句比較表</h3>
+        <table class="compare-table">
+            <tr>
+                <th style="width:20%;">類型</th>
+                <th style="width:40%;" class="bev-col">Be 動詞句</th>
+                <th style="width:40%;" class="verb-col">一般動詞句</th>
+            </tr>
+            <tr>
+                <td><strong>肯定句</strong></td>
+                <td class="bev-col">He <span style="color:#1565c0; font-weight:bold;">is</span> happy.</td>
+                <td class="verb-col">He <span style="color:#e65100; font-weight:bold;">plays</span> games.</td>
+            </tr>
+            <tr>
+                <td><strong>否定句</strong></td>
+                <td class="bev-col">He <span style="color:#c62828; font-weight:bold;">is not</span> happy.</td>
+                <td class="verb-col">He <span style="color:#c62828; font-weight:bold;">does not play</span> games.</td>
+            </tr>
+            <tr>
+                <td><strong>縮寫</strong></td>
+                <td class="bev-col">He <span style="color:#c62828; font-weight:bold;">isn't</span> happy.</td>
+                <td class="verb-col">He <span style="color:#c62828; font-weight:bold;">doesn't play</span> games.</td>
+            </tr>
+        </table>
+
+        <h3 class="sub-title">📊 疑問句比較表</h3>
+        <table class="compare-table">
+            <tr>
+                <th style="width:20%;">類型</th>
+                <th style="width:40%;" class="bev-col">Be 動詞句</th>
+                <th style="width:40%;" class="verb-col">一般動詞句</th>
+            </tr>
+            <tr>
+                <td><strong>肯定句</strong></td>
+                <td class="bev-col">He <span style="color:#1565c0; font-weight:bold;">is</span> happy.</td>
+                <td class="verb-col">He <span style="color:#e65100; font-weight:bold;">plays</span> games.</td>
+            </tr>
+            <tr>
+                <td><strong>疑問句</strong></td>
+                <td class="bev-col"><span style="color:#1565c0; font-weight:bold;">Is</span> he happy?</td>
+                <td class="verb-col"><span style="color:#e65100; font-weight:bold;">Does</span> he <span style="color:#e65100; font-weight:bold;">play</span> games?</td>
+            </tr>
+            <tr>
+                <td><strong>回答</strong></td>
+                <td class="bev-col">Yes, he <span style="color:#1565c0; font-weight:bold;">is</span>. / No, he <span style="color:#c62828; font-weight:bold;">isn't</span>.</td>
+                <td class="verb-col">Yes, he <span style="color:#e65100; font-weight:bold;">does</span>. / No, he <span style="color:#c62828; font-weight:bold;">doesn't</span>.</td>
+            </tr>
+        </table>
+
+        <div class="key-point">
+            <div class="title">💡 判斷方法</div>
+            <div style="font-size:1.15rem;">
+                <strong>看句子裡有什麼動詞：</strong><br><br>
+                ✅ 有 <strong style="color:#1565c0;">is / am / are</strong> → 用 Be 動詞的規則<br>
+                ✅ 有 <strong style="color:#e65100;">play / go / eat / study...</strong> 等動作 → 用一般動詞的規則（do/does）
+            </div>
+        </div>
+    </div>
+
+    <!-- BeV 否定句 -->
+    <div id="bev-neg" class="tab-content">
+        <h2 class="section-title">🚫 Be 動詞否定句</h2>
+        
+        <div class="formula-box">
+            <div style="font-size:1.1rem; color:#666; margin-bottom:10px;">公式</div>
+            <div class="formula">
+                主詞 + <span class="bev">Be 動詞</span> + <span class="highlight neg">not</span> + 其他
+            </div>
+        </div>
+
+        <div class="key-point">
+            <div class="title">💡 重點：直接在 Be 動詞後面加 not</div>
+            <div>is not → isn't ｜ am not → 不縮寫 ｜ are not → aren't</div>
+        </div>
+
+        <h3 class="sub-title">📝 例句練習</h3>
+        
+        <div class="example-card">
+            <div class="sentence">
+                肯定：I <span style="color:#1565c0; font-weight:bold;">am</span> a student.
+            </div>
+            <div class="sentence">
+                否定：I <span style="color:#c62828; font-weight:bold;">am not</span> a student.
+            </div>
+            <div class="translation">我不是學生。</div>
+        </div>
+
+        <div class="example-card">
+            <div class="sentence">
+                肯定：She <span style="color:#1565c0; font-weight:bold;">is</span> happy.
+            </div>
+            <div class="sentence">
+                否定：She <span style="color:#c62828; font-weight:bold;">is not</span> happy. = She <span style="color:#c62828; font-weight:bold;">isn't</span> happy.
+            </div>
+            <div class="translation">她不開心。</div>
+        </div>
+
+        <div class="example-card">
+            <div class="sentence">
+                肯定：They <span style="color:#1565c0; font-weight:bold;">are</span> teachers.
+            </div>
+            <div class="sentence">
+                否定：They <span style="color:#c62828; font-weight:bold;">are not</span> teachers. = They <span style="color:#c62828; font-weight:bold;">aren't</span> teachers.
+            </div>
+            <div class="translation">他們不是老師。</div>
+        </div>
+
+        <div class="step-box">
+            <div style="font-weight:bold; font-size:1.2rem; margin-bottom:15px;">🔄 改成否定句的步驟</div>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">找到 Be 動詞（is / am / are）</div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">在 Be 動詞後面加 <strong>not</strong></div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">其他部分不變</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BeV 疑問句 -->
+    <div id="bev-ques" class="tab-content">
+        <h2 class="section-title">❓ Be 動詞疑問句</h2>
+        
+        <div class="formula-box">
+            <div style="font-size:1.1rem; color:#666; margin-bottom:10px;">公式</div>
+            <div class="formula">
+                <span class="bev">Be 動詞</span> + 主詞 + 其他<span class="highlight">？</span>
+            </div>
+        </div>
+
+        <div class="key-point">
+            <div class="title">💡 重點：把 Be 動詞移到句首</div>
+            <div>Be 動詞和主詞「交換位置」，句尾加問號</div>
+        </div>
+
+        <h3 class="sub-title">📝 例句練習</h3>
+        
+        <div class="example-card">
+            <div class="sentence">
+                肯定：You <span style="color:#1565c0; font-weight:bold;">are</span> a student.
+            </div>
+            <div class="sentence">
+                疑問：<span style="color:#1565c0; font-weight:bold;">Are</span> you a student?
+            </div>
+            <div class="translation">你是學生嗎？</div>
+            <div style="margin-top:10px; padding:10px; background:#f5f5f5; border-radius:8px;">
+                回答：Yes, I <span style="color:#1565c0; font-weight:bold;">am</span>. / No, I<span style="color:#c62828; font-weight:bold;">'m not</span>.
+            </div>
+        </div>
+
+        <div class="example-card">
+            <div class="sentence">
+                肯定：He <span style="color:#1565c0; font-weight:bold;">is</span> your brother.
+            </div>
+            <div class="sentence">
+                疑問：<span style="color:#1565c0; font-weight:bold;">Is</span> he your brother?
+            </div>
+            <div class="translation">他是你的兄弟嗎？</div>
+            <div style="margin-top:10px; padding:10px; background:#f5f5f5; border-radius:8px;">
+                回答：Yes, he <span style="color:#1565c0; font-weight:bold;">is</span>. / No, he <span style="color:#c62828; font-weight:bold;">isn't</span>.
+            </div>
+        </div>
+
+        <div class="step-box">
+            <div style="font-weight:bold; font-size:1.2rem; margin-bottom:15px;">🔄 改成疑問句的步驟</div>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">找到 Be 動詞（is / am / are）</div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">把 Be 動詞移到<strong>句首</strong>（第一個字母大寫）</div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">句尾改成<strong>問號 ？</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 一般動詞否定句 -->
+    <div id="verb-neg" class="tab-content">
+        <h2 class="section-title">🚫 一般動詞否定句</h2>
+        
+        <div class="formula-box">
+            <div style="font-size:1.1rem; color:#666; margin-bottom:10px;">公式</div>
+            <div class="formula">
+                主詞 + <span class="highlight neg">do not / does not</span> + <span class="verb">原形動詞</span>
+            </div>
+        </div>
+
+        <div class="danger-box">
+            <div class="title">⚠️ 超級重要！</div>
+            <div style="font-size:1.15rem;">
+                用了 <strong>does not (doesn't)</strong>，後面動詞要<strong>變回原形</strong>！<br><br>
+                ❌ He doesn't <span style="text-decoration:line-through; color:#e74c3c;">plays</span> games.<br>
+                ✅ He doesn't <span style="color:#27ae60; font-weight:bold;">play</span> games.
+            </div>
+        </div>
+
+        <table class="compare-table">
+            <tr>
+                <th>主詞</th>
+                <th>否定用法</th>
+                <th>縮寫</th>
+            </tr>
+            <tr>
+                <td>I / You / We / They</td>
+                <td style="color:#c62828; font-weight:bold;">do not + 原形動詞</td>
+                <td style="color:#c62828; font-weight:bold;">don't + 原形動詞</td>
+            </tr>
+            <tr>
+                <td>He / She / It / 單數名詞</td>
+                <td style="color:#c62828; font-weight:bold;">does not + 原形動詞</td>
+                <td style="color:#c62828; font-weight:bold;">doesn't + 原形動詞</td>
+            </tr>
+        </table>
+
+        <h3 class="sub-title">📝 例句練習</h3>
+        
+        <div class="example-card">
+            <div class="sentence">
+                肯定：I <span style="color:#e65100; font-weight:bold;">play</span> basketball.
+            </div>
+            <div class="sentence">
+                否定：I <span style="color:#c62828; font-weight:bold;">do not play</span> basketball. = I <span style="color:#c62828; font-weight:bold;">don't play</span> basketball.
+            </div>
+            <div class="translation">我不打籃球。</div>
+        </div>
+
+        <div class="example-card">
+            <div class="sentence">
+                肯定：She <span style="color:#e65100; font-weight:bold;">goes</span> to school.
+            </div>
+            <div class="sentence">
+                否定：She <span style="color:#c62828; font-weight:bold;">does not go</span> to school. = She <span style="color:#c62828; font-weight:bold;">doesn't go</span> to school.
+            </div>
+            <div class="translation">她不去學校。（注意：goes → go）</div>
+        </div>
+
+        <div class="example-card">
+            <div class="sentence">
+                肯定：He <span style="color:#e65100; font-weight:bold;">likes</span> pizza.
+            </div>
+            <div class="sentence">
+                否定：He <span style="color:#c62828; font-weight:bold;">doesn't like</span> pizza.
+            </div>
+            <div class="translation">他不喜歡披薩。（注意：likes → like）</div>
+        </div>
+
+        <div class="step-box">
+            <div style="font-weight:bold; font-size:1.2rem; margin-bottom:15px;">🔄 改成否定句的步驟</div>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">判斷主詞：I/You/We/They → 用 <strong>don't</strong>，He/She/It → 用 <strong>doesn't</strong></div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">在主詞後面加 don't 或 doesn't</div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">動詞改成<strong>原形</strong>（去掉 s / es / ies）</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 一般動詞疑問句 -->
+    <div id="verb-ques" class="tab-content">
+        <h2 class="section-title">❓ 一般動詞疑問句</h2>
+        
+        <div class="formula-box">
+            <div style="font-size:1.1rem; color:#666; margin-bottom:10px;">公式</div>
+            <div class="formula">
+                <span class="highlight verb">Do / Does</span> + 主詞 + <span class="verb">原形動詞</span><span class="highlight">？</span>
+            </div>
+        </div>
+
+        <div class="danger-box">
+            <div class="title">⚠️ 超級重要！</div>
+            <div style="font-size:1.15rem;">
+                用了 <strong>Does</strong>，後面動詞要<strong>變回原形</strong>！<br><br>
+                ❌ Does he <span style="text-decoration:line-through; color:#e74c3c;">plays</span> games?<br>
+                ✅ Does he <span style="color:#27ae60; font-weight:bold;">play</span> games?
+            </div>
+        </div>
+
+        <table class="compare-table">
+            <tr>
+                <th>主詞</th>
+                <th>疑問句開頭</th>
+                <th>回答</th>
+            </tr>
+            <tr>
+                <td>I / You / We / They</td>
+                <td style="color:#e65100; font-weight:bold;">Do + 主詞 + 原形動詞?</td>
+                <td>Yes, ... <strong>do</strong>. / No, ... <strong>don't</strong>.</td>
+            </tr>
+            <tr>
+                <td>He / She / It / 單數名詞</td>
+                <td style="color:#e65100; font-weight:bold;">Does + 主詞 + 原形動詞?</td>
+                <td>Yes, ... <strong>does</strong>. / No, ... <strong>doesn't</strong>.</td>
+            </tr>
+        </table>
+
+        <h3 class="sub-title">📝 例句練習</h3>
+        
+        <div class="example-card">
+            <div class="sentence">
+                肯定：You <span style="color:#e65100; font-weight:bold;">like</span> music.
+            </div>
+            <div class="sentence">
+                疑問：<span style="color:#e65100; font-weight:bold;">Do</span> you <span style="color:#e65100; font-weight:bold;">like</span> music?
+            </div>
+            <div class="translation">你喜歡音樂嗎？</div>
+            <div style="margin-top:10px; padding:10px; background:#f5f5f5; border-radius:8px;">
+                回答：Yes, I <span style="color:#e65100; font-weight:bold;">do</span>. / No, I <span style="color:#c62828; font-weight:bold;">don't</span>.
+            </div>
+        </div>
+
+        <div class="example-card">
+            <div class="sentence">
+                肯定：She <span style="color:#e65100; font-weight:bold;">plays</span> tennis.
+            </div>
+            <div class="sentence">
+                疑問：<span style="color:#e65100; font-weight:bold;">Does</span> she <span style="color:#e65100; font-weight:bold;">play</span> tennis?
+            </div>
+            <div class="translation">她打網球嗎？（注意：plays → play）</div>
+            <div style="margin-top:10px; padding:10px; background:#f5f5f5; border-radius:8px;">
+                回答：Yes, she <span style="color:#e65100; font-weight:bold;">does</span>. / No, she <span style="color:#c62828; font-weight:bold;">doesn't</span>.
+            </div>
+        </div>
+
+        <div class="step-box">
+            <div style="font-weight:bold; font-size:1.2rem; margin-bottom:15px;">🔄 改成疑問句的步驟</div>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">判斷主詞：I/You/We/They → 用 <strong>Do</strong>，He/She/It → 用 <strong>Does</strong></div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">把 Do 或 Does 放到<strong>句首</strong></div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">動詞改成<strong>原形</strong>，句尾加<strong>問號</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 綜合練習 -->
+    <div id="practice" class="tab-content">
+        <h2 class="section-title">🎯 綜合練習</h2>
+        
+        <div class="practice-area">
+            <div class="practice-title">📝 選出正確答案</div>
+            <div id="questions-container"></div>
+            <div class="score-area" id="score-area" style="display:none;">
+                <div class="score">得分：<span id="score">0</span> / <span id="total">0</span></div>
+                <button class="reset-btn" onclick="resetQuiz()">🔄 重新練習</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // BeV 否定句
+        { q: "She _____ a teacher.", hint: "她不是老師", options: ["isn't", "doesn't", "don't"], answer: 0, type: "BeV否定" },
+        { q: "I _____ happy today.", hint: "我今天不開心", options: ["am not", "do not", "does not"], answer: 0, type: "BeV否定" },
+        { q: "They _____ students.", hint: "他們不是學生", options: ["isn't", "aren't", "don't"], answer: 1, type: "BeV否定" },
+        
+        // BeV 疑問句
+        { q: "_____ he your brother?", hint: "他是你的兄弟嗎？", options: ["Is", "Does", "Do"], answer: 0, type: "BeV疑問" },
+        { q: "_____ you tired?", hint: "你累了嗎？", options: ["Do", "Does", "Are"], answer: 2, type: "BeV疑問" },
+        { q: "Is she a nurse? — Yes, she _____.", hint: "是的回答", options: ["is", "does", "do"], answer: 0, type: "BeV疑問" },
+        
+        // 一般動詞否定句
+        { q: "He _____ play basketball.", hint: "他不打籃球", options: ["isn't", "doesn't", "don't"], answer: 1, type: "動詞否定" },
+        { q: "They _____ like pizza.", hint: "他們不喜歡披薩", options: ["doesn't", "aren't", "don't"], answer: 2, type: "動詞否定" },
+        { q: "She doesn't _____ to school.", hint: "她不去學校", options: ["goes", "go", "going"], answer: 1, type: "動詞否定" },
+        { q: "I _____ watch TV.", hint: "我不看電視", options: ["am not", "doesn't", "don't"], answer: 2, type: "動詞否定" },
+        
+        // 一般動詞疑問句
+        { q: "_____ she like music?", hint: "她喜歡音樂嗎？", options: ["Is", "Does", "Do"], answer: 1, type: "動詞疑問" },
+        { q: "_____ they play games?", hint: "他們玩遊戲嗎？", options: ["Are", "Does", "Do"], answer: 2, type: "動詞疑問" },
+        { q: "Does he _____ English?", hint: "他學英文嗎？", options: ["studies", "study", "studying"], answer: 1, type: "動詞疑問" },
+        { q: "Does she go to school? — No, she _____.", hint: "否定回答", options: ["isn't", "doesn't", "don't"], answer: 1, type: "動詞疑問" },
+        
+        // 綜合判斷
+        { q: "The cat _____ hungry.", hint: "這隻貓不餓（狀態）", options: ["isn't", "doesn't", "don't"], answer: 0, type: "綜合" },
+        { q: "My father _____ work on Sunday.", hint: "我爸爸週日不工作（動作）", options: ["isn't", "doesn't", "don't"], answer: 1, type: "綜合" },
+        { q: "_____ your mother cook?", hint: "你媽媽做飯嗎？（動作）", options: ["Is", "Does", "Do"], answer: 1, type: "綜合" },
+        { q: "_____ the book interesting?", hint: "這本書有趣嗎？（狀態）", options: ["Is", "Does", "Do"], answer: 0, type: "綜合" },
+        { q: "We _____ have homework.", hint: "我們沒有作業", options: ["aren't", "doesn't", "don't"], answer: 2, type: "綜合" },
+        { q: "He _____ late today.", hint: "他今天不遲到（狀態）", options: ["isn't", "doesn't", "don't"], answer: 0, type: "綜合" }
+    ];
+
+    let currentScore = 0;
+    let answeredCount = 0;
+    let shuffledQuestions = [];
+
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+        
+        if (tabId === 'practice') {
+            initQuiz();
+        }
+    }
+
+    function initQuiz() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+        currentScore = 0;
+        answeredCount = 0;
+        document.getElementById('score-area').style.display = 'none';
+
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0, 12);
+        
+        shuffledQuestions.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <div class="question-text">
+                    <span style="color:#11998e; font-weight:bold;">${index + 1}.</span> 
+                    <span style="background:#e0e0e0; padding:3px 10px; border-radius:15px; font-size:0.85rem; color:#555;">${q.type}</span>
+                    <br><br>${q.q}
+                </div>
+                <div class="question-hint">💡 ${q.hint}</div>
+                <div class="options" id="options-${index}">
+                    ${q.options.map((opt, i) => `
+                        <button class="option-btn" onclick="checkAnswer(${index}, ${i})">${opt}</button>
+                    `).join('')}
+                </div>
+                <div class="feedback" id="feedback-${index}"></div>
+            `;
+            container.appendChild(questionDiv);
+        });
+
+        document.getElementById('total').textContent = shuffledQuestions.length;
+    }
+
+    function checkAnswer(qIndex, selected) {
+        const correct = shuffledQuestions[qIndex].answer;
+        const optionsDiv = document.getElementById(`options-${qIndex}`);
+        const buttons = optionsDiv.querySelectorAll('.option-btn');
+        const feedback = document.getElementById(`feedback-${qIndex}`);
+
+        buttons.forEach((btn, i) => {
+            btn.disabled = true;
+            if (i === correct) {
+                btn.classList.add('correct');
+            } else if (i === selected && selected !== correct) {
+                btn.classList.add('wrong');
+            }
+        });
+
+        if (selected === correct) {
+            feedback.textContent = '✅ 正確！太棒了！';
+            feedback.className = 'feedback correct';
+            currentScore++;
+        } else {
+            feedback.textContent = `❌ 正確答案是：${shuffledQuestions[qIndex].options[correct]}`;
+            feedback.className = 'feedback wrong';
+        }
+
+        answeredCount++;
+        document.getElementById('score').textContent = currentScore;
+
+        if (answeredCount === shuffledQuestions.length) {
+            document.getElementById('score-area').style.display = 'block';
+            document.getElementById('score-area').scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    function resetQuiz() {
+        initQuiz();
+        document.querySelector('.practice-area').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+```
+
+</body>
+</html>

@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文片語練習 - English Phrase Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .phrase-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .phrase-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .phrase-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .phrase-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .phrase-card .meaning {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .exercise-section {
+            margin-bottom: 30px;
+        }
+
+        .exercise-type {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .exercise-title {
+            color: #4a5568;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .score {
+            background: #48bb78;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .question {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .question-text {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .blank {
+            display: inline-block;
+            min-width: 120px;
+            border-bottom: 2px solid #4a5568;
+            margin: 0 5px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 10px 15px;
+            background: #edf2f7;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .option-btn:hover {
+            background: #e2e8f0;
+            border-color: #667eea;
+        }
+
+        .option-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .option-btn.correct {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+        }
+
+        .option-btn.incorrect {
+            background: #f56565;
+            color: white;
+            border-color: #f56565;
+        }
+
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .match-column h4 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .match-item {
+            background: #f7fafc;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .match-item:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .match-item.selected {
+            border-color: #667eea;
+            background: #e6fffa;
+        }
+
+        .match-item.matched {
+            background: #c6f6d5;
+            border-color: #48bb78;
+            cursor: default;
+        }
+
+        .sentence-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .sentence-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 1em;
+        }
+
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .result-section h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .final-score {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        .audio-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .audio-btn:hover {
+            background: #3182ce;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 英文片語練習</h1>
+        <p class="subtitle">English Phrase Practice - 掌握重要片語用法</p>
+
+        <!-- 片語卡片展示 -->
+        <div class="phrase-cards">
+            <div class="phrase-card" onclick="playAudio('due to')">
+                <h3>due to</h3>
+                <div class="meaning">由於、因為</div>
+            </div>
+            <div class="phrase-card" onclick="playAudio('all of a sudden')">
+                <h3>all of a sudden</h3>
+                <div class="meaning">突然、忽然</div>
+            </div>
+            <div class="phrase-card" onclick="playAudio('turn out')">
+                <h3>turn out</h3>
+                <div class="meaning">結果是、證明是</div>
+            </div>
+            <div class="phrase-card" onclick="playAudio('come across')">
+                <h3>come across</h3>
+                <div class="meaning">偶然遇見、發現</div>
+            </div>
+            <div class="phrase-card" onclick="playAudio('carry out')">
+                <h3>carry out</h3>
+                <div class="meaning">執行、實施</div>
+            </div>
+        </div>
+
+        <!-- 練習區域 -->
+        <div class="exercise-section">
+            <!-- 選擇題 -->
+            <div class="exercise-type">
+                <div class="exercise-header">
+                    <h2 class="exercise-title">📝 Part 1: 選擇題 (Multiple Choice)</h2>
+                    <span class="score">得分: <span id="mc-score">0</span>/5</span>
+                </div>
+                
+                <div id="multiple-choice-questions"></div>
+                
+                <button class="btn" onclick="checkMultipleChoice()">檢查答案</button>
+                <div id="mc-feedback"></div>
+            </div>
+
+            <!-- 填空題 -->
+            <div class="exercise-type">
+                <div class="exercise-header">
+                    <h2 class="exercise-title">✏️ Part 2: 填空題 (Fill in the Blanks)</h2>
+                    <span class="score">得分: <span id="fill-score">0</span>/5</span>
+                </div>
+                
+                <div id="fill-blank-questions"></div>
+                
+                <button class="btn" onclick="checkFillBlanks()">檢查答案</button>
+                <div id="fill-feedback"></div>
+            </div>
+
+            <!-- 配對題 -->
+            <div class="exercise-type">
+                <div class="exercise-header">
+                    <h2 class="exercise-title">🔗 Part 3: 配對題 (Matching)</h2>
+                    <span class="score">得分: <span id="match-score">0</span>/5</span>
+                </div>
+                
+                <div class="matching-container">
+                    <div class="match-column">
+                        <h4>片語 (Phrases)</h4>
+                        <div id="phrase-column"></div>
+                    </div>
+                    <div class="match-column">
+                        <h4>情境 (Situations)</h4>
+                        <div id="situation-column"></div>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="checkMatching()">檢查答案</button>
+                <div id="match-feedback"></div>
+            </div>
+
+            <!-- 造句練習 -->
+            <div class="exercise-type">
+                <div class="exercise-header">
+                    <h2 class="exercise-title">💡 Part 4: 造句練習 (Make Sentences)</h2>
+                </div>
+                
+                <div id="sentence-practice"></div>
+                
+                <button class="btn" onclick="showSentenceExamples()">顯示範例句子</button>
+                <div id="sentence-feedback"></div>
+            </div>
+        </div>
+
+        <!-- 結果顯示 -->
+        <div class="result-section" style="display: none;" id="result-section">
+            <h2>🎉 練習完成！</h2>
+            <div class="final-score" id="final-score">0/15</div>
+            <p>繼續努力，你會越來越進步的！</p>
+            <button class="btn" onclick="resetAll()">重新練習</button>
+        </div>
+    </div>
+
+    <script>
+        // 題目資料（原始資料備份）
+        const originalMultipleChoiceQuestions = [
+            {
+                question: "The flight was cancelled _____ bad weather.",
+                options: ["due to", "all of a sudden", "turn out", "come across"],
+                answer: 0,
+                chinese: "航班因為惡劣天氣被取消了。"
+            },
+            {
+                question: "_____, the lights went out and we were in complete darkness.",
+                options: ["Due to", "All of a sudden", "Turn out", "Come across"],
+                answer: 1,
+                chinese: "突然間，燈熄滅了，我們陷入一片黑暗。"
+            },
+            {
+                question: "The party _____ to be more fun than we expected.",
+                options: ["carried out", "came across", "turned out", "due to"],
+                answer: 2,
+                chinese: "派對結果比我們預期的更有趣。"
+            },
+            {
+                question: "I _____ an old photo while cleaning my room.",
+                options: ["carried out", "came across", "turned out", "due to"],
+                answer: 1,
+                chinese: "我在打掃房間時偶然發現了一張老照片。"
+            },
+            {
+                question: "The scientists will _____ experiments next week.",
+                options: ["come across", "turn out", "carry out", "all of a sudden"],
+                answer: 2,
+                chinese: "科學家們下週將進行實驗。"
+            }
+        ];
+
+        const originalFillBlankQuestions = [
+            {
+                sentence: "The meeting was postponed _____ the manager's illness.",
+                answer: "due to",
+                chinese: "會議因經理生病而延期。"
+            },
+            {
+                sentence: "_____, everyone started laughing.",
+                answer: "All of a sudden",
+                chinese: "突然間，大家都開始笑了。"
+            },
+            {
+                sentence: "It _____ that he was right all along.",
+                answer: "turned out",
+                chinese: "結果證明他一直都是對的。"
+            },
+            {
+                sentence: "She _____ her old teacher at the supermarket.",
+                answer: "came across",
+                chinese: "她在超市偶遇了她的老師。"
+            },
+            {
+                sentence: "We need to _____ the plan immediately.",
+                answer: "carry out",
+                chinese: "我們需要立即執行這個計畫。"
+            }
+        ];
+
+        // 題目資料（會被打亂的版本）
+        let multipleChoiceQuestions = [
+            {
+                question: "The flight was cancelled _____ bad weather.",
+                options: ["due to", "all of a sudden", "turn out", "come across"],
+                answer: 0,
+                chinese: "航班因為惡劣天氣被取消了。"
+            },
+            {
+                question: "_____, the lights went out and we were in complete darkness.",
+                options: ["Due to", "All of a sudden", "Turn out", "Come across"],
+                answer: 1,
+                chinese: "突然間，燈熄滅了，我們陷入一片黑暗。"
+            },
+            {
+                question: "The party _____ to be more fun than we expected.",
+                options: ["carried out", "came across", "turned out", "due to"],
+                answer: 2,
+                chinese: "派對結果比我們預期的更有趣。"
+            },
+            {
+                question: "I _____ an old photo while cleaning my room.",
+                options: ["carried out", "came across", "turned out", "due to"],
+                answer: 1,
+                chinese: "我在打掃房間時偶然發現了一張老照片。"
+            },
+            {
+                question: "The scientists will _____ experiments next week.",
+                options: ["come across", "turn out", "carry out", "all of a sudden"],
+                answer: 2,
+                chinese: "科學家們下週將進行實驗。"
+            }
+        ];
+
+        let fillBlankQuestions = [
+            {
+                sentence: "The meeting was postponed _____ the manager's illness.",
+                answer: "due to",
+                chinese: "會議因經理生病而延期。"
+            },
+            {
+                sentence: "_____, everyone started laughing.",
+                answer: "All of a sudden",
+                chinese: "突然間，大家都開始笑了。"
+            },
+            {
+                sentence: "It _____ that he was right all along.",
+                answer: "turned out",
+                chinese: "結果證明他一直都是對的。"
+            },
+            {
+                sentence: "She _____ her old teacher at the supermarket.",
+                answer: "came across",
+                chinese: "她在超市偶遇了她的老師。"
+            },
+            {
+                sentence: "We need to _____ the plan immediately.",
+                answer: "carry out",
+                chinese: "我們需要立即執行這個計畫。"
+            }
+        ];
+
+        const matchingData = {
+            phrases: ["due to", "all of a sudden", "turn out", "come across", "carry out"],
+            situations: [
+                "航班延誤的原因 (reason for flight delay)",
+                "意外的事情發生 (unexpected occurrence)",
+                "最終的結果 (final result)",
+                "偶然的相遇 (chance encounter)",
+                "執行任務 (execute a task)"
+            ],
+            answers: [0, 1, 2, 3, 4]
+        };
+
+        const sentencePrompts = [
+            { phrase: "due to", prompt: "寫一個句子說明某事的原因" },
+            { phrase: "all of a sudden", prompt: "描述一個突發狀況" },
+            { phrase: "turn out", prompt: "描述事情的結果" },
+            { phrase: "come across", prompt: "描述偶然遇見某人或某物" },
+            { phrase: "carry out", prompt: "描述執行某項任務" }
+        ];
+
+        let mcAnswers = [];
+        let fillAnswers = [];
+        let matchAnswers = [];
+        let selectedMatch = null;
+
+        // 打亂陣列順序的函數
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // 深拷貝物件
+        function deepCopy(obj) {
+            return JSON.parse(JSON.stringify(obj));
+        }
+
+        // 初始化
+        function init() {
+            // 從原始資料創建新的打亂版本
+            multipleChoiceQuestions = shuffleArray(deepCopy(originalMultipleChoiceQuestions));
+            fillBlankQuestions = shuffleArray(deepCopy(originalFillBlankQuestions));
+            
+            loadMultipleChoice();
+            loadFillBlanks();
+            loadMatching();
+            loadSentencePractice();
+        }
+
+        // 載入選擇題
+        function loadMultipleChoice() {
+            const container = document.getElementById('multiple-choice-questions');
+            container.innerHTML = '';
+            
+            multipleChoiceQuestions.forEach((q, index) => {
+                // 建立選項陣列並記錄正確答案
+                const optionsWithIndex = q.options.map((opt, i) => ({
+                    text: opt,
+                    originalIndex: i
+                }));
+                
+                // 打亂選項順序
+                const shuffledOptions = shuffleArray(optionsWithIndex);
+                
+                // 找出正確答案在新順序中的位置
+                const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.answer);
+                
+                // 更新題目的正確答案索引
+                q.shuffledAnswer = newCorrectIndex;
+                q.shuffledOptions = shuffledOptions.map(opt => opt.text);
+                
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-text">
+                        ${index + 1}. ${q.question}
+                        <button class="audio-btn" onclick="playText('${q.question}')">🔊 播放</button>
+                        <div style="color: #718096; font-size: 0.9em; margin-top: 5px;">
+                            📌 ${q.chinese}
+                        </div>
+                    </div>
+                    <div class="options">
+                        ${shuffledOptions.map((opt, i) => `
+                            <button class="option-btn" onclick="selectMCAnswer(${index}, ${i})">
+                                ${opt.text}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // 載入填空題
+        function loadFillBlanks() {
+            const container = document.getElementById('fill-blank-questions');
+            container.innerHTML = '';
+            
+            fillBlankQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const sentenceParts = q.sentence.split('_____');
+                questionDiv.innerHTML = `
+                    <div class="question-text">
+                        ${index + 1}. ${sentenceParts[0]}
+                        <input type="text" class="sentence-input" 
+                               id="fill-${index}" 
+                               placeholder="輸入片語"
+                               style="width: 150px; display: inline-block;">
+                        ${sentenceParts[1]}
+                        <button class="audio-btn" onclick="playText('${q.sentence.replace('_____', q.answer)}')">🔊 播放</button>
+                        <div style="color: #718096; font-size: 0.9em; margin-top: 5px;">
+                            📌 ${q.chinese}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // 載入配對題
+        function loadMatching() {
+            const phraseColumn = document.getElementById('phrase-column');
+            const situationColumn = document.getElementById('situation-column');
+            
+            phraseColumn.innerHTML = '';
+            situationColumn.innerHTML = '';
+            
+            // 打亂順序
+            const shuffledSituations = [...matchingData.situations];
+            shuffledSituations.sort(() => Math.random() - 0.5);
+            
+            matchingData.phrases.forEach((phrase, index) => {
+                const phraseDiv = document.createElement('div');
+                phraseDiv.className = 'match-item';
+                phraseDiv.dataset.index = index;
+                phraseDiv.onclick = () => selectMatchItem('phrase', index);
+                phraseDiv.textContent = phrase;
+                phraseColumn.appendChild(phraseDiv);
+            });
+            
+            shuffledSituations.forEach((situation, index) => {
+                const situationDiv = document.createElement('div');
+                situationDiv.className = 'match-item';
+                situationDiv.dataset.originalIndex = matchingData.situations.indexOf(situation);
+                situationDiv.onclick = () => selectMatchItem('situation', matchingData.situations.indexOf(situation));
+                situationDiv.textContent = situation;
+                situationColumn.appendChild(situationDiv);
+            });
+        }
+
+        // 載入造句練習
+        function loadSentencePractice() {
+            const container = document.getElementById('sentence-practice');
+            container.innerHTML = '';
+            
+            // 打亂造句提示順序
+            const shuffledPrompts = shuffleArray(sentencePrompts);
+            
+            shuffledPrompts.forEach((prompt, index) => {
+                const promptDiv = document.createElement('div');
+                promptDiv.className = 'question';
+                promptDiv.innerHTML = `
+                    <div class="question-text">
+                        ${index + 1}. 使用 "<strong>${prompt.phrase}</strong>" ${prompt.prompt}：
+                    </div>
+                    <textarea class="sentence-input" 
+                              id="sentence-${index}" 
+                              rows="3" 
+                              placeholder="Type your sentence here..."></textarea>
+                `;
+                container.appendChild(promptDiv);
+            });
+        }
+
+        // 選擇題答案選擇
+        function selectMCAnswer(questionIndex, answerIndex) {
+            mcAnswers[questionIndex] = answerIndex;
+            
+            const question = document.querySelectorAll('.question')[questionIndex];
+            const buttons = question.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('selected');
+                if (index === answerIndex) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        // 檢查選擇題
+        function checkMultipleChoice() {
+            let score = 0;
+            const questions = document.querySelectorAll('#multiple-choice-questions .question');
+            const wrongAnswers = [];  // 收集錯題
+            
+            multipleChoiceQuestions.forEach((q, qIndex) => {
+                const buttons = questions[qIndex].querySelectorAll('.option-btn');
+                const correctAnswerIndex = q.shuffledAnswer;  // 使用打亂後的正確答案索引
+                
+                buttons.forEach((btn, bIndex) => {
+                    btn.classList.remove('correct', 'incorrect');
+                    btn.disabled = true;
+                    
+                    if (bIndex === correctAnswerIndex) {
+                        btn.classList.add('correct');
+                    } else if (bIndex === mcAnswers[qIndex]) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+                
+                if (mcAnswers[qIndex] === correctAnswerIndex) {
+                    score++;
+                } else {
+                    // 記錄錯題
+                    wrongAnswers.push({
+                        question: q.question,
+                        userAnswer: q.shuffledOptions[mcAnswers[qIndex]] || '未作答',
+                        correctAnswer: q.options[q.answer],  // 使用原始正確答案
+                        chinese: q.chinese
+                    });
+                }
+                
+                // 顯示正確答案提示
+                if (mcAnswers[qIndex] !== correctAnswerIndex) {
+                    const feedbackDiv = document.createElement('div');
+                    feedbackDiv.className = 'feedback incorrect';
+                    feedbackDiv.innerHTML = `
+                        ❌ 錯誤！正確答案是: <strong>${q.options[q.answer]}</strong><br>
+                        💡 提示: ${getHint(q.options[q.answer])}
+                    `;
+                    questions[qIndex].appendChild(feedbackDiv);
+                }
+            });
+            
+            document.getElementById('mc-score').textContent = score;
+            
+            // 將錯題存入全域變數
+            window.mcWrongAnswers = wrongAnswers;
+            
+            const feedbackDiv = document.getElementById('mc-feedback');
+            let feedbackHTML = `
+                <div class="feedback ${score === 5 ? 'correct' : 'incorrect'}">
+                    你答對了 ${score}/5 題！${score === 5 ? ' 太棒了！🎉' : ' 繼續加油！💪'}
+                </div>
+            `;
+            
+            // 如果有錯題，顯示錯題訂正按鈕
+            if (wrongAnswers.length > 0) {
+                feedbackHTML += `
+                    <button class="btn" style="margin-top: 10px;" onclick="showMCCorrections()">
+                        📝 查看錯題訂正
+                    </button>
+                `;
+            }
+            
+            feedbackDiv.innerHTML = feedbackHTML;
+        }
+
+        // 檢查填空題
+        function checkFillBlanks() {
+            let score = 0;
+            const wrongAnswers = [];  // 收集錯題
+            
+            fillBlankQuestions.forEach((q, index) => {
+                const input = document.getElementById(`fill-${index}`);
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = q.answer.toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    score++;
+                    input.style.borderColor = '#48bb78';
+                    input.style.backgroundColor = '#f0fff4';
+                } else {
+                    input.style.borderColor = '#f56565';
+                    input.style.backgroundColor = '#fff5f5';
+                    
+                    // 記錄錯題
+                    wrongAnswers.push({
+                        sentence: q.sentence,
+                        userAnswer: input.value || '未作答',
+                        correctAnswer: q.answer,
+                        chinese: q.chinese
+                    });
+                    
+                    // 顯示錯誤提示
+                    const feedbackDiv = document.createElement('div');
+                    feedbackDiv.className = 'feedback incorrect';
+                    feedbackDiv.innerHTML = `
+                        ❌ 錯誤！正確答案: <strong>${q.answer}</strong><br>
+                        💡 提示: ${getHint(q.answer)}<br>
+                        📌 完整句子: ${q.sentence.replace('_____', q.answer)}
+                    `;
+                    input.parentElement.appendChild(feedbackDiv);
+                }
+            });
+            
+            document.getElementById('fill-score').textContent = score;
+            
+            // 將錯題存入全域變數
+            window.fillWrongAnswers = wrongAnswers;
+            
+            const feedbackDiv = document.getElementById('fill-feedback');
+            let feedbackHTML = `
+                <div class="feedback ${score === 5 ? 'correct' : 'incorrect'}">
+                    你答對了 ${score}/5 題！${score === 5 ? ' 非常好！🌟' : ' 再接再厲！📚'}
+                </div>
+            `;
+            
+            // 如果有錯題，顯示錯題訂正按鈕
+            if (wrongAnswers.length > 0) {
+                feedbackHTML += `
+                    <button class="btn" style="margin-top: 10px;" onclick="showFillCorrections()">
+                        📝 查看錯題訂正
+                    </button>
+                `;
+            }
+            
+            feedbackDiv.innerHTML = feedbackHTML;
+        }
+
+        // 配對選擇
+        function selectMatchItem(type, index) {
+            if (type === 'phrase') {
+                // 清除之前的選擇
+                document.querySelectorAll('#phrase-column .match-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                const selected = document.querySelector(`#phrase-column .match-item[data-index="${index}"]`);
+                if (!selected.classList.contains('matched')) {
+                    selected.classList.add('selected');
+                    selectedMatch = { type: 'phrase', index: index };
+                }
+            } else {
+                if (selectedMatch && selectedMatch.type === 'phrase') {
+                    // 進行配對
+                    matchAnswers[selectedMatch.index] = index;
+                    
+                    // 標記已配對
+                    const phraseItem = document.querySelector(`#phrase-column .match-item[data-index="${selectedMatch.index}"]`);
+                    const situationItem = document.querySelector(`#situation-column .match-item[data-original-index="${index}"]`);
+                    
+                    phraseItem.classList.add('matched');
+                    phraseItem.classList.remove('selected');
+                    situationItem.classList.add('matched');
+                    
+                    selectedMatch = null;
+                }
+            }
+        }
+
+        // 檢查配對題
+        function checkMatching() {
+            let score = 0;
+            
+            matchingData.answers.forEach((correct, index) => {
+                if (matchAnswers[index] === correct) {
+                    score++;
+                }
+            });
+            
+            document.getElementById('match-score').textContent = score;
+            
+            const feedbackDiv = document.getElementById('match-feedback');
+            feedbackDiv.innerHTML = `
+                <div class="feedback ${score === 5 ? 'correct' : 'incorrect'}">
+                    你配對正確了 ${score}/5 組！${score === 5 ? ' 完美！🏆' : ' 不錯，繼續努力！🎯'}
+                </div>
+            `;
+            
+            // 顯示正確答案
+            if (score < 5) {
+                const correctMatches = matchingData.phrases.map((phrase, i) => 
+                    `${phrase} → ${matchingData.situations[i]}`
+                ).join('<br>');
+                
+                feedbackDiv.innerHTML += `
+                    <div class="feedback" style="margin-top: 10px;">
+                        <strong>正確配對：</strong><br>${correctMatches}
+                    </div>
+                `;
+            }
+        }
+
+        // 顯示範例句子
+        function showSentenceExamples() {
+            const examples = [
+                { 
+                    en: "Due to the heavy rain, the outdoor concert was cancelled.",
+                    zh: "由於大雨，戶外音樂會被取消了。"
+                },
+                {
+                    en: "All of a sudden, my phone rang in the quiet library.",
+                    zh: "突然間，我的手機在安靜的圖書館響起。"
+                },
+                {
+                    en: "The movie turned out to be much better than the reviews suggested.",
+                    zh: "這部電影結果比評論說的好很多。"
+                },
+                {
+                    en: "I came across an interesting article while browsing the internet.",
+                    zh: "我在瀏覽網路時偶然發現了一篇有趣的文章。"
+                },
+                {
+                    en: "The company will carry out a survey to understand customer needs.",
+                    zh: "公司將進行調查以了解客戶需求。"
+                }
+            ];
+            
+            const feedbackDiv = document.getElementById('sentence-feedback');
+            feedbackDiv.innerHTML = `
+                <div class="feedback correct">
+                    <strong>範例句子 (Example Sentences)：</strong><br><br>
+                    ${examples.map((ex, i) => `
+                        ${i + 1}. ${ex.en}<br>
+                        <span style="color: #718096; margin-left: 20px;">→ ${ex.zh}</span>
+                    `).join('<br><br>')}
+                </div>
+            `;
+        }
+        
+        // 取得片語提示
+        function getHint(phrase) {
+            const hints = {
+                "due to": "表示「原因」，後面接名詞或動名詞，類似 because of",
+                "all of a sudden": "表示「突然發生」，通常放在句首或句中，= suddenly",
+                "turn out": "表示「最後的結果」，後面常接 to be + 形容詞",
+                "come across": "表示「偶然遇到」，可以是遇到人或發現東西",
+                "carry out": "表示「執行、實施」，常用於正式場合，後接計畫、任務等"
+            };
+            return hints[phrase.toLowerCase()] || "";
+        }
+        
+        // 顯示選擇題錯題訂正
+        function showMCCorrections() {
+            if (!window.mcWrongAnswers || window.mcWrongAnswers.length === 0) return;
+            
+            let correctionHTML = '<div class="exercise-type"><h3>📝 選擇題錯題訂正</h3>';
+            
+            window.mcWrongAnswers.forEach((item, index) => {
+                correctionHTML += `
+                    <div class="question">
+                        <div class="question-text">
+                            <strong>題目 ${index + 1}:</strong> ${item.question}<br>
+                            <span style="color: #718096;">中文: ${item.chinese}</span><br><br>
+                            ❌ 你的答案: <span style="color: #f56565;">${item.userAnswer}</span><br>
+                            ✅ 正確答案: <span style="color: #48bb78;">${item.correctAnswer}</span><br>
+                            💡 記憶技巧: ${getHint(item.correctAnswer)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            correctionHTML += '</div>';
+            
+            // 創建一個新的div來顯示訂正
+            const correctionDiv = document.createElement('div');
+            correctionDiv.innerHTML = correctionHTML;
+            correctionDiv.id = 'mc-corrections';
+            
+            // 插入到選擇題區塊後面
+            const mcSection = document.querySelector('#multiple-choice-questions').parentElement;
+            if (document.getElementById('mc-corrections')) {
+                document.getElementById('mc-corrections').remove();
+            }
+            mcSection.appendChild(correctionDiv);
+        }
+        
+        // 顯示填空題錯題訂正
+        function showFillCorrections() {
+            if (!window.fillWrongAnswers || window.fillWrongAnswers.length === 0) return;
+            
+            let correctionHTML = '<div class="exercise-type"><h3>📝 填空題錯題訂正</h3>';
+            
+            window.fillWrongAnswers.forEach((item, index) => {
+                correctionHTML += `
+                    <div class="question">
+                        <div class="question-text">
+                            <strong>題目 ${index + 1}:</strong> ${item.sentence}<br>
+                            <span style="color: #718096;">中文: ${item.chinese}</span><br><br>
+                            ❌ 你的答案: <span style="color: #f56565;">${item.userAnswer}</span><br>
+                            ✅ 正確答案: <span style="color: #48bb78;">${item.correctAnswer}</span><br>
+                            💡 記憶技巧: ${getHint(item.correctAnswer)}<br>
+                            📝 完整句子: ${item.sentence.replace('_____', '<strong>' + item.correctAnswer + '</strong>')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            correctionHTML += '</div>';
+            
+            // 創建一個新的div來顯示訂正
+            const correctionDiv = document.createElement('div');
+            correctionDiv.innerHTML = correctionHTML;
+            correctionDiv.id = 'fill-corrections';
+            
+            // 插入到填空題區塊後面
+            const fillSection = document.querySelector('#fill-blank-questions').parentElement;
+            if (document.getElementById('fill-corrections')) {
+                document.getElementById('fill-corrections').remove();
+            }
+            fillSection.appendChild(correctionDiv);
+        }
+
+        // 音頻功能
+        function playAudio(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.7;  // 放慢語速
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playText(text) {
+            playAudio(text);
+        }
+
+        // 重置功能
+        function resetAll() {
+            mcAnswers = [];
+            fillAnswers = [];
+            matchAnswers = [];
+            selectedMatch = null;
+            
+            // 清除全域錯題記錄
+            window.mcWrongAnswers = [];
+            window.fillWrongAnswers = [];
+            
+            document.getElementById('mc-score').textContent = '0';
+            document.getElementById('fill-score').textContent = '0';
+            document.getElementById('match-score').textContent = '0';
+            
+            document.getElementById('mc-feedback').innerHTML = '';
+            document.getElementById('fill-feedback').innerHTML = '';
+            document.getElementById('match-feedback').innerHTML = '';
+            document.getElementById('sentence-feedback').innerHTML = '';
+            
+            // 移除錯題訂正區域
+            if (document.getElementById('mc-corrections')) {
+                document.getElementById('mc-corrections').remove();
+            }
+            if (document.getElementById('fill-corrections')) {
+                document.getElementById('fill-corrections').remove();
+            }
+            
+            document.getElementById('result-section').style.display = 'none';
+            
+            // 重新載入所有題目
+            init();
+            
+            // 啟用所有按鈕
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // 清除輸入
+            document.querySelectorAll('.sentence-input').forEach(input => {
+                input.value = '';
+                input.style.borderColor = '#cbd5e0';
+                input.style.backgroundColor = 'white';
+            });
+            
+            // 清除反饋
+            document.querySelectorAll('.feedback').forEach(fb => {
+                if (!fb.id) fb.remove();
+            });
+        }
+
+        // 初始化頁面
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公輸 | 墨子 | 互動學習</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            padding: 25px 0;
+        }
+        .header h1 {
+            font-size: 2.3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+
+```
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+    .nav-tab {
+        padding: 12px 20px;
+        background: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .nav-tab:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .nav-tab.active {
+        background: #2980b9;
+        color: white;
+    }
+    
+    .content-section {
+        display: none;
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        animation: fadeIn 0.5s ease;
+    }
+    .content-section.active { display: block; }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section-title {
+        font-size: 1.5em;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid #2980b9;
+    }
+    .sub-title {
+        font-size: 1.2em;
+        color: #2980b9;
+        margin: 25px 0 15px;
+        padding-left: 15px;
+        border-left: 4px solid #2980b9;
+    }
+    
+    /* 資訊卡片 */
+    .info-card {
+        background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    .info-item {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .info-item .label {
+        color: #2980b9;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .info-item .value { color: #2c3e50; }
+    
+    /* 思想卡片 */
+    .thought-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    .thought-card {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px 15px;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    .thought-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(41, 128, 185, 0.4);
+    }
+    .thought-card .icon { font-size: 2em; margin-bottom: 10px; }
+    .thought-card .name { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
+    .thought-card .desc { font-size: 0.9em; opacity: 0.9; }
+    
+    /* 重點框 */
+    .highlight-box {
+        background: linear-gradient(135deg, #d4efdf, #a9dfbf);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin: 20px 0;
+    }
+    .highlight-box .main { font-size: 1.4em; font-weight: bold; color: #1e8449; }
+    .highlight-box .sub { font-size: 1.1em; color: #27ae60; margin-top: 8px; }
+    
+    /* 人物卡片 */
+    .character-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+    .character-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-left: 5px solid #2980b9;
+    }
+    .character-card .name {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    .character-card .role {
+        color: #2980b9;
+        margin-bottom: 10px;
+    }
+    .character-card .desc { color: #666; line-height: 1.6; }
+    
+    /* 流程圖 */
+    .flow-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin: 20px 0;
+    }
+    .flow-step {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+    .flow-step .number {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+        flex-shrink: 0;
+    }
+    .flow-step .content { flex: 1; }
+    .flow-step .title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+    .flow-step .desc { color: #666; font-size: 0.95em; }
+    
+    /* 課文區 */
+    .text-box {
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+    }
+    .text-box.original {
+        background: #fef9e7;
+        border-left: 4px solid #f39c12;
+    }
+    .text-box.translation {
+        background: #eafaf1;
+        border-left: 4px solid #27ae60;
+    }
+    .text-box .label {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .text-box.original .label { color: #b7950b; }
+    .text-box.translation .label { color: #1e8449; }
+    .text-box .content {
+        line-height: 1.8;
+        color: #2c3e50;
+    }
+    
+    /* 比較表格 */
+    .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    .compare-table th, .compare-table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    .compare-table th {
+        background: #2980b9;
+        color: white;
+    }
+    .compare-table tr:nth-child(even) { background: #f8f9fa; }
+    .compare-table tr:hover { background: #e8f4f8; }
+    
+    /* 測驗樣式 */
+    .quiz-question {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .question-number {
+        display: inline-block;
+        background: #2980b9;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        line-height: 35px;
+        text-align: center;
+        font-weight: bold;
+        margin-right: 12px;
+    }
+    .question-text {
+        font-size: 1.1em;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option {
+        padding: 15px 20px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        font-size: 1em;
+        text-align: left;
+    }
+    .option:hover { border-color: #2980b9; background: #e8f4f8; }
+    .option.selected { border-color: #2980b9; background: #d6eaf8; }
+    .option.correct { border-color: #27ae60; background: #d4edda; }
+    .option.wrong { border-color: #e74c3c; background: #f8d7da; }
+    
+    .feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.correct { background: #d4edda; color: #155724; }
+    .feedback.wrong { background: #f8d7da; color: #721c24; }
+    
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #2980b9, #1e6091);
+        color: white;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(41, 128, 185, 0.4);
+    }
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+    
+    .score-display {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #2980b9, #1e6091);
+        border-radius: 15px;
+        color: white;
+        margin-top: 20px;
+        display: none;
+    }
+    .score-number { font-size: 3em; font-weight: bold; }
+    .score-text { font-size: 1.2em; margin-top: 10px; }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #2980b9, #1e6091);
+        border-radius: 4px;
+        transition: width 0.3s;
+    }
+    
+    /* 詞彙卡片 */
+    .vocab-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+    }
+    .vocab-card {
+        background: linear-gradient(145deg, #fff, #f5f5f5);
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+    .vocab-word { font-size: 1.3em; color: #2c3e50; margin-bottom: 5px; }
+    .vocab-pinyin { color: #2980b9; margin-bottom: 8px; }
+    .vocab-meaning { color: #666; line-height: 1.5; }
+    
+    @media (max-width: 768px) {
+        .header h1 { font-size: 1.8em; }
+        .nav-tab { padding: 10px 15px; font-size: 0.9em; }
+        .flow-step { flex-direction: column; text-align: center; }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 公輸</h1>
+            <p>《墨子》選讀 | 互動學習系統</p>
+        </div>
+
+```
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showSection('intro')">👤 認識墨子</button>
+        <button class="nav-tab" onclick="showSection('thought')">💡 墨家思想</button>
+        <button class="nav-tab" onclick="showSection('story')">📖 故事流程</button>
+        <button class="nav-tab" onclick="showSection('text')">📜 課文學習</button>
+        <button class="nav-tab" onclick="showSection('vocab')">📚 字詞</button>
+        <button class="nav-tab" onclick="showSection('quiz')">✏️ 測驗</button>
+    </div>
+    
+    <!-- 認識墨子 -->
+    <div id="intro" class="content-section active">
+        <h2 class="section-title">👤 認識墨子</h2>
+        
+        <div class="info-card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">姓名</div>
+                    <div class="value">墨翟（ㄇㄛˋ ㄉㄧˊ）</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">時代</div>
+                    <div class="value">戰國時代</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">身分</div>
+                    <div class="value">思想家、工匠</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">學派</div>
+                    <div class="value">墨家創始人</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">著作</div>
+                    <div class="value">《墨子》</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">稱號</div>
+                    <div class="value">墨家領袖稱「鉅子」</div>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="sub-title">📖 墨子小故事</h3>
+        <div class="info-card">
+            <p style="line-height: 1.8; color: #2c3e50;">
+                墨子原本學習儒家，後來覺得儒家的禮儀太繁瑣、太花錢，對窮苦百姓沒有幫助，於是自創「墨家」學派。
+                <br><br>
+                他和弟子組成一個團體，專門幫助弱小的國家防守，反對大國欺負小國。墨子本人非常刻苦，據說「摩頂放踵」（從頭到腳都磨破了）也要幫助天下人。
+            </p>
+        </div>
+        
+        <h3 class="sub-title">👥 課文人物介紹</h3>
+        <div class="character-cards">
+            <div class="character-card">
+                <div class="name">🧙 墨子</div>
+                <div class="role">墨家創始人</div>
+                <div class="desc">主角。聽說楚國要攻打宋國，走了十天十夜去阻止戰爭。</div>
+            </div>
+            <div class="character-card">
+                <div class="name">🔧 公輸盤</div>
+                <div class="role">著名工匠（魯班）</div>
+                <div class="desc">幫楚國製造攻城的「雲梯」，後來被墨子說服。</div>
+            </div>
+            <div class="character-card">
+                <div class="name">👑 楚王</div>
+                <div class="role">楚國國君</div>
+                <div class="desc">想攻打宋國搶地盤，最後被墨子說服放棄。</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 墨家思想 -->
+    <div id="thought" class="content-section">
+        <h2 class="section-title">💡 墨家核心思想</h2>
+        
+        <div class="thought-cards">
+            <div class="thought-card">
+                <div class="icon">🤝</div>
+                <div class="name">兼愛</div>
+                <div class="desc">愛所有人，沒有差別</div>
+            </div>
+            <div class="thought-card">
+                <div class="icon">🕊️</div>
+                <div class="name">非攻</div>
+                <div class="desc">反對戰爭</div>
+            </div>
+            <div class="thought-card">
+                <div class="icon">⭐</div>
+                <div class="name">尚賢</div>
+                <div class="desc">重用有才能的人</div>
+            </div>
+            <div class="thought-card">
+                <div class="icon">💰</div>
+                <div class="name">節用</div>
+                <div class="desc">節省資源</div>
+            </div>
+            <div class="thought-card">
+                <div class="icon">⚰️</div>
+                <div class="name">節葬</div>
+                <div class="desc">喪禮要簡單</div>
+            </div>
+            <div class="thought-card">
+                <div class="icon">🎵</div>
+                <div class="name">非樂</div>
+                <div class="desc">反對奢侈音樂</div>
+            </div>
+        </div>
+        
+        <div class="highlight-box">
+            <div class="main">墨家 = 「兼愛」＋「非攻」</div>
+            <div class="sub">愛所有人，反對戰爭！</div>
+        </div>
+        
+        <h3 class="sub-title">🔍 兼愛 vs 儒家的愛</h3>
+        <table class="compare-table">
+            <tr>
+                <th>比較</th>
+                <th>墨家（兼愛）</th>
+                <th>儒家（仁愛）</th>
+            </tr>
+            <tr>
+                <td>愛的範圍</td>
+                <td>愛所有人都一樣</td>
+                <td>先愛家人，再愛別人</td>
+            </tr>
+            <tr>
+                <td>愛的差別</td>
+                <td>沒有差別</td>
+                <td>有親疏遠近的差別</td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- 故事流程 -->
+    <div id="story" class="content-section">
+        <h2 class="section-title">📖 故事流程</h2>
+        
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="number" style="background: #e74c3c;">1</div>
+                <div class="content">
+                    <div class="title">🔴 起因</div>
+                    <div class="desc">公輸盤幫楚國造雲梯，楚王準備攻打宋國</div>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="number" style="background: #f39c12;">2</div>
+                <div class="content">
+                    <div class="title">🟠 行動</div>
+                    <div class="desc">墨子從齊國出發，走了十天十夜到楚國</div>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="number" style="background: #3498db;">3</div>
+                <div class="content">
+                    <div class="title">🔵 說服一：對公輸盤</div>
+                    <div class="desc">指出「你說不殺一個人，卻要殺很多人」的矛盾 → 公輸盤被說服</div>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="number" style="background: #9b59b6;">4</div>
+                <div class="content">
+                    <div class="title">🟣 說服二：對楚王</div>
+                    <div class="desc">用「三舍三竊」的比喻 → 楚王口頭認同，但還想靠雲梯打贏</div>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="number" style="background: #1abc9c;">5</div>
+                <div class="content">
+                    <div class="title">🔷 較量</div>
+                    <div class="desc">墨子與公輸盤模擬攻防九次，墨子每次都守住了</div>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="number" style="background: #27ae60;">6</div>
+                <div class="content">
+                    <div class="title">🟢 結局</div>
+                    <div class="desc">楚王放棄攻打宋國 → 墨子成功阻止戰爭！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 課文學習 -->
+    <div id="text" class="content-section">
+        <h2 class="section-title">📜 課文學習</h2>
+        
+        <h3 class="sub-title">【第一段】說服公輸盤</h3>
+        
+        <div class="text-box original">
+            <div class="label">📜 原文：</div>
+            <div class="content">子墨子見公輸盤，曰：「北方有侮臣者，願藉子殺之。」公輸盤不說。子墨子曰：「請獻十金。」公輸盤曰：「吾義固不殺人。」</div>
+        </div>
+        <div class="text-box translation">
+            <div class="label">💬 白話：</div>
+            <div class="content">墨子去見公輸盤，說：「北方有人侮辱我，希望借助你幫我殺掉他。」公輸盤不高興。墨子說：「我願意給你十兩黃金。」公輸盤說：「我講義氣，絕對不殺人。」</div>
+        </div>
+        
+        <div class="highlight-box" style="background: linear-gradient(135deg, #fef9e7, #fcf3cf);">
+            <div class="main" style="color: #b7950b;">🎯 重點：墨子設下陷阱</div>
+            <div class="sub" style="color: #d4ac0d;">讓公輸盤自己說出「我不殺人」</div>
+        </div>
+        
+        <div class="text-box original">
+            <div class="label">📜 原文（續）：</div>
+            <div class="content">子墨子起，再拜，曰：「請說之。吾從北方聞子為梯，將以攻宋。宋何罪之有？荊國有餘於地而不足於民，殺所不足而爭所有餘，不可謂智。宋無罪而攻之，不可謂仁。知而不爭，不可謂忠。爭而不得，不可謂強。義不殺少而殺眾，不可謂知類。」</div>
+        </div>
+        <div class="text-box translation">
+            <div class="label">💬 白話：</div>
+            <div class="content">墨子站起來拜了兩拜，說：「讓我說清楚。我在北方聽說你造雲梯要攻打宋國。宋國有什麼罪？楚國土地多、人民少，犧牲不足的人民去搶多餘的土地，不能說是聰明。宋國無罪卻攻打，不能說是仁慈。知道不對卻不勸阻，不能說是忠誠。勸阻卻沒效果，不能說是強大。你說不殺一個人，卻要殺很多人，不能說是明白事理。」</div>
+        </div>
+        
+        <h3 class="sub-title">【第二段】說服楚王：三舍三竊</h3>
+        
+        <div class="text-box original">
+            <div class="label">📜 原文：</div>
+            <div class="content">子墨子見王，曰：「今有人於此，舍其文軒，鄰有敝轝，而欲竊之；舍其錦繡，鄰有短褐，而欲竊之；舍其粱肉，鄰有糠糟，而欲竊之。此為何若人？」王曰：「必為有竊疾矣。」</div>
+        </div>
+        <div class="text-box translation">
+            <div class="label">💬 白話：</div>
+            <div class="content">墨子拜見楚王，說：「現在有一個人，放著自己華美的車子不要，卻想偷鄰居的破車；放著自己的絲綢衣服不穿，卻想偷鄰居的粗布衣；放著自己的美食不吃，卻想偷鄰居的糟糠。這是什麼樣的人？」楚王說：「這個人一定有偷竊的毛病。」</div>
+        </div>
+        
+        <h3 class="sub-title">🎯「三舍三竊」對照表</h3>
+        <table class="compare-table">
+            <tr>
+                <th style="background: #27ae60;">自己有的好東西</th>
+                <th style="background: #e74c3c;">鄰居的破爛</th>
+                <th style="background: #3498db;">比喻</th>
+            </tr>
+            <tr>
+                <td>文軒（華美的車）</td>
+                <td>敝轝（破車）</td>
+                <td>楚國土地大 vs 宋國小</td>
+            </tr>
+            <tr>
+                <td>錦繡（絲綢）</td>
+                <td>短褐（粗布衣）</td>
+                <td>楚國木材好 vs 宋國差</td>
+            </tr>
+            <tr>
+                <td>粱肉（美食）</td>
+                <td>糠糟（糟糠）</td>
+                <td>楚國物產豐 vs 宋國少</td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- 字詞 -->
+    <div id="vocab" class="content-section">
+        <h2 class="section-title">📚 重要字詞</h2>
+        
+        <div class="vocab-grid">
+            <div class="vocab-card">
+                <div class="vocab-word">公輸盤</div>
+                <div class="vocab-pinyin">ㄍㄨㄥ ㄕㄨ ㄆㄢˊ</div>
+                <div class="vocab-meaning">即「魯班」，古代著名工匠</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">藉</div>
+                <div class="vocab-pinyin">ㄐㄧㄝˋ</div>
+                <div class="vocab-meaning">借助、憑藉</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">說</div>
+                <div class="vocab-pinyin">ㄩㄝˋ</div>
+                <div class="vocab-meaning">同「悅」，高興</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">義</div>
+                <div class="vocab-pinyin">ㄧˋ</div>
+                <div class="vocab-meaning">講義氣、堅守原則（動詞）</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">再拜</div>
+                <div class="vocab-pinyin">ㄗㄞˋ ㄅㄞˋ</div>
+                <div class="vocab-meaning">拜兩次，表示非常敬重</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">知類</div>
+                <div class="vocab-pinyin">ㄓ ㄌㄟˋ</div>
+                <div class="vocab-meaning">明白事理、懂得類推</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">文軒</div>
+                <div class="vocab-pinyin">ㄨㄣˊ ㄒㄩㄢ</div>
+                <div class="vocab-meaning">有花紋的華美車子</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">敝轝</div>
+                <div class="vocab-pinyin">ㄅㄧˋ ㄩˊ</div>
+                <div class="vocab-meaning">破舊的車子</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">錦繡</div>
+                <div class="vocab-pinyin">ㄐㄧㄣˇ ㄒㄧㄡˋ</div>
+                <div class="vocab-meaning">華美的絲綢衣服</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">短褐</div>
+                <div class="vocab-pinyin">ㄉㄨㄢˇ ㄏㄜˋ</div>
+                <div class="vocab-meaning">粗布做的短衣</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">粱肉</div>
+                <div class="vocab-pinyin">ㄌㄧㄤˊ ㄖㄡˋ</div>
+                <div class="vocab-meaning">精米和肉，指美食</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-word">竊疾</div>
+                <div class="vocab-pinyin">ㄑㄧㄝˋ ㄐㄧˊ</div>
+                <div class="vocab-meaning">愛偷東西的毛病</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 測驗 -->
+    <div id="quiz" class="content-section">
+        <h2 class="section-title">✏️ 自我測驗</h2>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+        
+        <div id="quizContainer"></div>
+        
+        <div class="btn-group">
+            <button class="btn btn-primary" id="submitBtn" onclick="submitQuiz()">提交答案</button>
+            <button class="btn" style="background: #e0e0e0;" onclick="resetQuiz()">重新作答</button>
+        </div>
+        
+        <div class="score-display" id="scoreDisplay">
+            <div class="score-number" id="scoreNumber">0</div>
+            <div class="score-text" id="scoreText">答對 0 題，共 8 題</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
+        if (id === 'quiz') initQuiz();
+    }
+    
+    const quizData = [
+        { q: "墨子是哪一家的創始人？", opts: ["儒家", "道家", "墨家", "法家"], ans: 2, exp: "墨子是墨家的創始人。" },
+        { q: "墨家最重要的兩個主張是？", opts: ["仁義禮智", "兼愛非攻", "法術勢", "道法自然"], ans: 1, exp: "墨家最重要的主張是「兼愛」和「非攻」。" },
+        { q: "墨子為什麼要去見公輸盤？", opts: ["想學造雲梯", "想阻止戰爭", "想做生意", "想請他殺人"], ans: 1, exp: "墨子要阻止楚國攻打宋國。" },
+        { q: "「義固不殺人」的「義」是什麼意思？", opts: ["意義", "正義", "講義氣", "義務"], ans: 2, exp: "這裡的「義」是動詞，意思是「講義氣」。" },
+        { q: "「三舍三竊」的比喻是要說明什麼？", opts: ["楚國應該攻宋", "宋國很窮", "楚國攻宋不合理", "偷東西不對"], ans: 2, exp: "墨子用這個比喻說明楚國攻打宋國就像放著好東西不要，去偷差的，非常不合理。" },
+        { q: "楚王聽完「三舍三竊」後說「善哉」，表示他？", opts: ["完全被說服", "口頭同意但還想打", "很生氣", "聽不懂"], ans: 1, exp: "楚王雖然說「說得好」，但還是想靠雲梯打贏。" },
+        { q: "「文軒」是指什麼？", opts: ["破車", "華美的車", "粗布衣", "糟糠"], ans: 1, exp: "「文軒」是有花紋裝飾的華美車子。" },
+        { q: "本文最能表現墨家哪個主張？", opts: ["節用", "非攻", "節葬", "尚賢"], ans: 1, exp: "〈公輸〉主要展現墨家「非攻」（反對戰爭）的主張。" }
+    ];
+    
+    let answers = {};
+    
+    function initQuiz() {
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = '';
+        answers = {};
+        
+        quizData.forEach((q, i) => {
+            const div = document.createElement('div');
+            div.className = 'quiz-question';
+            div.innerHTML = `
+                <div class="question-text"><span class="question-number">${i+1}</span>${q.q}</div>
+                <div class="options" id="opts-${i}">
+                    ${q.opts.map((opt, j) => `<button class="option" onclick="selectOpt(${i},${j})">(${String.fromCharCode(65+j)}) ${opt}</button>`).join('')}
+                </div>
+                <div class="feedback" id="fb-${i}"></div>
+            `;
+            container.appendChild(div);
+        });
+        
+        document.getElementById('scoreDisplay').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        updateProgress();
+    }
+    
+    function selectOpt(qi, oi) {
+        document.querySelectorAll(`#opts-${qi} .option`).forEach(o => o.classList.remove('selected'));
+        document.querySelectorAll(`#opts-${qi} .option`)[oi].classList.add('selected');
+        answers[qi] = oi;
+        updateProgress();
+    }
+    
+    function updateProgress() {
+        const pct = (Object.keys(answers).length / quizData.length) * 100;
+        document.getElementById('progressBar').style.width = pct + '%';
+    }
+    
+    function submitQuiz() {
+        let score = 0;
+        quizData.forEach((q, i) => {
+            const opts = document.querySelectorAll(`#opts-${i} .option`);
+            const fb = document.getElementById(`fb-${i}`);
+            opts.forEach(o => o.style.pointerEvents = 'none');
+            
+            if (answers[i] !== undefined) {
+                if (answers[i] === q.ans) {
+                    opts[answers[i]].classList.add('correct');
+                    fb.className = 'feedback show correct';
+                    fb.innerHTML = '✅ 正確！' + q.exp;
+                    score++;
+                } else {
+                    opts[answers[i]].classList.add('wrong');
+                    opts[q.ans].classList.add('correct');
+                    fb.className = 'feedback show wrong';
+                    fb.innerHTML = '❌ 答錯了。' + q.exp;
+                }
+            } else {
+                opts[q.ans].classList.add('correct');
+                fb.className = 'feedback show wrong';
+                fb.innerHTML = '⚠️ 未作答。' + q.exp;
+            }
+        });
+        
+        const sd = document.getElementById('scoreDisplay');
+        sd.style.display = 'block';
+        document.getElementById('scoreNumber').textContent = Math.round(score / quizData.length * 100);
+        document.getElementById('scoreText').textContent = `答對 ${score} 題，共 ${quizData.length} 題`;
+        document.getElementById('submitBtn').disabled = true;
+        sd.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function resetQuiz() { initQuiz(); }
+</script>
+```
+
+</body>
+</html>

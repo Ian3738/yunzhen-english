@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基礎100字 - 單字翻牌學習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .week-selector {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .week-selector h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .week-btn {
+            padding: 20px;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .week-btn:hover {
+            border-color: #9c27b0;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+        }
+
+        .week-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .week-subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .special-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .review-all-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .review-all-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .control-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .control-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #7b1fa2;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .progress-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #9c27b0;
+        }
+
+        .cards-area {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .flip-card {
+            aspect-ratio: 3/4;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+            color: white;
+        }
+
+        .flip-card-front .emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .flip-card-front .zh-text {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .flip-card-back {
+            background: white;
+            border: 3px solid #9c27b0;
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-back .emoji {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .flip-card-back .en-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #9c27b0;
+            margin-bottom: 10px;
+        }
+
+        .flip-card-back .zh-text {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .flip-card-back .speaker-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #9c27b0;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flip-card-back .speaker-btn:hover {
+            background: #7b1fa2;
+            transform: scale(1.1);
+        }
+
+        .flip-card-back .speaker-btn:active {
+            transform: scale(0.95);
+        }
+
+        .home-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #9c27b0;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .home-btn:hover {
+            background: #7b1fa2;
+            transform: scale(1.1);
+        }
+
+        .instruction {
+            background: #fff3cd;
+            padding: 15px 20px;
+            border-left: 5px solid #ffc107;
+            margin: 20px 30px;
+            border-radius: 5px;
+        }
+
+        .instruction strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 15px;
+            }
+
+            .flip-card-front .zh-text {
+                font-size: 24px;
+            }
+
+            .flip-card-back .en-text {
+                font-size: 28px;
+            }
+
+            .flip-card-back .zh-text {
+                font-size: 18px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .control-left, .control-right {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .week-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎴 基礎100字 - 單字翻牌學習</h1>
+            <p>點擊卡片翻面,聽發音,記單字!</p>
+        </div>
+
+        <div class="week-selector" id="weekSelector">
+            <h2>選擇要學習的週數</h2>
+            <div class="week-grid" id="weekGrid">
+                <!-- 週次按鈕會在這裡顯示 -->
+            </div>
+            <button class="special-btn review-all-btn" onclick="selectWeek('all')">📖 總複習 (100字)</button>
+        </div>
+
+        <div class="instruction" id="instruction" style="display: none;">
+            <strong>📌 使用說明:</strong><br>
+            • 點擊卡片可以翻面<br>
+            • 翻到背面後,點擊 🔊 可以聽英文發音<br>
+            • 點擊「全部翻開」可以一次看到所有單字<br>
+            • 點擊「全部蓋回」可以重新開始練習
+        </div>
+
+        <div class="controls" id="controls" style="display: none;">
+            <div class="control-left">
+                <span class="progress-text" id="progressText">第 0/10 週</span>
+            </div>
+            <div class="control-right">
+                <button class="btn btn-primary" onclick="flipAll()">全部翻開</button>
+                <button class="btn btn-secondary" onclick="flipAllBack()">全部蓋回</button>
+            </div>
+        </div>
+
+        <div class="cards-area" id="cardsArea">
+            <!-- 單字卡片會在這裡顯示 -->
+        </div>
+    </div>
+
+    <button class="home-btn" id="homeBtn" onclick="backToWeekSelector()" style="display: none;" title="返回主頁面">🏠</button>
+
+    <script>
+        // 基礎100字 Week 1-10
+        const vocabulary = {
+            week1: [
+                { en: "I", zh: "我", emoji: "🙋" },
+                { en: "you", zh: "你", emoji: "👤" },
+                { en: "he", zh: "他", emoji: "👨" },
+                { en: "she", zh: "她", emoji: "👩" },
+                { en: "it", zh: "它", emoji: "📦" },
+                { en: "we", zh: "我們", emoji: "👥" },
+                { en: "they", zh: "他們", emoji: "👨‍👩‍👧‍👦" },
+                { en: "my", zh: "我的", emoji: "✋" },
+                { en: "your", zh: "你的", emoji: "👉" },
+                { en: "his", zh: "他的", emoji: "👨" }
+            ],
+            week2: [
+                { en: "am", zh: "是(I am)", emoji: "✨" },
+                { en: "is", zh: "是(he/she/it)", emoji: "💫" },
+                { en: "are", zh: "是(you/we/they)", emoji: "⭐" },
+                { en: "not", zh: "不", emoji: "🚫" },
+                { en: "the", zh: "這個/那個", emoji: "👈" },
+                { en: "a", zh: "一個", emoji: "1️⃣" },
+                { en: "an", zh: "一個(母音前)", emoji: "🅰️" },
+                { en: "and", zh: "和", emoji: "➕" },
+                { en: "but", zh: "但是", emoji: "⚠️" },
+                { en: "or", zh: "或者", emoji: "🔀" }
+            ],
+            week3: [
+                { en: "man", zh: "男人", emoji: "👨" },
+                { en: "woman", zh: "女人", emoji: "👩" },
+                { en: "boy", zh: "男孩", emoji: "👦" },
+                { en: "girl", zh: "女孩", emoji: "👧" },
+                { en: "family", zh: "家庭", emoji: "👨‍👩‍👧‍👦" },
+                { en: "parent", zh: "父母", emoji: "👨‍👩‍👧" },
+                { en: "child", zh: "孩子", emoji: "👶" },
+                { en: "people", zh: "人們", emoji: "👥" },
+                { en: "person", zh: "人", emoji: "👤" },
+                { en: "friend", zh: "朋友", emoji: "💑" }
+            ],
+            week4: [
+                { en: "home", zh: "家", emoji: "🏠" },
+                { en: "school", zh: "學校", emoji: "🏫" },
+                { en: "office", zh: "辦公室", emoji: "🏢" },
+                { en: "store", zh: "商店", emoji: "🏪" },
+                { en: "hotel", zh: "飯店", emoji: "🏨" },
+                { en: "hospital", zh: "醫院", emoji: "🏥" },
+                { en: "bank", zh: "銀行", emoji: "🏦" },
+                { en: "world", zh: "世界", emoji: "🌍" },
+                { en: "place", zh: "地方", emoji: "🗺️" },
+                { en: "city", zh: "城市", emoji: "🏘️" }
+            ],
+            week5: [
+                { en: "thing", zh: "東西", emoji: "📦" },
+                { en: "phone", zh: "電話", emoji: "📱" },
+                { en: "computer", zh: "電腦", emoji: "💻" },
+                { en: "TV", zh: "電視", emoji: "📺" },
+                { en: "car", zh: "車", emoji: "🚗" },
+                { en: "book", zh: "書", emoji: "📖" },
+                { en: "ball", zh: "球", emoji: "🏀" },
+                { en: "game", zh: "遊戲", emoji: "🎮" },
+                { en: "money", zh: "錢", emoji: "💰" },
+                { en: "time", zh: "時間", emoji: "🕰️" }
+            ],
+            week6: [
+                { en: "go", zh: "去", emoji: "▶️" },
+                { en: "come", zh: "來", emoji: "🔙" },
+                { en: "be", zh: "是/在", emoji: "📍" },
+                { en: "have", zh: "有", emoji: "🤲" },
+                { en: "do", zh: "做", emoji: "✅" },
+                { en: "say", zh: "說", emoji: "🗣️" },
+                { en: "tell", zh: "告訴", emoji: "💬" },
+                { en: "think", zh: "想/認為", emoji: "💭" },
+                { en: "see", zh: "看見", emoji: "🔍" },
+                { en: "watch", zh: "看/觀看", emoji: "📺" }
+            ],
+            week7: [
+                { en: "get", zh: "得到/拿", emoji: "🎁" },
+                { en: "make", zh: "做/製造", emoji: "🏗️" },
+                { en: "know", zh: "知道", emoji: "💡" },
+                { en: "want", zh: "想要", emoji: "🤔" },
+                { en: "need", zh: "需要", emoji: "🎯" },
+                { en: "like", zh: "喜歡", emoji: "❤️" },
+                { en: "love", zh: "愛/很喜歡", emoji: "💕" },
+                { en: "help", zh: "幫助", emoji: "🙋" },
+                { en: "play", zh: "玩", emoji: "🎮" },
+                { en: "work", zh: "工作", emoji: "💼" }
+            ],
+            week8: [
+                { en: "eat", zh: "吃", emoji: "🍽️" },
+                { en: "drink", zh: "喝", emoji: "🥤" },
+                { en: "read", zh: "閱讀", emoji: "📚" },
+                { en: "write", zh: "寫", emoji: "✍️" },
+                { en: "speak", zh: "說話", emoji: "🎤" },
+                { en: "listen", zh: "聽", emoji: "👂" },
+                { en: "learn", zh: "學習", emoji: "📖" },
+                { en: "teach", zh: "教", emoji: "👨‍🏫" },
+                { en: "study", zh: "學習/讀書", emoji: "📝" },
+                { en: "find", zh: "找到", emoji: "🔎" }
+            ],
+            week9: [
+                { en: "big", zh: "大的", emoji: "⬆️" },
+                { en: "small", zh: "小的", emoji: "⬇️" },
+                { en: "good", zh: "好的", emoji: "😊" },
+                { en: "bad", zh: "壞的", emoji: "😞" },
+                { en: "new", zh: "新的", emoji: "🆕" },
+                { en: "old", zh: "舊的/老的", emoji: "👴" },
+                { en: "long", zh: "長的", emoji: "📏" },
+                { en: "short", zh: "短的/矮的", emoji: "📐" },
+                { en: "high", zh: "高的", emoji: "📈" },
+                { en: "low", zh: "低的", emoji: "📉" }
+            ],
+            week10: [
+                { en: "what", zh: "什麼", emoji: "❓" },
+                { en: "who", zh: "誰", emoji: "🙋" },
+                { en: "where", zh: "哪裡", emoji: "📍" },
+                { en: "when", zh: "什麼時候", emoji: "⏰" },
+                { en: "why", zh: "為什麼", emoji: "🤔" },
+                { en: "how", zh: "如何/怎麼", emoji: "🔧" },
+                { en: "this", zh: "這個", emoji: "👉" },
+                { en: "that", zh: "那個", emoji: "👈" },
+                { en: "yes", zh: "是的", emoji: "✅" },
+                { en: "no", zh: "不", emoji: "❌" }
+            ]
+        };
+
+        const weekInfo = {
+            week1: { title: "Week 1", subtitle: "人稱代名詞" },
+            week2: { title: "Week 2", subtitle: "be動詞與基礎字" },
+            week3: { title: "Week 3", subtitle: "家人與人" },
+            week4: { title: "Week 4", subtitle: "地方" },
+            week5: { title: "Week 5", subtitle: "事物" },
+            week6: { title: "Week 6", subtitle: "動作動詞(1)" },
+            week7: { title: "Week 7", subtitle: "動作動詞(2)" },
+            week8: { title: "Week 8", subtitle: "動作動詞(3)" },
+            week9: { title: "Week 9", subtitle: "形容詞" },
+            week10: { title: "Week 10", subtitle: "疑問詞與其他" }
+        };
+
+        let currentWeek = null;
+        let currentWords = [];
+
+        // 初始化
+        function init() {
+            displayWeekSelector();
+        }
+
+        // 顯示週次選擇
+        function displayWeekSelector() {
+            const weekGrid = document.getElementById('weekGrid');
+            weekGrid.innerHTML = Object.keys(vocabulary).map((week, index) => {
+                const info = weekInfo[week];
+                return `
+                    <div class="week-btn" onclick="selectWeek('${week}')">
+                        <div class="week-title">${info.title}</div>
+                        <div class="week-subtitle">${info.subtitle}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 選擇週次
+        function selectWeek(week) {
+            currentWeek = week;
+            
+            currentWords = week === 'all' 
+                ? Object.values(vocabulary).flat()
+                : vocabulary[week];
+
+            document.getElementById('weekSelector').style.display = 'none';
+            document.getElementById('instruction').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('homeBtn').style.display = 'block';
+
+            updateProgressText();
+            displayCards();
+        }
+
+        // 更新進度文字
+        function updateProgressText() {
+            const progressText = document.getElementById('progressText');
+            if (currentWeek === 'all') {
+                progressText.textContent = '總複習 (100字)';
+            } else {
+                const info = weekInfo[currentWeek];
+                progressText.textContent = `${info.title} - ${info.subtitle} (${currentWords.length}字)`;
+            }
+        }
+
+        // 顯示卡片
+        function displayCards() {
+            const cardsArea = document.getElementById('cardsArea');
+            cardsArea.innerHTML = `
+                <div class="cards-grid">
+                    ${currentWords.map((word, index) => `
+                        <div class="flip-card" id="card-${index}">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front" onclick="flipCard(${index})">
+                                    <div class="emoji">${word.emoji}</div>
+                                    <div class="zh-text">${word.zh}</div>
+                                </div>
+                                <div class="flip-card-back" onclick="flipCard(${index})">
+                                    <div class="emoji">${word.emoji}</div>
+                                    <div class="en-text">${word.en}</div>
+                                    <div class="zh-text">${word.zh}</div>
+                                    <button class="speaker-btn" onclick="speakWord(event, '${word.en}')">🔊</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // 翻牌
+        function flipCard(index) {
+            const card = document.getElementById(`card-${index}`);
+            card.classList.toggle('flipped');
+        }
+
+        // 語音朗讀
+        function speakWord(event, word) {
+            event.stopPropagation(); // 阻止事件冒泡,避免翻牌
+            
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 全部翻開
+        function flipAll() {
+            currentWords.forEach((word, index) => {
+                const card = document.getElementById(`card-${index}`);
+                card.classList.add('flipped');
+            });
+        }
+
+        // 全部蓋回
+        function flipAllBack() {
+            currentWords.forEach((word, index) => {
+                const card = document.getElementById(`card-${index}`);
+                card.classList.remove('flipped');
+            });
+        }
+
+        // 返回週次選擇
+        function backToWeekSelector() {
+            document.getElementById('weekSelector').style.display = 'block';
+            document.getElementById('instruction').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('homeBtn').style.display = 'none';
+            document.getElementById('cardsArea').innerHTML = '';
+            currentWeek = null;
+            currentWords = [];
+        }
+
+        // 初始化
+        init();
+    </script>
+</body>
+</html>

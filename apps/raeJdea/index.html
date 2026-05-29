@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第十一課 真愛 心智圖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .mindmap {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        /* 中心主題 */
+        .center {
+            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 50%;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .center small {
+            display: block;
+            font-size: 0.5em;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        /* 分支容器 */
+        .branches {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        /* 主分支 */
+        .branch {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            width: 320px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .branch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+        }
+        
+        .branch-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .branch-title .icon {
+            font-size: 1.5em;
+        }
+        
+        /* 不同分支的顏色 */
+        .branch-author .branch-title { background: #e3f2fd; color: #1565c0; }
+        .branch-story .branch-title { background: #e8f5e9; color: #2e7d32; }
+        .branch-character .branch-title { background: #fff3e0; color: #ef6c00; }
+        .branch-theme .branch-title { background: #fce4ec; color: #c2185b; }
+        .branch-laws .branch-title { background: #f3e5f5; color: #7b1fa2; }
+        
+        /* 子項目 */
+        .sub-items {
+            padding-left: 10px;
+        }
+        
+        .sub-item {
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            border-left: 4px solid;
+            background: #f8f9fa;
+        }
+        
+        .branch-author .sub-item { border-color: #1565c0; }
+        .branch-story .sub-item { border-color: #2e7d32; }
+        .branch-character .sub-item { border-color: #ef6c00; }
+        .branch-theme .sub-item { border-color: #c2185b; }
+        .branch-laws .sub-item { border-color: #7b1fa2; }
+        
+        .highlight {
+            background: #fff59d;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .important {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        /* 故事結構 */
+        .story-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .story-step {
+            background: #e8f5e9;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #2e7d32;
+        }
+        
+        .arrow {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        /* 角色卡片 */
+        .character-card {
+            background: #fff;
+            border: 2px solid #ef6c00;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .character-name {
+            font-weight: bold;
+            color: #ef6c00;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .character-info {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        /* 法則卡片 */
+        .law-card {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .law-1 { background: #ffcdd2; }
+        .law-2 { background: #c8e6c9; }
+        .law-3 { background: #bbdefb; }
+        
+        .law-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .law-content {
+            font-size: 0.85em;
+        }
+        
+        /* 列印樣式 */
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            
+            h1 {
+                color: #333;
+                text-shadow: none;
+            }
+            
+            .branch {
+                box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* 手機響應式 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .branch {
+                width: 100%;
+            }
+            
+            .center {
+                padding: 20px 30px;
+                font-size: 1.5em;
+            }
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .print-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ 列印</button>
+    
+    <div class="container">
+        <h1>📖 第十一課 真愛 心智圖</h1>
+        
+        <!-- 中心主題 -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div class="center">
+                真愛
+                <small>以撒．艾西莫夫</small>
+            </div>
+        </div>
+        
+        <!-- 分支 -->
+        <div class="branches">
+            <!-- 作者分支 -->
+            <div class="branch branch-author">
+                <div class="branch-title">
+                    <span class="icon">👤</span>
+                    <span>作者介紹</span>
+                </div>
+                <div class="sub-items">
+                    <div class="sub-item">
+                        <strong>以撒．艾西莫夫</strong><br>
+                        俄裔美國人
+                    </div>
+                    <div class="sub-item">
+                        <span class="highlight">科幻小說家</span> + 科普作家
+                    </div>
+                    <div class="sub-item">
+                        稱號：「<span class="important">現代機器人故事之父</span>」
+                    </div>
+                    <div class="sub-item">
+                        代表作：《機器人》系列、《基地》系列
+                    </div>
+                    <div class="sub-item">
+                        創造「<span class="highlight">機器人學三大法則</span>」
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 機器人三大法則 -->
+            <div class="branch branch-laws">
+                <div class="branch-title">
+                    <span class="icon">🤖</span>
+                    <span>機器人學三大法則</span>
+                </div>
+                <div class="sub-items">
+                    <div class="law-card law-1">
+                        <div class="law-title">第一法則</div>
+                        <div class="law-content">機器人<strong>不得傷害人類</strong></div>
+                    </div>
+                    <div class="law-card law-2">
+                        <div class="law-title">第二法則</div>
+                        <div class="law-content">機器人必須<strong>服從人類命令</strong>（除非違背第一法則）</div>
+                    </div>
+                    <div class="law-card law-3">
+                        <div class="law-title">第三法則</div>
+                        <div class="law-content">機器人必須<strong>保護自己</strong>（除非違背第一、二法則）</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 故事情節 -->
+            <div class="branch branch-story">
+                <div class="branch-title">
+                    <span class="icon">📚</span>
+                    <span>故事情節</span>
+                </div>
+                <div class="sub-items">
+                    <div class="story-flow">
+                        <span class="story-step">開端</span>
+                        <span class="arrow">→</span>
+                        <span class="story-step">發展</span>
+                        <span class="arrow">→</span>
+                        <span class="story-step">轉折</span>
+                        <span class="arrow">→</span>
+                        <span class="story-step">結局</span>
+                    </div>
+                    <div class="sub-item">
+                        <strong>開端：</strong>米爾頓請喬幫他找「真愛」
+                    </div>
+                    <div class="sub-item">
+                        <strong>發展：</strong>用各種條件篩選對象
+                    </div>
+                    <div class="sub-item">
+                        <strong>轉折：</strong>符合條件卻無法心動<br>
+                        → 喬提出：愛是<span class="highlight">雙向</span>的
+                    </div>
+                    <div class="sub-item">
+                        <strong>結局：</strong>米爾頓被捕<br>
+                        <span class="important">喬：「妳是我的真愛！」</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 角色 -->
+            <div class="branch branch-character">
+                <div class="branch-title">
+                    <span class="icon">👥</span>
+                    <span>故事角色</span>
+                </div>
+                <div class="sub-items">
+                    <div class="character-card">
+                        <div class="character-name">🖥️ 喬</div>
+                        <div class="character-info">
+                            • 電腦程式（AI）<br>
+                            • <span class="highlight">敘事者</span>（第一人稱）<br>
+                            • 不斷進化、學習
+                        </div>
+                    </div>
+                    <div class="character-card">
+                        <div class="character-name">👨‍💻 米爾頓</div>
+                        <div class="character-info">
+                            • 程式設計師<br>
+                            • 喬的創造者<br>
+                            • 年近四十、未婚
+                        </div>
+                    </div>
+                    <div class="character-card">
+                        <div class="character-name">👩 夏芮蒂</div>
+                        <div class="character-info">
+                            • 圖書館選書員<br>
+                            • 喬篩選出的「真愛」
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 主題 -->
+            <div class="branch branch-theme">
+                <div class="branch-title">
+                    <span class="icon">💡</span>
+                    <span>主題與寫作特色</span>
+                </div>
+                <div class="sub-items">
+                    <div class="sub-item">
+                        <strong>文體：</strong><span class="highlight">科幻小說</span>
+                    </div>
+                    <div class="sub-item">
+                        <strong>主題：</strong><br>
+                        • 反思「真愛」的本質<br>
+                        • 科技對人類的影響<br>
+                        • AI可能帶來的危機
+                    </div>
+                    <div class="sub-item">
+                        <strong>寫作特色：</strong><br>
+                        • <span class="highlight">懸疑結構</span>，結局出人意表<br>
+                        • 第一人稱敘事（由AI敘述）<br>
+                        • 帶有<span class="important">諷刺</span>意味
+                    </div>
+                    <div class="sub-item">
+                        <strong>諷刺之處：</strong><br>
+                        電腦程式的「真愛」<br>
+                        只是複製人類的條件
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

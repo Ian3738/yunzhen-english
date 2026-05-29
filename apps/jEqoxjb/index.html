@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>過去式練習系統 (含錯題複習)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .section-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #fa709a;
+            color: #fa709a;
+        }
+
+        .tab .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .practice-section {
+            display: none;
+            padding: 30px;
+        }
+
+        .practice-section.active {
+            display: block;
+        }
+
+        .grammar-rules {
+            padding: 30px;
+            background: #fff3cd;
+            margin: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .grammar-rules h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .rule-box {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .rule-title {
+            font-weight: bold;
+            color: #fa709a;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th {
+            background: #fa709a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fa709a;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .question-hint {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 5px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            border: 3px solid #fa709a;
+            background: white;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: #fff0f5;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 5px;
+        }
+
+        .next-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: #fa709a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #e85d89;
+            transform: translateY(-2px);
+        }
+
+        .wrong-review-notice {
+            background: #f8d7da;
+            padding: 20px;
+            border-left: 5px solid #dc3545;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .wrong-review-notice h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .clear-wrong-btn {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clear-wrong-btn:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 600px) {
+            .section-tabs {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 過去式練習系統</h1>
+            <p>Past Tense - 規則/不規則動詞</p>
+        </div>
+
+        <div class="section-tabs">
+            <div class="tab active" onclick="showSection('rules')">📖 文法規則</div>
+            <div class="tab" onclick="showSection('type1')">題型1:規則動詞</div>
+            <div class="tab" onclick="showSection('type2')">題型2:不規則動詞</div>
+            <div class="tab" onclick="showSection('type3')">題型3:否定句</div>
+            <div class="tab" onclick="showSection('type4')">題型4:疑問句</div>
+            <div class="tab" onclick="showSection('wrong')" id="wrongTab">
+                ⚠️ 錯題複習
+                <span class="badge" id="wrongBadge" style="display: none;">0</span>
+            </div>
+        </div>
+
+        <!-- 文法規則 -->
+        <div id="rules" class="practice-section active">
+            <div class="grammar-rules">
+                <h3>🎯 過去式重點整理</h3>
+                
+                <div class="rule-box">
+                    <div class="rule-title">📌 什麼時候用過去式?</div>
+                    <div class="example">
+                        • 表示「過去」發生的動作或狀態<br>
+                        • 時間副詞: yesterday (昨天), last night (昨晚), last week (上週), ago (以前)<br>
+                        • 例: I <strong>played</strong> games <strong>yesterday</strong>. (我昨天玩遊戲)
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">📌 規則動詞 (加 -ed)</div>
+                    <table>
+                        <tr>
+                            <th>原形動詞</th>
+                            <th>過去式</th>
+                            <th>規則</th>
+                        </tr>
+                        <tr>
+                            <td>play</td>
+                            <td>play<strong>ed</strong></td>
+                            <td>直接加 -ed</td>
+                        </tr>
+                        <tr>
+                            <td>like</td>
+                            <td>lik<strong>ed</strong></td>
+                            <td>字尾是e,只加 -d</td>
+                        </tr>
+                        <tr>
+                            <td>study</td>
+                            <td>stud<strong>ied</strong></td>
+                            <td>字尾是「子音+y」,改y為i再加-ed</td>
+                        </tr>
+                        <tr>
+                            <td>stop</td>
+                            <td>stop<strong>ped</strong></td>
+                            <td>字尾是「短母音+子音」,重複字尾再加-ed</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">📌 不規則動詞 (要背!)</div>
+                    <table>
+                        <tr>
+                            <th>原形</th>
+                            <th>過去式</th>
+                            <th>中文</th>
+                        </tr>
+                        <tr><td>go</td><td><strong>went</strong></td><td>去</td></tr>
+                        <tr><td>have</td><td><strong>had</strong></td><td>有</td></tr>
+                        <tr><td>do</td><td><strong>did</strong></td><td>做</td></tr>
+                        <tr><td>see</td><td><strong>saw</strong></td><td>看見</td></tr>
+                        <tr><td>get</td><td><strong>got</strong></td><td>得到</td></tr>
+                        <tr><td>make</td><td><strong>made</strong></td><td>做/製造</td></tr>
+                        <tr><td>take</td><td><strong>took</strong></td><td>拿/帶</td></tr>
+                        <tr><td>come</td><td><strong>came</strong></td><td>來</td></tr>
+                    </table>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">📌 否定句: didn't + 原形動詞</div>
+                    <div class="example">
+                        • He play<s>ed</s> games. → He <strong>didn't play</strong> games.<br>
+                        • She <s>went</s> to school. → She <strong>didn't go</strong> to school.<br>
+                        <br>
+                        ⚠️ <strong>重點:</strong> didn't 後面要用「原形動詞」!<br>
+                        ❌ He didn't play<s>ed</s> games. (錯!)<br>
+                        ✅ He didn't play games. (對!)
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">📌 疑問句: Did + 主詞 + 原形動詞?</div>
+                    <div class="example">
+                        • He play<s>ed</s> games. → <strong>Did</strong> he <strong>play</strong> games?<br>
+                        • She <s>went</s> to school. → <strong>Did</strong> she <strong>go</strong> to school?<br>
+                        <br>
+                        ⚠️ <strong>重點:</strong> Did 後面要用「原形動詞」!<br>
+                        ❌ Did he play<s>ed</s> games? (錯!)<br>
+                        ✅ Did he play games? (對!)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 題型1: 規則動詞 -->
+        <div id="type1" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress1">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct1">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong1">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy1">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice1Area"></div>
+        </div>
+
+        <!-- 題型2: 不規則動詞 -->
+        <div id="type2" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress2">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct2">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong2">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy2">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice2Area"></div>
+        </div>
+
+        <!-- 題型3: 否定句 -->
+        <div id="type3" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress3">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct3">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong3">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy3">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice3Area"></div>
+        </div>
+
+        <!-- 題型4: 疑問句 -->
+        <div id="type4" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress4">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct4">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong4">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy4">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice4Area"></div>
+        </div>
+
+        <!-- 錯題複習 -->
+        <div id="wrong" class="practice-section">
+            <div class="wrong-review-notice">
+                <h4>⚠️ 錯題複習</h4>
+                <p>這裡會顯示你答錯的題目,建議多練習直到全部答對!</p>
+                <p id="wrongCount">目前錯題: <strong>0</strong> 題</p>
+                <button class="clear-wrong-btn" onclick="clearWrongQuestions()">清除所有錯題記錄</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressWrong">0/0</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correctWrong">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrongWrong">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracyWrong">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practiceWrongArea"></div>
+        </div>
+    </div>
+
+    <script>
+        // 題型1: 規則動詞過去式
+        const type1Questions = [
+            { question: "I _____ games yesterday. (play)", options: ["played", "plaied", "playes"], correct: "played", explanation: "play 是規則動詞,直接加 -ed → played" },
+            { question: "She _____ TV last night. (watch)", options: ["watched", "watchs", "watchied"], correct: "watched", explanation: "watch 是規則動詞,直接加 -ed → watched" },
+            { question: "He _____ basketball last week. (play)", options: ["played", "plaied", "playes"], correct: "played", explanation: "play 是規則動詞,直接加 -ed → played" },
+            { question: "They _____ English yesterday. (study)", options: ["studied", "studyed", "studys"], correct: "studied", explanation: "study 字尾是子音+y,改 y 為 i 再加 -ed → studied" },
+            { question: "We _____ the movie last night. (like)", options: ["liked", "likeed", "likes"], correct: "liked", explanation: "like 字尾是 e,只加 -d → liked" },
+            { question: "I _____ my room yesterday. (clean)", options: ["cleaned", "cleanned", "cleans"], correct: "cleaned", explanation: "clean 是規則動詞,直接加 -ed → cleaned" },
+            { question: "She _____ her homework last night. (finish)", options: ["finished", "finishd", "finishs"], correct: "finished", explanation: "finish 是規則動詞,直接加 -ed → finished" },
+            { question: "He _____ the bus yesterday. (miss)", options: ["missed", "missd", "misses"], correct: "missed", explanation: "miss 是規則動詞,直接加 -ed → missed" },
+            { question: "They _____ at the park last week. (play)", options: ["played", "plaied", "playes"], correct: "played", explanation: "play 是規則動詞,直接加 -ed → played" },
+            { question: "We _____ pizza yesterday. (cook)", options: ["cooked", "cookd", "cooks"], correct: "cooked", explanation: "cook 是規則動詞,直接加 -ed → cooked" }
+        ];
+
+        // 題型2: 不規則動詞過去式
+        const type2Questions = [
+            { question: "I _____ to school yesterday. (go)", options: ["went", "goed", "goes"], correct: "went", explanation: "go 是不規則動詞 → went (要背!)" },
+            { question: "She _____ lunch yesterday. (have)", options: ["had", "haved", "has"], correct: "had", explanation: "have 是不規則動詞 → had (要背!)" },
+            { question: "He _____ his homework last night. (do)", options: ["did", "doed", "does"], correct: "did", explanation: "do 是不規則動詞 → did (要背!)" },
+            { question: "I _____ my friend yesterday. (see)", options: ["saw", "seed", "sees"], correct: "saw", explanation: "see 是不規則動詞 → saw (要背!)" },
+            { question: "We _____ a present yesterday. (get)", options: ["got", "geted", "gets"], correct: "got", explanation: "get 是不規則動詞 → got (要背!)" },
+            { question: "She _____ a cake yesterday. (make)", options: ["made", "maked", "makes"], correct: "made", explanation: "make 是不規則動詞 → made (要背!)" },
+            { question: "He _____ a photo yesterday. (take)", options: ["took", "taked", "takes"], correct: "took", explanation: "take 是不規則動詞 → took (要背!)" },
+            { question: "They _____ to my house yesterday. (come)", options: ["came", "comed", "comes"], correct: "came", explanation: "come 是不規則動詞 → came (要背!)" },
+            { question: "I _____ to the store yesterday. (go)", options: ["went", "goed", "goes"], correct: "went", explanation: "go 是不規則動詞 → went (要背!)" },
+            { question: "She _____ a book yesterday. (read)", options: ["read", "readed", "reads"], correct: "read", explanation: "read 是不規則動詞 → read [red] (拼法一樣,發音不同!)" }
+        ];
+
+        // 題型3: 否定句
+        const type3Questions = [
+            { question: "He _____ games yesterday. (否定句)", options: ["didn't play", "didn't played", "not played"], correct: "didn't play", explanation: "過去式否定句: didn't + 原形動詞" },
+            { question: "She _____ TV last night. (否定句)", options: ["didn't watch", "didn't watched", "not watched"], correct: "didn't watch", explanation: "過去式否定句: didn't + 原形動詞" },
+            { question: "I _____ to school yesterday. (否定句)", options: ["didn't go", "didn't went", "not went"], correct: "didn't go", explanation: "過去式否定句: didn't + 原形動詞 (go,不是went!)" },
+            { question: "They _____ lunch yesterday. (否定句)", options: ["didn't have", "didn't had", "not had"], correct: "didn't have", explanation: "過去式否定句: didn't + 原形動詞 (have,不是had!)" },
+            { question: "We _____ homework last night. (否定句)", options: ["didn't do", "didn't did", "not did"], correct: "didn't do", explanation: "過去式否定句: didn't + 原形動詞 (do,不是did!)" },
+            { question: "He _____ his friend yesterday. (否定句)", options: ["didn't see", "didn't saw", "not saw"], correct: "didn't see", explanation: "過去式否定句: didn't + 原形動詞 (see,不是saw!)" },
+            { question: "She _____ a cake yesterday. (否定句)", options: ["didn't make", "didn't made", "not made"], correct: "didn't make", explanation: "過去式否定句: didn't + 原形動詞 (make,不是made!)" },
+            { question: "I _____ the bus yesterday. (否定句)", options: ["didn't take", "didn't took", "not took"], correct: "didn't take", explanation: "過去式否定句: didn't + 原形動詞 (take,不是took!)" },
+            { question: "They _____ to the party. (否定句)", options: ["didn't come", "didn't came", "not came"], correct: "didn't come", explanation: "過去式否定句: didn't + 原形動詞 (come,不是came!)" },
+            { question: "We _____ pizza yesterday. (否定句)", options: ["didn't eat", "didn't ate", "not ate"], correct: "didn't eat", explanation: "過去式否定句: didn't + 原形動詞 (eat,不是ate!)" }
+        ];
+
+        // 題型4: 疑問句
+        const type4Questions = [
+            { question: "_____ he play games yesterday? (疑問句)", options: ["Did", "Does", "Do"], correct: "Did", explanation: "過去式疑問句: Did + 主詞 + 原形動詞?" },
+            { question: "_____ she watch TV last night? (疑問句)", options: ["Did", "Does", "Do"], correct: "Did", explanation: "過去式疑問句: Did + 主詞 + 原形動詞?" },
+            { question: "Did you _____ to school yesterday? (go)", options: ["go", "went", "goes"], correct: "go", explanation: "Did 後面要用原形動詞 go,不是 went!" },
+            { question: "Did they _____ lunch yesterday? (have)", options: ["have", "had", "has"], correct: "have", explanation: "Did 後面要用原形動詞 have,不是 had!" },
+            { question: "Did he _____ homework last night? (do)", options: ["do", "did", "does"], correct: "do", explanation: "Did 後面要用原形動詞 do,不是 did!" },
+            { question: "_____ you see your friend yesterday? (疑問句)", options: ["Did", "Does", "Do"], correct: "Did", explanation: "過去式疑問句: Did + 主詞 + 原形動詞?" },
+            { question: "Did she _____ a cake yesterday? (make)", options: ["make", "made", "makes"], correct: "make", explanation: "Did 後面要用原形動詞 make,不是 made!" },
+            { question: "Did they _____ a photo yesterday? (take)", options: ["take", "took", "takes"], correct: "take", explanation: "Did 後面要用原形動詞 take,不是 took!" },
+            { question: "_____ he come to the party? (疑問句)", options: ["Did", "Does", "Do"], correct: "Did", explanation: "過去式疑問句: Did + 主詞 + 原形動詞?" },
+            { question: "Did you _____ the book? (read)", options: ["read", "readed", "reads"], correct: "read", explanation: "Did 後面要用原形動詞 read" }
+        ];
+
+        let currentType = 1;
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let answered = false;
+        let wrongQuestions = new Set();
+
+        // 載入錯題記錄
+        function loadWrongQuestions() {
+            const saved = localStorage.getItem('pastTenseWrongQuestions');
+            if (saved) {
+                wrongQuestions = new Set(JSON.parse(saved));
+            }
+            updateWrongBadge();
+        }
+
+        // 儲存錯題記錄
+        function saveWrongQuestions() {
+            localStorage.setItem('pastTenseWrongQuestions', JSON.stringify([...wrongQuestions]));
+            updateWrongBadge();
+        }
+
+        // 更新錯題徽章
+        function updateWrongBadge() {
+            const badge = document.getElementById('wrongBadge');
+            const count = document.getElementById('wrongCount');
+            if (wrongQuestions.size > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = wrongQuestions.size;
+                if (count) {
+                    count.innerHTML = `目前錯題: <strong>${wrongQuestions.size}</strong> 題`;
+                }
+            } else {
+                badge.style.display = 'none';
+                if (count) {
+                    count.innerHTML = `目前錯題: <strong>0</strong> 題 (太棒了!)`;
+                }
+            }
+        }
+
+        // 清除錯題記錄
+        function clearWrongQuestions() {
+            if (confirm('確定要清除所有錯題記錄嗎?')) {
+                wrongQuestions.clear();
+                saveWrongQuestions();
+                alert('已清除所有錯題記錄!');
+                showSection('wrong');
+            }
+        }
+
+        // 顯示區塊
+        function showSection(section) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.practice-section').forEach(s => s.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(section).classList.add('active');
+
+            if (section === 'type1') {
+                currentType = 1;
+                startPractice(1);
+            } else if (section === 'type2') {
+                currentType = 2;
+                startPractice(2);
+            } else if (section === 'type3') {
+                currentType = 3;
+                startPractice(3);
+            } else if (section === 'type4') {
+                currentType = 4;
+                startPractice(4);
+            } else if (section === 'wrong') {
+                startWrongPractice();
+            }
+        }
+
+        // 開始練習
+        function startPractice(type) {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+            updateStats(type);
+            showQuestion(type);
+        }
+
+        // 開始錯題練習
+        function startWrongPractice() {
+            if (wrongQuestions.size === 0) {
+                document.getElementById('practiceWrongArea').innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 80px; margin-bottom: 20px;">🎉</div>
+                        <h2 style="font-size: 32px; color: #28a745; margin-bottom: 20px;">太棒了!</h2>
+                        <p style="font-size: 20px; color: #666;">目前沒有錯題需要複習!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            currentType = 'wrong';
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+
+            // 收集所有錯題
+            const allQuestions = [...type1Questions, ...type2Questions, ...type3Questions, ...type4Questions];
+            const wrongList = [];
+            wrongQuestions.forEach(key => {
+                const q = allQuestions.find(question => getQuestionKey(question) === key);
+                if (q) wrongList.push(q);
+            });
+
+            // 儲存錯題列表
+            window.wrongQuestionsList = wrongList;
+            
+            updateStats('wrong');
+            showWrongQuestion();
+        }
+
+        // 顯示錯題
+        function showWrongQuestion() {
+            const wrongList = window.wrongQuestionsList || [];
+            
+            if (currentQuestion >= wrongList.length) {
+                showComplete('wrong');
+                return;
+            }
+
+            answered = false;
+            const q = wrongList[currentQuestion];
+            const practiceArea = document.getElementById('practiceWrongArea');
+
+            const optionsHTML = q.options.map(opt => `
+                <button class="option-btn" onclick="checkAnswerWrong('${opt.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}')">${opt}</button>
+            `).join('');
+
+            practiceArea.innerHTML = `
+                <div class="question-card">
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${optionsHTML}
+                    </div>
+                    <div id="feedbackWrong"></div>
+                </div>
+            `;
+        }
+
+        // 檢查錯題答案
+        function checkAnswerWrong(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const wrongList = window.wrongQuestionsList || [];
+            const q = wrongList[currentQuestion];
+            const buttons = document.querySelectorAll('#practiceWrongArea .option-btn');
+            const feedback = document.getElementById('feedbackWrong');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確! 這題答對了!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion('wrong')">下一題</button>
+                `;
+                // 答對了,從錯題中移除
+                wrongQuestions.delete(getQuestionKey(q));
+                saveWrongQuestions();
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion('wrong')">下一題</button>
+                `;
+            }
+
+            updateStats('wrong');
+        }
+
+        // 顯示問題
+        function showQuestion(type) {
+            const questions = type === 1 ? type1Questions : 
+                            type === 2 ? type2Questions : 
+                            type === 3 ? type3Questions : type4Questions;
+
+            if (currentQuestion >= questions.length) {
+                showComplete(type);
+                return;
+            }
+
+            answered = false;
+            const q = questions[currentQuestion];
+            const practiceArea = document.getElementById(`practice${type}Area`);
+
+            const optionsHTML = q.options.map(opt => `
+                <button class="option-btn" onclick="checkAnswer${type}('${opt.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}')">${opt}</button>
+            `).join('');
+
+            practiceArea.innerHTML = `
+                <div class="question-card">
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${optionsHTML}
+                    </div>
+                    <div id="feedback${type}"></div>
+                </div>
+            `;
+        }
+
+        // 獲取題目唯一標識
+        function getQuestionKey(question) {
+            return question.question + '|' + question.correct;
+        }
+
+        // 檢查答案 (題型1)
+        function checkAnswer1(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const q = type1Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type1 .option-btn');
+            const feedback = document.getElementById('feedback1');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(1)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(1)">下一題</button>
+                `;
+                // 加入錯題
+                wrongQuestions.add(getQuestionKey(q));
+                saveWrongQuestions();
+            }
+
+            updateStats(1);
+        }
+
+        // 檢查答案 (題型2)
+        function checkAnswer2(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const q = type2Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type2 .option-btn');
+            const feedback = document.getElementById('feedback2');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(2)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(2)">下一題</button>
+                `;
+                wrongQuestions.add(getQuestionKey(q));
+                saveWrongQuestions();
+            }
+
+            updateStats(2);
+        }
+
+        // 檢查答案 (題型3)
+        function checkAnswer3(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const q = type3Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type3 .option-btn');
+            const feedback = document.getElementById('feedback3');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(3)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(3)">下一題</button>
+                `;
+                wrongQuestions.add(getQuestionKey(q));
+                saveWrongQuestions();
+            }
+
+            updateStats(3);
+        }
+
+        // 檢查答案 (題型4)
+        function checkAnswer4(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const q = type4Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type4 .option-btn');
+            const feedback = document.getElementById('feedback4');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(4)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(4)">下一題</button>
+                `;
+                wrongQuestions.add(getQuestionKey(q));
+                saveWrongQuestions();
+            }
+
+            updateStats(4);
+        }
+
+        // 下一題
+        function nextQuestion(type) {
+            currentQuestion++;
+            updateStats(type);
+            if (type === 'wrong') {
+                showWrongQuestion();
+            } else {
+                showQuestion(type);
+            }
+        }
+
+        // 更新統計
+        function updateStats(type) {
+            const total = correctAnswers + wrongAnswers;
+            const accuracy = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+
+            const typeStr = type === 'wrong' ? 'Wrong' : type;
+            const questions = type === 1 ? type1Questions : 
+                            type === 2 ? type2Questions : 
+                            type === 3 ? type3Questions :
+                            type === 4 ? type4Questions :
+                            window.wrongQuestionsList || [];
+
+            document.getElementById(`correct${typeStr}`).textContent = correctAnswers;
+            document.getElementById(`wrong${typeStr}`).textContent = wrongAnswers;
+            document.getElementById(`accuracy${typeStr}`).textContent = accuracy + '%';
+
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById(`progress${typeStr}`).style.width = progress + '%';
+            document.getElementById(`progress${typeStr}`).textContent = `${currentQuestion}/${questions.length}`;
+        }
+
+        // 顯示完成畫面
+        function showComplete(type) {
+            const accuracy = Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+            const typeStr = type === 'wrong' ? 'Wrong' : type;
+            const practiceArea = document.getElementById(`practice${typeStr}Area`);
+
+            let message = '';
+            let emoji = '';
+            if (accuracy === 100) {
+                message = '完美!全部答對!';
+                emoji = '🏆';
+            } else if (accuracy >= 80) {
+                message = '很棒!繼續加油!';
+                emoji = '🎉';
+            } else if (accuracy >= 60) {
+                message = '不錯!再多練習!';
+                emoji = '👍';
+            } else {
+                message = '加油!你可以的!';
+                emoji = '💪';
+            }
+
+            const typeNames = { 1: '規則動詞', 2: '不規則動詞', 3: '否定句', 4: '疑問句', 'wrong': '錯題複習' };
+
+            practiceArea.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">${emoji}</div>
+                    <h2 style="font-size: 32px; color: #fa709a; margin-bottom: 20px;">${message}</h2>
+                    <div style="font-size: 24px; margin-bottom: 30px;">
+                        <p>題型: <strong>${typeNames[type]}</strong></p>
+                        <p>答對: <strong style="color: #28a745;">${correctAnswers}</strong></p>
+                        <p>答錯: <strong style="color: #dc3545;">${wrongAnswers}</strong></p>
+                        <p>正確率: <strong style="color: #fa709a;">${accuracy}%</strong></p>
+                    </div>
+                    <button class="next-btn" onclick="${type === 'wrong' ? 'startWrongPractice()' : `startPractice(${type})`}">再練習一次</button>
+                    <button class="next-btn" style="background: #6c757d;" onclick="showSection('rules')">返回文法規則</button>
+                </div>
+            `;
+        }
+
+        // 初始化
+        loadWrongQuestions();
+    </script>
+</body>
+</html>

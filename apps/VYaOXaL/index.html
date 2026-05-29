@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進階常見字練習 Week 11-18</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .week-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .week-btn {
+            padding: 12px 20px;
+            border: 3px solid #f093fb;
+            border-radius: 15px;
+            background: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .week-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .week-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .progress-section {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f093fb;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .quiz-area {
+            padding: 40px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .word-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .word-english {
+            font-size: 48px;
+            font-weight: bold;
+            color: #f093fb;
+            margin-bottom: 15px;
+        }
+
+        .audio-btn {
+            padding: 12px 30px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .audio-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            border: 3px solid #f093fb;
+            background: white;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            background: #fff0f6;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .next-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: #f093fb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #f5576c;
+            transform: translateY(-2px);
+        }
+
+        .complete-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .complete-emoji {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .complete-title {
+            font-size: 36px;
+            color: #f093fb;
+            margin-bottom: 20px;
+        }
+
+        .complete-stats {
+            font-size: 24px;
+            margin: 30px 0;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .wrong-review-btn {
+            padding: 15px 30px;
+            background: #ffc107;
+            color: #856404;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wrong-review-btn:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .word-english {
+                font-size: 36px;
+            }
+
+            .emoji {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 進階常見字練習</h1>
+            <p>Week 11-18 | 配合文法學習</p>
+        </div>
+
+        <div class="week-selector">
+            <button class="week-btn active" onclick="selectWeek(11)">Week 11<br>時間副詞</button>
+            <button class="week-btn" onclick="selectWeek(12)">Week 12<br>時間名詞</button>
+            <button class="week-btn" onclick="selectWeek(13)">Week 13<br>月份季節</button>
+            <button class="week-btn" onclick="selectWeek(14)">Week 14<br>數字量詞</button>
+            <button class="week-btn" onclick="selectWeek(15)">Week 15<br>地方介系詞</button>
+            <button class="week-btn" onclick="selectWeek(16)">Week 16<br>連接詞</button>
+            <button class="week-btn" onclick="selectWeek(17)">Week 17<br>進階形容詞</button>
+            <button class="week-btn" onclick="selectWeek(18)">Week 18<br>進階動詞</button>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correctCount">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrongCount">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-area" id="quizArea"></div>
+    </div>
+
+    <script>
+        const vocabulary = {
+            week11: [
+                { en: "now", zh: "現在", emoji: "⏰" },
+                { en: "today", zh: "今天", emoji: "📅" },
+                { en: "tonight", zh: "今晚", emoji: "🌙" },
+                { en: "yesterday", zh: "昨天", emoji: "📆" },
+                { en: "tomorrow", zh: "明天", emoji: "🗓️" },
+                { en: "often", zh: "經常", emoji: "🔁" },
+                { en: "always", zh: "總是", emoji: "💯" },
+                { en: "sometimes", zh: "有時候", emoji: "🤷" },
+                { en: "usually", zh: "通常", emoji: "📊" },
+                { en: "never", zh: "從不", emoji: "🚫" }
+            ],
+            week12: [
+                { en: "morning", zh: "早上", emoji: "🌅" },
+                { en: "afternoon", zh: "下午", emoji: "☀️" },
+                { en: "evening", zh: "傍晚", emoji: "🌆" },
+                { en: "night", zh: "晚上", emoji: "🌃" },
+                { en: "weekend", zh: "週末", emoji: "🎉" },
+                { en: "Monday", zh: "星期一", emoji: "1️⃣" },
+                { en: "Tuesday", zh: "星期二", emoji: "2️⃣" },
+                { en: "Wednesday", zh: "星期三", emoji: "3️⃣" },
+                { en: "Thursday", zh: "星期四", emoji: "4️⃣" },
+                { en: "Friday", zh: "星期五", emoji: "5️⃣" }
+            ],
+            week13: [
+                { en: "January", zh: "一月", emoji: "❄️" },
+                { en: "February", zh: "二月", emoji: "💝" },
+                { en: "March", zh: "三月", emoji: "🌸" },
+                { en: "April", zh: "四月", emoji: "🌷" },
+                { en: "May", zh: "五月", emoji: "🌺" },
+                { en: "June", zh: "六月", emoji: "☀️" },
+                { en: "July", zh: "七月", emoji: "🏖️" },
+                { en: "August", zh: "八月", emoji: "🌊" },
+                { en: "September", zh: "九月", emoji: "🍂" },
+                { en: "October", zh: "十月", emoji: "🎃" }
+            ],
+            week14: [
+                { en: "one", zh: "一", emoji: "1️⃣" },
+                { en: "two", zh: "二", emoji: "2️⃣" },
+                { en: "three", zh: "三", emoji: "3️⃣" },
+                { en: "four", zh: "四", emoji: "4️⃣" },
+                { en: "five", zh: "五", emoji: "5️⃣" },
+                { en: "some", zh: "一些", emoji: "📦" },
+                { en: "many", zh: "許多", emoji: "🔢" },
+                { en: "much", zh: "很多", emoji: "📈" },
+                { en: "any", zh: "任何", emoji: "❓" },
+                { en: "every", zh: "每個", emoji: "🔄" }
+            ],
+            week15: [
+                { en: "under", zh: "在...下面", emoji: "⬇️" },
+                { en: "over", zh: "在...上方", emoji: "⬆️" },
+                { en: "between", zh: "在...之間", emoji: "↔️" },
+                { en: "next", zh: "下一個/旁邊", emoji: "➡️" },
+                { en: "behind", zh: "在...後面", emoji: "⏪" },
+                { en: "front", zh: "前面", emoji: "⏩" },
+                { en: "left", zh: "左邊", emoji: "⬅️" },
+                { en: "right", zh: "右邊", emoji: "➡️" },
+                { en: "near", zh: "靠近", emoji: "📍" },
+                { en: "far", zh: "遠的", emoji: "🌍" }
+            ],
+            week16: [
+                { en: "because", zh: "因為", emoji: "🤔" },
+                { en: "so", zh: "所以", emoji: "💡" },
+                { en: "then", zh: "然後", emoji: "⏭️" },
+                { en: "but", zh: "但是", emoji: "⚠️" },
+                { en: "or", zh: "或者", emoji: "🔀" },
+                { en: "if", zh: "如果", emoji: "❔" },
+                { en: "when", zh: "當...時候", emoji: "⏰" },
+                { en: "before", zh: "之前", emoji: "⏮️" },
+                { en: "after", zh: "之後", emoji: "⏭️" },
+                { en: "while", zh: "當...同時", emoji: "⏸️" }
+            ],
+            week17: [
+                { en: "hot", zh: "熱的", emoji: "🔥" },
+                { en: "cold", zh: "冷的", emoji: "❄️" },
+                { en: "warm", zh: "溫暖的", emoji: "☀️" },
+                { en: "cool", zh: "涼爽的", emoji: "🌬️" },
+                { en: "beautiful", zh: "美麗的", emoji: "😍" },
+                { en: "ugly", zh: "醜的", emoji: "😱" },
+                { en: "clean", zh: "乾淨的", emoji: "✨" },
+                { en: "dirty", zh: "髒的", emoji: "💩" },
+                { en: "full", zh: "滿的", emoji: "💯" },
+                { en: "empty", zh: "空的", emoji: "📭" }
+            ],
+            week18: [
+                { en: "open", zh: "打開", emoji: "🔓" },
+                { en: "close", zh: "關閉", emoji: "🔒" },
+                { en: "start", zh: "開始", emoji: "▶️" },
+                { en: "stop", zh: "停止", emoji: "⏹️" },
+                { en: "begin", zh: "開始", emoji: "🎬" },
+                { en: "finish", zh: "完成", emoji: "🏁" },
+                { en: "turn", zh: "轉/輪流", emoji: "🔄" },
+                { en: "move", zh: "移動", emoji: "🚶" },
+                { en: "keep", zh: "保持", emoji: "✊" },
+                { en: "change", zh: "改變", emoji: "🔀" }
+            ]
+        };
+
+        let currentWeek = 11;
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let answered = false;
+        let wrongWords = [];
+
+        // 載入錯題記錄
+        function loadWrongWords() {
+            const saved = localStorage.getItem(`advancedWords_week${currentWeek}_wrong`);
+            if (saved) {
+                wrongWords = JSON.parse(saved);
+            }
+        }
+
+        // 儲存錯題記錄
+        function saveWrongWords() {
+            localStorage.setItem(`advancedWords_week${currentWeek}_wrong`, JSON.stringify(wrongWords));
+        }
+
+        function selectWeek(week) {
+            currentWeek = week;
+            document.querySelectorAll('.week-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index + week - 11 === 0);
+            });
+            startQuiz();
+        }
+
+        function startQuiz() {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+            loadWrongWords();
+            updateStats();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= vocabulary[`week${currentWeek}`].length) {
+                showComplete();
+                return;
+            }
+
+            answered = false;
+            const words = vocabulary[`week${currentWeek}`];
+            const currentWord = words[currentQuestion];
+            
+            // 隨機選3個錯誤選項
+            const otherWords = words.filter(w => w.en !== currentWord.en);
+            const shuffled = otherWords.sort(() => Math.random() - 0.5);
+            const wrongOptions = shuffled.slice(0, 3).map(w => w.zh);
+            
+            // 組合所有選項並打亂
+            const allOptions = [...wrongOptions, currentWord.zh].sort(() => Math.random() - 0.5);
+
+            const quizArea = document.getElementById('quizArea');
+            quizArea.innerHTML = `
+                <div class="question-card">
+                    <div class="word-display">
+                        <div class="emoji">${currentWord.emoji}</div>
+                        <div class="word-english">${currentWord.en}</div>
+                        <button class="audio-btn" onclick="speakWord('${currentWord.en}')">🔊 聽發音</button>
+                    </div>
+                    <div class="question-text">這個字的中文意思是?</div>
+                    <div class="options">
+                        ${allOptions.map(opt => `
+                            <button class="option-btn" onclick="checkAnswer('${opt}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div id="feedback"></div>
+                </div>
+            `;
+
+            // 自動播放語音
+            setTimeout(() => speakWord(currentWord.en), 300);
+        }
+
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function checkAnswer(selected) {
+            if (answered) return;
+            answered = true;
+
+            const currentWord = vocabulary[`week${currentWeek}`][currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === currentWord.zh) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === currentWord.zh) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!<br>
+                    <strong>${currentWord.en}</strong> = ${currentWord.zh}
+                    <button class="next-btn" onclick="nextQuestion()">下一題 →</button>
+                `;
+                // 答對了,從錯題中移除
+                wrongWords = wrongWords.filter(w => w !== currentWord.en);
+                saveWrongWords();
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了!<br>
+                    正確答案: <strong>${currentWord.en}</strong> = ${currentWord.zh}
+                    <button class="next-btn" onclick="nextQuestion()">下一題 →</button>
+                `;
+                // 答錯了,加入錯題
+                if (!wrongWords.includes(currentWord.en)) {
+                    wrongWords.push(currentWord.en);
+                    saveWrongWords();
+                }
+                // 重播語音
+                setTimeout(() => speakWord(currentWord.en), 500);
+            }
+
+            updateStats();
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            updateStats();
+            showQuestion();
+        }
+
+        function updateStats() {
+            const total = correctAnswers + wrongAnswers;
+            const accuracy = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+            const words = vocabulary[`week${currentWeek}`];
+
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('wrongCount').textContent = wrongAnswers;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+
+            const progress = (currentQuestion / words.length) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = `${currentQuestion}/${words.length}`;
+        }
+
+        function showComplete() {
+            const accuracy = Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+            let emoji = '🎉';
+            let message = '完成練習!';
+
+            if (accuracy === 100) {
+                emoji = '🏆';
+                message = '完美!全部答對!';
+            } else if (accuracy >= 80) {
+                emoji = '🎉';
+                message = '很棒!繼續加油!';
+            } else if (accuracy >= 60) {
+                emoji = '👍';
+                message = '不錯!再多練習!';
+            } else {
+                emoji = '💪';
+                message = '加油!你可以的!';
+            }
+
+            const quizArea = document.getElementById('quizArea');
+            const wrongReviewBtn = wrongWords.length > 0 ? 
+                `<button class="wrong-review-btn" onclick="reviewWrongWords()">⚠️ 複習錯題 (${wrongWords.length}個)</button>` : '';
+
+            quizArea.innerHTML = `
+                <div class="complete-screen">
+                    <div class="complete-emoji">${emoji}</div>
+                    <div class="complete-title">${message}</div>
+                    <div class="complete-stats">
+                        <p>Week ${currentWeek} 練習完成</p>
+                        <p style="margin: 20px 0;">
+                            答對: <strong style="color: #28a745;">${correctAnswers}</strong> / 
+                            答錯: <strong style="color: #dc3545;">${wrongAnswers}</strong>
+                        </p>
+                        <p>正確率: <strong style="color: #f093fb;">${accuracy}%</strong></p>
+                    </div>
+                    <div class="action-btns">
+                        <button class="next-btn" onclick="startQuiz()">🔄 再練一次</button>
+                        ${wrongReviewBtn}
+                    </div>
+                </div>
+            `;
+        }
+
+        function reviewWrongWords() {
+            if (wrongWords.length === 0) {
+                alert('沒有錯題!');
+                return;
+            }
+
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+
+            const allWords = vocabulary[`week${currentWeek}`];
+            const reviewWords = allWords.filter(w => wrongWords.includes(w.en));
+            
+            // 暫時替換詞彙表
+            const tempWeek = `week${currentWeek}_review`;
+            vocabulary[tempWeek] = reviewWords;
+            const originalWeek = currentWeek;
+            currentWeek = currentWeek + '_review';
+
+            showQuestionReview(originalWeek);
+        }
+
+        function showQuestionReview(originalWeek) {
+            const words = vocabulary[`week${currentWeek}`];
+            
+            if (currentQuestion >= words.length) {
+                // 複習完成,恢復原週次
+                currentWeek = originalWeek;
+                showComplete();
+                return;
+            }
+
+            answered = false;
+            const currentWord = words[currentQuestion];
+            
+            const otherWords = words.filter(w => w.en !== currentWord.en);
+            const shuffled = otherWords.sort(() => Math.random() - 0.5);
+            const wrongOptions = shuffled.slice(0, 3).map(w => w.zh);
+            const allOptions = [...wrongOptions, currentWord.zh].sort(() => Math.random() - 0.5);
+
+            const quizArea = document.getElementById('quizArea');
+            quizArea.innerHTML = `
+                <div class="question-card">
+                    <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                        <strong style="color: #856404;">⚠️ 錯題複習模式</strong>
+                    </div>
+                    <div class="word-display">
+                        <div class="emoji">${currentWord.emoji}</div>
+                        <div class="word-english">${currentWord.en}</div>
+                        <button class="audio-btn" onclick="speakWord('${currentWord.en}')">🔊 聽發音</button>
+                    </div>
+                    <div class="question-text">這個字的中文意思是?</div>
+                    <div class="options">
+                        ${allOptions.map(opt => `
+                            <button class="option-btn" onclick="checkAnswerReview('${opt}', ${originalWeek})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div id="feedback"></div>
+                </div>
+            `;
+
+            setTimeout(() => speakWord(currentWord.en), 300);
+        }
+
+        function checkAnswerReview(selected, originalWeek) {
+            if (answered) return;
+            answered = true;
+
+            const words = vocabulary[`week${currentWeek}`];
+            const currentWord = words[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === currentWord.zh) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === currentWord.zh) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確! 太棒了!<br>
+                    <strong>${currentWord.en}</strong> = ${currentWord.zh}
+                    <button class="next-btn" onclick="nextQuestionReview(${originalWeek})">下一題 →</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 再試試看!<br>
+                    正確答案: <strong>${currentWord.en}</strong> = ${currentWord.zh}
+                    <button class="next-btn" onclick="nextQuestionReview(${originalWeek})">下一題 →</button>
+                `;
+                setTimeout(() => speakWord(currentWord.en), 500);
+            }
+
+            updateStats();
+        }
+
+        function nextQuestionReview(originalWeek) {
+            currentQuestion++;
+            updateStats();
+            showQuestionReview(originalWeek);
+        }
+
+        // 初始化
+        window.onload = function() {
+            startQuiz();
+        };
+    </script>
+</body>
+</html>

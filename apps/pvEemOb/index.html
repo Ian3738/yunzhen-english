@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第四課　潛藏在認知裡的「錯誤知識」</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: '標楷體', 'DFKai-SB', serif;
+    background: #F4F6F9;
+    color: #1C2833;
+    padding: 20px;
+    line-height: 1.7;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.6em;
+    color: #C0392B;
+    margin-bottom: 6px;
+    padding: 18px 0 6px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #7F8C8D;
+    font-size: 0.95em;
+    margin-bottom: 24px;
+  }
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.2s;
+    background: #ECF0F1;
+    color: #5D6D7E;
+  }
+  .tab-btn.active {
+    background: #C0392B;
+    color: white;
+    box-shadow: 0 3px 10px rgba(192,57,43,0.3);
+  }
+  .tab-btn:hover:not(.active) {
+    background: #D5D8DC;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── 卡片 ── */
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid;
+  }
+  .red { color: #C0392B; border-color: #C0392B; }
+  .blue { color: #1A5276; border-color: #1A5276; }
+  .green { color: #1E8449; border-color: #1E8449; }
+  .orange { color: #CA6F1E; border-color: #CA6F1E; }
+  .purple { color: #6C3483; border-color: #6C3483; }
+
+  /* ── 三種類型卡片 ── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .type-card {
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+  }
+  .type-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+  .type-card.selected { border-color: #2C3E50; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+  .type-card h3 { font-size: 1.1em; margin-bottom: 10px; }
+  .type-card p { font-size: 0.92em; line-height: 1.6; }
+  .type-red { background: #FADBD8; }
+  .type-red h3 { color: #C0392B; }
+  .type-orange { background: #FDEBD0; }
+  .type-orange h3 { color: #CA6F1E; }
+  .type-purple { background: #F5EEF8; }
+  .type-purple h3 { color: #6C3483; }
+
+  .detail-box {
+    background: #F8F9FA;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 10px;
+    border-left: 5px solid #BDC3C7;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .detail-box.show { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .detail-box h4 { margin-bottom: 10px; font-size: 1em; }
+  .detail-row { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.93em; }
+  .detail-label { font-weight: bold; min-width: 60px; color: #5D6D7E; }
+
+  /* ── 情境判斷 ── */
+  .situation {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border-left: 5px solid #BDC3C7;
+  }
+  .situation-text { font-size: 0.95em; margin-bottom: 14px; line-height: 1.7; color: #2C3E50; }
+  .choice-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .choice-btn {
+    padding: 8px 18px;
+    border: 2px solid;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: bold;
+    background: white;
+    transition: all 0.2s;
+  }
+  .choice-btn-fake { border-color: #C0392B; color: #C0392B; }
+  .choice-btn-fake:hover { background: #FADBD8; }
+  .choice-btn-self { border-color: #CA6F1E; color: #CA6F1E; }
+  .choice-btn-self:hover { background: #FDEBD0; }
+  .choice-btn-distort { border-color: #6C3483; color: #6C3483; }
+  .choice-btn-distort:hover { background: #F5EEF8; }
+  .choice-btn.correct { color: white; }
+  .choice-btn.correct.fake-ans { background: #C0392B; border-color: #C0392B; }
+  .choice-btn.correct.self-ans { background: #CA6F1E; border-color: #CA6F1E; }
+  .choice-btn.correct.distort-ans { background: #6C3483; border-color: #6C3483; }
+  .choice-btn.wrong { background: #F2F3F4; border-color: #BDC3C7; color: #BDC3C7; text-decoration: line-through; }
+  .feedback {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    display: none;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; animation: fadeIn 0.3s ease; }
+  .feedback.correct-fb { background: #D5F5E3; color: #1E8449; border-left: 4px solid #1E8449; }
+  .feedback.wrong-fb { background: #FADBD8; color: #C0392B; border-left: 4px solid #C0392B; }
+
+  /* ── 選擇題 ── */
+  .quiz-q {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .quiz-text { font-size: 0.95em; margin-bottom: 14px; font-weight: bold; }
+  .quiz-options { display: grid; gap: 8px; }
+  .quiz-opt {
+    padding: 10px 16px;
+    border: 2px solid #D5D8DC;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.93em;
+    text-align: left;
+    background: white;
+    transition: all 0.18s;
+    width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) { background: #EBF5FB; border-color: #1A5276; }
+  .quiz-opt.selected-opt { background: #D6EAF8; border-color: #1A5276; }
+  .quiz-opt.right { background: #D5F5E3; border-color: #1E8449; color: #1E8449; font-weight: bold; }
+  .quiz-opt.wrong-opt { background: #FADBD8; border-color: #C0392B; color: #C0392B; text-decoration: line-through; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback { margin-top: 10px; font-size: 0.9em; display: none; padding: 8px 12px; border-radius: 6px; }
+  .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+
+  /* ── 按鈕 ── */
+  .submit-btn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 40px;
+    background: #1E8449;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 12px rgba(30,132,73,0.3);
+  }
+  .submit-btn:hover { background: #196F3D; transform: translateY(-1px); }
+  .reset-btn {
+    display: none;
+    margin: 10px auto 0;
+    padding: 10px 30px;
+    background: #5D6D7E;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-family: inherit;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .reset-btn:hover { background: #4D5D6E; }
+  .score-box {
+    text-align: center;
+    margin-top: 20px;
+    padding: 16px;
+    background: #EBF5FB;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #1A5276;
+    display: none;
+  }
+  .score-box.show { display: block; animation: fadeIn 0.4s ease; }
+
+  /* ── 詞彙配對 ── */
+  .match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .match-col h4 { font-size: 1em; font-weight: bold; margin-bottom: 12px; color: #5D6D7E; }
+  .match-item {
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 0.93em;
+    border: 2px solid transparent;
+    user-select: none;
+  }
+  .match-left { background: #EBF5FB; border-color: #AED6F1; color: #1A5276; font-weight: bold; }
+  .match-left:hover { background: #D6EAF8; }
+  .match-left.ml-selected { background: #1A5276; color: white; border-color: #1A5276; }
+  .match-right { background: #F9F9F9; border-color: #D5D8DC; color: #2C3E50; }
+  .match-right:hover { background: #EBF5FB; border-color: #AED6F1; }
+  .match-right.mr-selected { background: #D6EAF8; border-color: #1A5276; }
+  .match-item.matched-correct { background: #D5F5E3; border-color: #1E8449; color: #1E8449; cursor: default; }
+  .match-item.matched-wrong { background: #FADBD8; border-color: #C0392B; color: #C0392B; }
+  .match-status { text-align: center; margin-top: 16px; font-weight: bold; font-size: 1em; min-height: 30px; }
+
+  @media(max-width: 600px) {
+    .match-container { grid-template-columns: 1fr; }
+    .type-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>潛藏在認知裡的「錯誤知識」</h1>
+<div class="subtitle">作者：冀劍制　｜　第四課互動學習工具</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('types')">📚 三種錯誤知識</button>
+  <button class="tab-btn" onclick="switchTab('situation')">🔍 情境判斷</button>
+  <button class="tab-btn" onclick="switchTab('vocab')">🔤 詞彙配對</button>
+  <button class="tab-btn" onclick="switchTab('quiz')">✏️ 選擇題</button>
+</div>
+
+<!-- ════ Tab 1：三種錯誤知識 ════ -->
+<div id="tab-types" class="tab-content active">
+  <div class="card">
+    <div class="card-title red">三種錯誤知識——點擊卡片查看詳情</div>
+    <div class="type-grid">
+      <div class="type-card type-red" onclick="showDetail('fake')">
+        <h3>❶ 假知識</h3>
+        <p>外部錯誤訊息滲入大腦，<br>人們無暇過濾，照單全收</p>
+      </div>
+      <div class="type-card type-orange" onclick="showDetail('self')">
+        <h3>❷ 自己製造的錯誤知識</h3>
+        <p>認知功能有邏輯漏洞，<br>我們自己產生謬誤推理</p>
+      </div>
+      <div class="type-card type-purple" onclick="showDetail('distort')">
+        <h3>❸ 失真的知識</h3>
+        <p>原本正確的知識，<br>因保存或傳遞過程失真</p>
+      </div>
+    </div>
+
+    <div id="detail-fake" class="detail-box" style="border-left-color:#C0392B">
+      <h4 style="color:#C0392B">❶ 假知識</h4>
+      <div class="detail-row"><span class="detail-label">成因</span><span>資訊爆炸，外部虛假或不嚴謹的訊息滲入，人們每天接收大量訊息，無暇仔細過濾</span></div>
+      <div class="detail-row"><span class="detail-label">特點</span><span>錯誤訊息穿著「讓人容易相信的外衣」；訂正消息不夠聳動，難以傳播，真相鮮少人知</span></div>
+      <div class="detail-row"><span class="detail-label">課文例子</span><span>「味精吃多了會導致癌症」——原實驗以白老鼠為對象但未依體重比例修正，屬無效實驗，但很少人知道真相</span></div>
+    </div>
+
+    <div id="detail-self" class="detail-box" style="border-left-color:#CA6F1E">
+      <h4 style="color:#CA6F1E">❷ 自己製造的錯誤知識（兩大謬誤工廠）</h4>
+      <div class="detail-row"><span class="detail-label">謬誤①</span><span>把合理當正確：看起來合理的推測直接當作正確，久而久之信以為真<br>→ 例：誤以為「我思故我在」是指「思考很重要」</span></div>
+      <div class="detail-row"><span class="detail-label">謬誤②</span><span>輕率因果連結：把前後發生的事情誤認為有因果關係<br>→ 例：朋友吃藥草後病癒→誤以為藥草有效；大明被A毒蟲咬傷→誤以為是B毒蟲所傷</span></div>
+      <div class="detail-row"><span class="detail-label">應對</span><span>學習認識謬誤＋提升偵測謬誤的敏感度（如同工廠的品管部門）</span></div>
+    </div>
+
+    <div id="detail-distort" class="detail-box" style="border-left-color:#6C3483">
+      <h4 style="color:#6C3483">❸ 失真的知識</h4>
+      <div class="detail-row"><span class="detail-label">成因</span><span>原本正確的知識，經過不當保存或傳遞後變成錯誤知識；由於保留了原知識的「好印象」，讓人容易失去戒心</span></div>
+      <div class="detail-row"><span class="detail-label">保存失真</span><span>作者記憶中林正弘老師那堂課是「知識論」，後來發現可能記錯——因為林老師對作者影響最深的是知識論，兩個記憶久而久之合而為一</span></div>
+      <div class="detail-row"><span class="detail-label">傳遞失真</span><span>傳話遊戲：第一個人的話傳到最後，多半面目全非；現實中更複雜，人帶著七情六欲傳訊息，容易避重就輕甚至添油加醋</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title blue">重要比喻</div>
+    <table style="width:100%;border-collapse:collapse;font-size:0.93em;">
+      <tr style="background:#D6EAF8;">
+        <th style="padding:10px;text-align:left;border:1px solid #AED6F1;color:#1A5276;">比喻</th>
+        <th style="padding:10px;text-align:left;border:1px solid #AED6F1;color:#1A5276;">實際意義</th>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#EBF5FB;">風狂雨驟中撐傘走出戶外</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">雨水＝錯誤訊息；傘＝分辨對錯的理智。即使理智再強，也難以完全避開錯誤訊息的侵襲</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#EBF5FB;">製造錯誤知識的工廠</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">人類認知能力的邏輯漏洞，不斷產生謬誤推理，製造出錯誤知識</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;border:1px solid #D5D8DC;background:#EBF5FB;">在工廠增加強大的品管部門</td>
+        <td style="padding:10px;border:1px solid #D5D8DC;">學習認識謬誤、提升偵測謬誤的敏感度，謬誤一出現就立刻抓到，不讓它產出不良知識</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════ Tab 2：情境判斷 ════ -->
+<div id="tab-situation" class="tab-content">
+  <div class="card">
+    <div class="card-title green">情境判斷——判斷這是哪一種錯誤知識？</div>
+    <p style="font-size:0.9em;color:#5D6D7E;margin-bottom:20px;">讀完情境，點選你認為正確的類型。</p>
+
+    <div id="situations-container"></div>
+
+    <button class="submit-btn" id="sit-submit" onclick="submitSituations()">送出答案</button>
+    <button class="reset-btn" id="sit-reset" onclick="resetSituations()">重新作答</button>
+    <div class="score-box" id="sit-score"></div>
+  </div>
+</div>
+
+<!-- ════ Tab 3：詞彙配對 ════ -->
+<div id="tab-vocab" class="tab-content">
+  <div class="card">
+    <div class="card-title purple">詞彙配對——點選左欄詞彙，再點選右欄正確意思</div>
+    <p style="font-size:0.9em;color:#5D6D7E;margin-bottom:20px;">先點左欄的詞，再點右欄的解釋來配對。</p>
+    <div class="match-container">
+      <div>
+        <h4>詞彙</h4>
+        <div id="match-left"></div>
+      </div>
+      <div>
+        <h4>意思</h4>
+        <div id="match-right"></div>
+      </div>
+    </div>
+    <div class="match-status" id="match-status"></div>
+    <button class="reset-btn" id="match-reset" style="display:block" onclick="resetMatch()">重新配對</button>
+  </div>
+</div>
+
+<!-- ════ Tab 4：選擇題 ════ -->
+<div id="tab-quiz" class="tab-content">
+  <div class="card">
+    <div class="card-title orange">選擇題——全部作答後按送出</div>
+    <div id="quiz-container"></div>
+    <button class="submit-btn" id="quiz-submit" onclick="submitQuiz()">送出答案</button>
+    <button class="reset-btn" id="quiz-reset" onclick="resetQuiz()">重新作答</button>
+    <div class="score-box" id="quiz-score"></div>
+  </div>
+</div>
+
+<script>
+// ════ Tab ════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ════ 類型詳情 ════
+let currentDetail = null;
+function showDetail(type) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.detail-box').forEach(d => d.classList.remove('show'));
+  event.currentTarget.classList.add('selected');
+  if (currentDetail === type) { currentDetail = null; return; }
+  document.getElementById('detail-' + type).classList.add('show');
+  currentDetail = type;
+}
+
+// ════ 情境判斷 ════
+const situations = [
+  { text: '小美看到一則「喝檸檬水能治百病」的貼文，感覺寫得很有道理，就開始每天照做，沒有查過任何醫學資料。', ans: 'fake', explanation: '這是「假知識」。小美沒有查證就照單全收外部訊息，這是典型的假知識侵入——資訊穿著「讓人容易相信的外衣」，人們無暇過濾。' },
+  { text: '阿明看到鄰居每天早上去公園跑步，半年後瘦了十公斤，就認為「一定是跑步讓他瘦的」，完全沒考慮鄰居同時也在控制飲食。', ans: 'self', explanation: '這是「自己製造的錯誤知識」，犯了「輕率因果連結的謬誤」——把前後發生的事情（跑步→變瘦）誤認為有因果關係，沒有用科學方法驗證。' },
+  { text: '奶奶記得媽媽說過「不要在晚上吹風，會生病」，但媽媽當年其實說的是「不要在發燒時吹風」，傳了幾代已經變成完全不同的意思。', ans: 'distort', explanation: '這是「失真的知識」中的「傳遞過程失真」。知識在人與人之間傳遞時，容易因理解落差、避重就輕而改變，最後面目全非。' },
+  { text: '小華看到一篇引用大學研究的新聞，說「打電動有助於提升注意力」，但他沒注意到這篇研究的受試者只有十五個人，樣本很小。', ans: 'fake', explanation: '這是「假知識」。訊息雖然引用了研究，但研究本身不嚴謹（樣本過小），且小華沒有仔細過濾就接受了——這正是假知識的成因。' },
+  { text: '阿芬記得自己第一次吃牛排是在爸爸生日那天，但爸爸說那天其實是去吃火鍋，阿芬卻堅信自己的記憶沒有錯。', ans: 'distort', explanation: '這是「失真的知識」中的「保存不當（記憶失真）」。人的記憶並不完全可靠，重要情感（爸爸生日）可能讓我們把不同記憶混合在一起。' },
+];
+
+const sitAnswers = {};
+
+function buildSituations() {
+  const container = document.getElementById('situations-container');
+  container.innerHTML = '';
+  situations.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'situation';
+    div.innerHTML = `
+      <div class="situation-text"><strong>${i+1}.</strong>　${s.text}</div>
+      <div class="choice-row">
+        <button class="choice-btn choice-btn-fake" onclick="selectSit(${i},'fake',this)">假知識</button>
+        <button class="choice-btn choice-btn-self" onclick="selectSit(${i},'self',this)">自己製造</button>
+        <button class="choice-btn choice-btn-distort" onclick="selectSit(${i},'distort',this)">失真的知識</button>
+      </div>
+      <div class="feedback" id="sit-fb-${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function selectSit(i, val, btn) {
+  const situation = btn.closest('.situation');
+  situation.querySelectorAll('.choice-btn').forEach(b => {
+    b.classList.remove('correct', 'wrong', 'fake-ans', 'self-ans', 'distort-ans');
+    b.style.opacity = '';
+  });
+  sitAnswers[i] = val;
+  btn.classList.add('selected-temp');
+  situation.querySelectorAll('.choice-btn').forEach(b => {
+    if (b !== btn) b.style.opacity = '0.5';
+    else b.style.opacity = '1';
+  });
+}
+
+function submitSituations() {
+  let correct = 0;
+  situations.forEach((s, i) => {
+    const fb = document.getElementById('sit-fb-' + i);
+    const situation = document.querySelectorAll('.situation')[i];
+    const btns = situation.querySelectorAll('.choice-btn');
+    btns.forEach(b => {
+      b.disabled = true;
+      b.style.opacity = '1';
+      b.classList.remove('selected-temp');
+      const bval = b.classList.contains('choice-btn-fake') ? 'fake' : b.classList.contains('choice-btn-self') ? 'self' : 'distort';
+      if (bval === s.ans) {
+        b.classList.add('correct', bval + '-ans');
+      }
+    });
+    const chosen = sitAnswers[i];
+    if (chosen === s.ans) {
+      correct++;
+      fb.className = 'feedback show correct-fb';
+      fb.innerHTML = '✅ 正確！' + s.explanation;
+    } else if (chosen) {
+      fb.className = 'feedback show wrong-fb';
+      fb.innerHTML = '❌ 再想想。' + s.explanation;
+    } else {
+      fb.className = 'feedback show wrong-fb';
+      fb.innerHTML = '⚠️ 未作答。' + s.explanation;
+    }
+  });
+  document.getElementById('sit-submit').style.display = 'none';
+  document.getElementById('sit-reset').style.display = 'block';
+  const scoreBox = document.getElementById('sit-score');
+  scoreBox.className = 'score-box show';
+  scoreBox.textContent = `共答對 ${correct} / ${situations.length} 題！`;
+}
+
+function resetSituations() {
+  Object.keys(sitAnswers).forEach(k => delete sitAnswers[k]);
+  buildSituations();
+  document.getElementById('sit-submit').style.display = 'block';
+  document.getElementById('sit-reset').style.display = 'none';
+  document.getElementById('sit-score').className = 'score-box';
+}
+
+// ════ 詞彙配對 ════
+const vocabPairs = [
+  { word: '誤以為', meaning: '錯誤地認為某件事是真的' },
+  { word: '小心翼翼', meaning: '形容非常謹慎，不敢疏忽的樣子' },
+  { word: '風靡一時', meaning: '某種事物在一段時間內非常流行' },
+  { word: '首當其衝', meaning: '首先受到攻擊或遭遇災難' },
+  { word: '有機可乘', meaning: '有可供利用的機會' },
+  { word: '謬誤', meaning: '似是而非的推理，邏輯上錯誤的判斷' },
+  { word: '失真知識', meaning: '原本正確，因保存或傳遞失真而變成錯誤的知識' },
+  { word: '偏袒', meaning: '私心庇護某一方，不公正對待' },
+];
+
+let matchSelected = null;
+let matchDone = {};
+let matchShuffledRight = [];
+
+function buildMatch() {
+  matchSelected = null;
+  matchDone = {};
+  matchShuffledRight = [...vocabPairs].sort(() => Math.random() - 0.5);
+
+  const leftEl = document.getElementById('match-left');
+  const rightEl = document.getElementById('match-right');
+  leftEl.innerHTML = '';
+  rightEl.innerHTML = '';
+  document.getElementById('match-status').textContent = '';
+
+  vocabPairs.forEach((pair, i) => {
+    const el = document.createElement('div');
+    el.className = 'match-item match-left';
+    el.textContent = pair.word;
+    el.dataset.idx = i;
+    el.onclick = () => selectLeft(i, el);
+    leftEl.appendChild(el);
+  });
+
+  matchShuffledRight.forEach((pair, i) => {
+    const el = document.createElement('div');
+    el.className = 'match-item match-right';
+    el.textContent = pair.meaning;
+    el.dataset.idx = i;
+    el.onclick = () => selectRight(i, el);
+    rightEl.appendChild(el);
+  });
+}
+
+function selectLeft(idx, el) {
+  if (matchDone['L' + idx]) return;
+  document.querySelectorAll('.match-left').forEach(e => e.classList.remove('ml-selected'));
+  matchSelected = { type: 'left', idx, el };
+  el.classList.add('ml-selected');
+  checkMatch();
+}
+
+function selectRight(idx, el) {
+  if (matchDone['R' + idx]) return;
+  document.querySelectorAll('.match-right').forEach(e => e.classList.remove('mr-selected'));
+  if (matchSelected && matchSelected.type === 'left') {
+    el.classList.add('mr-selected');
+    doMatch(matchSelected.idx, matchSelected.el, idx, el);
+  }
+}
+
+function doMatch(li, lel, ri, rel) {
+  const leftWord = vocabPairs[li].word;
+  const rightMeaning = matchShuffledRight[ri].meaning;
+  const correctMeaning = vocabPairs[li].meaning;
+
+  if (rightMeaning === correctMeaning) {
+    lel.classList.remove('ml-selected');
+    lel.classList.add('matched-correct');
+    rel.classList.remove('mr-selected');
+    rel.classList.add('matched-correct');
+    matchDone['L' + li] = true;
+    matchDone['R' + ri] = true;
+    const done = Object.keys(matchDone).length / 2;
+    if (done === vocabPairs.length) {
+      document.getElementById('match-status').innerHTML = '🎉 全部配對正確！';
+    } else {
+      document.getElementById('match-status').textContent = `已完成 ${done} / ${vocabPairs.length} 對`;
+    }
+  } else {
+    lel.classList.add('matched-wrong');
+    rel.classList.add('matched-wrong');
+    setTimeout(() => {
+      lel.classList.remove('matched-wrong', 'ml-selected');
+      rel.classList.remove('matched-wrong', 'mr-selected');
+    }, 700);
+    document.getElementById('match-status').textContent = '❌ 不對，再試試看！';
+    setTimeout(() => { document.getElementById('match-status').textContent = ''; }, 1200);
+  }
+  matchSelected = null;
+}
+
+function resetMatch() {
+  buildMatch();
+}
+
+// ════ 選擇題 ════
+const quizData = [
+  { q: '本文說「在你現有的知識中，包含許多錯誤，只是你不知道，而且誤以為正確」，這句話最主要想說明什麼？', opts: ['A　每個人天生就比較愚笨', 'B　錯誤知識最可怕的是：自己不知道自己錯了', 'C　只有學歷高的人才會有錯誤知識', 'D　要解決錯誤知識，只需要多讀書'], ans: 'B', exp: '作者強調「在『誤以為』的當下，卻自信滿滿」——錯誤知識的可怕在於人無法察覺自己的錯誤。' },
+  { q: '「把合理當正確的謬誤」是指什麼？', opts: ['A　把別人說的話都當作正確', 'B　把看起來合理的推測直接當作正確，不加以驗證', 'C　把自己喜歡的事情當作合理的事', 'D　把課本上的知識全部記下來'], ans: 'B', exp: '「把合理當正確」是指我們容易把「感覺合理」的推測直接認定為事實，忘了那只是推想，不等於真相。' },
+  { q: '「味精致癌」的例子，主要用來說明哪一種錯誤知識？', opts: ['A　自己製造的錯誤知識', 'B　失真的知識（記憶失真）', 'C　假知識（外部錯誤訊息）', 'D　輕率因果連結的謬誤'], ans: 'C', exp: '「味精致癌」是不嚴謹的研究經媒體報導後廣泛傳播，屬於從外部進入的假知識；修正後的真相因不夠聳動而鮮少人知。' },
+  { q: '作者說「謬誤是天生的思考習性，無法根除」，他的意思是？', opts: ['A　我們應該放棄思考，因為思考本來就會出錯', 'B　謬誤無法消除，但可以學習辨識它、在它出現時立刻抓住', 'C　只有哲學家才能避免謬誤', 'D　謬誤是後天學習的壞習慣，改掉就好'], ans: 'B', exp: '作者說無法根除謬誤，但「可以學習認識謬誤，以及提升偵測謬誤的敏感度」，就像工廠增加品管部門一樣。' },
+  { q: '「大明被A毒蟲咬傷→誤以為是B毒蟲所傷」，這是哪一種謬誤？', opts: ['A　把合理當正確的謬誤', 'B　輕率因果連結的謬誤', 'C　傳遞過程失真', 'D　記憶保存不當'], ans: 'B', exp: '大明把「B毒蟲被他抓住」和「身體不適」這兩個前後發生的事，誤認為有因果關係，是輕率因果連結的謬誤。' },
+  { q: '本文最後提到，面對錯誤知識，第一步最重要的是什麼？', opts: ['A　馬上找專家查證所有知識', 'B　相信自己的直覺判斷', 'C　先「喚醒自覺」，了解自己所知不一定完全正確', 'D　不要輕易相信任何人說的話'], ans: 'C', exp: '作者說「只有先喚醒自覺，了解『自己所知不一定完全正確』，我們才可能開始避開錯誤知識的危害」。' },
+  { q: '文中「在狂風暴雨中撐傘走出戶外，我確信你一定會被雨水濺到」，「雨水」比喻的是什麼？', opts: ['A　困難的環境', 'B　錯誤的訊息', 'C　理性的思考', 'D　假知識的傳播者'], ans: 'B', exp: '「雨水」比喻錯誤訊息；「傘」比喻分辨對錯的理智。即使傘再大（理智再強），也難以完全避開錯誤訊息的侵襲。' },
+  { q: '作者說「失真知識」特別危險，是因為什麼原因？', opts: ['A　失真知識比假知識傳播更快', 'B　失真知識是完全捏造的，很難分辨', 'C　它保留了原本知識的可信度好印象，讓人容易失去戒心', 'D　失真知識都來自有惡意的人'], ans: 'C', exp: '作者說「由於保留了一開始對這個知識可信度的好印象，所以容易讓我們失去戒心」——這讓失真知識特別難以察覺。' },
+];
+
+const quizUserAnswers = {};
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  quizUserAnswers;
+  Object.keys(quizUserAnswers).forEach(k => delete quizUserAnswers[k]);
+
+  quizData.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `<div class="quiz-text">${i+1}.　${q.q}</div>
+    <div class="quiz-options">${q.opts.map((opt, j) => `<button class="quiz-opt" onclick="selectQuiz(${i},'${opt[0]}',this)">${opt}</button>`).join('')}</div>
+    <div class="quiz-feedback" id="qfb-${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function selectQuiz(qi, val, btn) {
+  const qs = document.querySelectorAll('.quiz-q')[qi];
+  qs.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected-opt'));
+  btn.classList.add('selected-opt');
+  quizUserAnswers[qi] = val;
+}
+
+function submitQuiz() {
+  let correct = 0;
+  quizData.forEach((q, i) => {
+    const qs = document.querySelectorAll('.quiz-q')[i];
+    const fb = document.getElementById('qfb-' + i);
+    const chosen = quizUserAnswers[i];
+    qs.querySelectorAll('.quiz-opt').forEach(b => {
+      b.disabled = true;
+      b.classList.remove('selected-opt');
+      const bval = b.textContent[0];
+      if (bval === q.ans) b.classList.add('right');
+      else if (bval === chosen && bval !== q.ans) b.classList.add('wrong-opt');
+    });
+    if (chosen === q.ans) {
+      correct++;
+      fb.className = 'quiz-feedback show correct-fb';
+      fb.innerHTML = '✅ ' + q.exp;
+    } else if (chosen) {
+      fb.className = 'quiz-feedback show wrong-fb';
+      fb.innerHTML = `❌ 正確答案是 ${q.ans}。${q.exp}`;
+    } else {
+      fb.className = 'quiz-feedback show wrong-fb';
+      fb.innerHTML = `⚠️ 未作答。正確答案是 ${q.ans}。${q.exp}`;
+    }
+  });
+  document.getElementById('quiz-submit').style.display = 'none';
+  document.getElementById('quiz-reset').style.display = 'block';
+  const scoreBox = document.getElementById('quiz-score');
+  scoreBox.className = 'score-box show';
+  const pct = Math.round(correct / quizData.length * 100);
+  scoreBox.innerHTML = `共答對 ${correct} / ${quizData.length} 題（${pct}%）${pct >= 80 ? '　🎉 太棒了！' : pct >= 60 ? '　👍 不錯！' : '　📖 繼續加油！'}`;
+}
+
+function resetQuiz() {
+  buildQuiz();
+  document.getElementById('quiz-submit').style.display = 'block';
+  document.getElementById('quiz-reset').style.display = 'none';
+  document.getElementById('quiz-score').className = 'score-box';
+}
+
+// ════ 初始化 ════
+buildSituations();
+buildMatch();
+buildQuiz();
+</script>
+</body>
+</html>

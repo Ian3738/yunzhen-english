@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>諸子百家 | 互動學習系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        text-align: center;
+        color: white;
+        padding: 25px 0;
+    }
+    
+    .header h1 {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+    
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+    
+    .nav-tab {
+        padding: 12px 18px;
+        background: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .nav-tab:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    
+    .nav-tab.active {
+        background: #e74c3c;
+        color: white;
+    }
+    
+    .content-section {
+        display: none;
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .content-section.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section-title {
+        font-size: 1.5em;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid #e74c3c;
+    }
+    
+    /* 學派卡片 */
+    .school-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .school-card {
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: white;
+    }
+    
+    .school-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .school-card.ru { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+    .school-card.dao { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+    .school-card.mo { background: linear-gradient(135deg, #2980b9, #3498db); }
+    .school-card.fa { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
+    
+    .school-card .icon {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+    
+    .school-card .name {
+        font-size: 1.4em;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    
+    .school-card .keyword {
+        font-size: 0.95em;
+        opacity: 0.9;
+    }
+    
+    /* 詳細資訊面板 */
+    .detail-panel {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
+        display: none;
+    }
+    
+    .detail-panel.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ddd;
+    }
+    
+    .detail-icon {
+        font-size: 2.5em;
+    }
+    
+    .detail-title {
+        font-size: 1.5em;
+        color: #2c3e50;
+    }
+    
+    .detail-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .detail-item {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .detail-item h4 {
+        color: #e74c3c;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    
+    .detail-item p, .detail-item ul {
+        color: #555;
+        line-height: 1.8;
+    }
+    
+    .detail-item ul {
+        padding-left: 20px;
+    }
+    
+    /* 比較表格 */
+    .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.95em;
+    }
+    
+    .compare-table th,
+    .compare-table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    
+    .compare-table th {
+        color: white;
+        font-weight: bold;
+    }
+    
+    .compare-table th:nth-child(1) { background: #2c3e50; }
+    .compare-table th:nth-child(2) { background: #c0392b; }
+    .compare-table th:nth-child(3) { background: #27ae60; }
+    .compare-table th:nth-child(4) { background: #2980b9; }
+    .compare-table th:nth-child(5) { background: #8e44ad; }
+    
+    .compare-table tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+    
+    .compare-table tr:hover {
+        background: #e8f4f8;
+    }
+    
+    /* 配對遊戲 */
+    .matching-game {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .matching-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 150px;
+    }
+    
+    .matching-item {
+        padding: 15px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        font-size: 1em;
+    }
+    
+    .matching-left {
+        background: #3498db;
+        color: white;
+    }
+    
+    .matching-right {
+        background: #e74c3c;
+        color: white;
+    }
+    
+    .matching-item:hover {
+        transform: scale(1.05);
+    }
+    
+    .matching-item.selected {
+        box-shadow: 0 0 0 4px #f39c12;
+        transform: scale(1.05);
+    }
+    
+    .matching-item.correct {
+        background: #27ae60 !important;
+    }
+    
+    .matching-item.wrong {
+        background: #95a5a6 !important;
+    }
+    
+    .matching-item.matched {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    
+    /* 測驗樣式 */
+    .quiz-question {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .question-number {
+        display: inline-block;
+        background: #e74c3c;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        line-height: 35px;
+        text-align: center;
+        font-weight: bold;
+        margin-right: 12px;
+    }
+    
+    .question-text {
+        font-size: 1.1em;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 15px 20px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        font-size: 1em;
+        text-align: left;
+    }
+    
+    .option:hover {
+        border-color: #e74c3c;
+        background: #fff5f5;
+    }
+    
+    .option.selected {
+        border-color: #e74c3c;
+        background: #ffe8e8;
+    }
+    
+    .option.correct {
+        border-color: #27ae60;
+        background: #d4edda;
+    }
+    
+    .option.wrong {
+        border-color: #e74c3c;
+        background: #f8d7da;
+    }
+    
+    .feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        display: none;
+        font-size: 1em;
+        line-height: 1.6;
+    }
+    
+    .feedback.show {
+        display: block;
+    }
+    
+    .feedback.correct {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .feedback.wrong {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    /* 按鈕 */
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+    }
+    
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #333;
+    }
+    
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+    
+    /* 分數 */
+    .score-display {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        border-radius: 15px;
+        color: white;
+        margin-top: 20px;
+    }
+    
+    .score-number {
+        font-size: 3em;
+        font-weight: bold;
+    }
+    
+    .score-text {
+        font-size: 1.2em;
+        margin-top: 10px;
+    }
+    
+    /* 進度條 */
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #e74c3c, #c0392b);
+        border-radius: 4px;
+        transition: width 0.3s;
+    }
+    
+    /* 記憶卡片 */
+    .memory-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    .memory-card {
+        background: linear-gradient(145deg, #fff, #f5f5f5);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+    }
+    
+    .memory-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    
+    .memory-card .title {
+        font-size: 1.3em;
+        color: #2c3e50;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .memory-card .content {
+        color: #555;
+        line-height: 1.8;
+    }
+    
+    .memory-card .highlight {
+        background: #fff3cd;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    
+    /* 遊戲訊息 */
+    .game-message {
+        text-align: center;
+        padding: 20px;
+        font-size: 1.2em;
+        color: #2c3e50;
+    }
+    
+    .game-score {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #e74c3c;
+    }
+    
+    /* 子標題 */
+    .sub-title {
+        font-size: 1.2em;
+        color: #2c3e50;
+        margin: 25px 0 15px;
+        padding-left: 15px;
+        border-left: 4px solid #e74c3c;
+    }
+    
+    /* 平板優化 */
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 1.8em;
+        }
+        
+        .nav-tab {
+            padding: 10px 14px;
+            font-size: 0.85em;
+        }
+        
+        .content-section {
+            padding: 20px;
+        }
+        
+        .matching-game {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .compare-table {
+            font-size: 0.8em;
+        }
+        
+        .compare-table th,
+        .compare-table td {
+            padding: 8px 5px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 諸子百家</h1>
+            <p>互動學習系統 | 先秦思想總整理</p>
+        </div>
+
+```
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showSection('overview')">🏠 總覽</button>
+        <button class="nav-tab" onclick="showSection('compare')">⚖️ 比較</button>
+        <button class="nav-tab" onclick="showSection('memory')">🧠 記憶法</button>
+        <button class="nav-tab" onclick="showSection('matching')">🎯 配對</button>
+        <button class="nav-tab" onclick="showSection('quiz')">✏️ 測驗</button>
+    </div>
+    
+    <!-- 總覽區 -->
+    <div id="overview" class="content-section active">
+        <h2 class="section-title">🏛️ 四大學派總覽</h2>
+        <p style="margin-bottom: 20px; color: #666;">點擊卡片查看詳細介紹：</p>
+        
+        <div class="school-cards">
+            <div class="school-card ru" onclick="showDetail('ru')">
+                <div class="icon">❤️</div>
+                <div class="name">儒家</div>
+                <div class="keyword">仁義禮智</div>
+            </div>
+            <div class="school-card dao" onclick="showDetail('dao')">
+                <div class="icon">🌊</div>
+                <div class="name">道家</div>
+                <div class="keyword">道法自然</div>
+            </div>
+            <div class="school-card mo" onclick="showDetail('mo')">
+                <div class="icon">🤝</div>
+                <div class="name">墨家</div>
+                <div class="keyword">兼愛非攻</div>
+            </div>
+            <div class="school-card fa" onclick="showDetail('fa')">
+                <div class="icon">⚖️</div>
+                <div class="name">法家</div>
+                <div class="keyword">法術勢</div>
+            </div>
+        </div>
+        
+        <div id="detail-ru" class="detail-panel">
+            <div class="detail-header">
+                <span class="detail-icon">❤️</span>
+                <span class="detail-title">儒家</span>
+            </div>
+            <div class="detail-content">
+                <div class="detail-item">
+                    <h4>👤 代表人物</h4>
+                    <ul>
+                        <li><strong>孔子</strong>：至聖先師，創始人</li>
+                        <li><strong>孟子</strong>：亞聖，主張性善論</li>
+                        <li><strong>荀子</strong>：主張性惡論</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>💡 核心思想</h4>
+                    <ul>
+                        <li><strong>仁</strong>：愛人，有等級的愛</li>
+                        <li><strong>義</strong>：做正當的事</li>
+                        <li><strong>禮</strong>：社會規範</li>
+                        <li><strong>德治</strong>：用道德教化人民</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>📖 代表作品</h4>
+                    <p>《論語》《孟子》《荀子》</p>
+                </div>
+                <div class="detail-item">
+                    <h4>💬 名言</h4>
+                    <p>「己所不欲，勿施於人」<br>「人皆有不忍人之心」</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="detail-dao" class="detail-panel">
+            <div class="detail-header">
+                <span class="detail-icon">🌊</span>
+                <span class="detail-title">道家</span>
+            </div>
+            <div class="detail-content">
+                <div class="detail-item">
+                    <h4>👤 代表人物</h4>
+                    <ul>
+                        <li><strong>老子</strong>：創始人</li>
+                        <li><strong>莊子</strong>：逍遙思想</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>💡 核心思想</h4>
+                    <ul>
+                        <li><strong>道</strong>：萬物的本源</li>
+                        <li><strong>自然</strong>：順應天性</li>
+                        <li><strong>無為</strong>：不強求、不干預</li>
+                        <li><strong>清靜</strong>：減少欲望</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>📖 代表作品</h4>
+                    <p>《老子》（道德經）<br>《莊子》</p>
+                </div>
+                <div class="detail-item">
+                    <h4>💬 名言</h4>
+                    <p>「道可道，非常道」<br>「相濡以沫，不如相忘於江湖」</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="detail-mo" class="detail-panel">
+            <div class="detail-header">
+                <span class="detail-icon">🤝</span>
+                <span class="detail-title">墨家</span>
+            </div>
+            <div class="detail-content">
+                <div class="detail-item">
+                    <h4>👤 代表人物</h4>
+                    <ul>
+                        <li><strong>墨子</strong>：創始人</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>💡 核心思想</h4>
+                    <ul>
+                        <li><strong>兼愛</strong>：愛所有人，無差等</li>
+                        <li><strong>非攻</strong>：反對戰爭</li>
+                        <li><strong>尚賢</strong>：任用賢才</li>
+                        <li><strong>節用</strong>：節約資源</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>📖 代表作品</h4>
+                    <p>《墨子》</p>
+                </div>
+                <div class="detail-item">
+                    <h4>💬 名言</h4>
+                    <p>「兼相愛，交相利」<br>「義固不殺人」（公輸篇）</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="detail-fa" class="detail-panel">
+            <div class="detail-header">
+                <span class="detail-icon">⚖️</span>
+                <span class="detail-title">法家</span>
+            </div>
+            <div class="detail-content">
+                <div class="detail-item">
+                    <h4>👤 代表人物</h4>
+                    <ul>
+                        <li><strong>韓非子</strong>：集大成者</li>
+                        <li><strong>商鞅</strong>：變法改革</li>
+                        <li><strong>李斯</strong>：輔佐秦始皇</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>💡 核心思想</h4>
+                    <ul>
+                        <li><strong>法</strong>：明確的法律</li>
+                        <li><strong>術</strong>：駕馭臣下的手段</li>
+                        <li><strong>勢</strong>：君主的權威</li>
+                        <li><strong>法治</strong>：用法律管理國家</li>
+                    </ul>
+                </div>
+                <div class="detail-item">
+                    <h4>📖 代表作品</h4>
+                    <p>《韓非子》</p>
+                </div>
+                <div class="detail-item">
+                    <h4>💬 名言</h4>
+                    <p>「法不阿貴，繩不撓曲」<br>猛狗社鼠的寓言</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 比較區 -->
+    <div id="compare" class="content-section">
+        <h2 class="section-title">⚖️ 四大學派比較</h2>
+        
+        <table class="compare-table">
+            <tr>
+                <th>比較項目</th>
+                <th>儒家</th>
+                <th>道家</th>
+                <th>墨家</th>
+                <th>法家</th>
+            </tr>
+            <tr>
+                <td><strong>創始人</strong></td>
+                <td>孔子</td>
+                <td>老子</td>
+                <td>墨子</td>
+                <td>韓非子</td>
+            </tr>
+            <tr>
+                <td><strong>核心概念</strong></td>
+                <td>仁義禮</td>
+                <td>道、自然</td>
+                <td>兼愛非攻</td>
+                <td>法術勢</td>
+            </tr>
+            <tr>
+                <td><strong>對「愛」的看法</strong></td>
+                <td>差等之愛<br>（先愛家人）</td>
+                <td>順其自然</td>
+                <td>兼愛<br>（愛所有人）</td>
+                <td>不談愛<br>（談利害）</td>
+            </tr>
+            <tr>
+                <td><strong>人性觀</strong></td>
+                <td>性善/性惡</td>
+                <td>人性本真</td>
+                <td>人性本善</td>
+                <td>人性自私</td>
+            </tr>
+            <tr>
+                <td><strong>治國方式</strong></td>
+                <td>德治、禮治</td>
+                <td>無為而治</td>
+                <td>尚賢、節用</td>
+                <td>法治、賞罰</td>
+            </tr>
+            <tr>
+                <td><strong>對戰爭態度</strong></td>
+                <td>反對不義之戰</td>
+                <td>反對戰爭</td>
+                <td>堅決反對</td>
+                <td>可以用兵</td>
+            </tr>
+            <tr>
+                <td><strong>代表作品</strong></td>
+                <td>《論語》</td>
+                <td>《老子》</td>
+                <td>《墨子》</td>
+                <td>《韓非子》</td>
+            </tr>
+        </table>
+        
+        <h3 class="sub-title">🔑 關鍵對比</h3>
+        <div class="memory-cards">
+            <div class="memory-card">
+                <div class="title">❤️ vs 🤝 愛的差異</div>
+                <div class="content">
+                    <p><span class="highlight">儒家</span>：差等之愛（先愛爸媽，再愛別人）</p>
+                    <p><span class="highlight">墨家</span>：兼愛（愛所有人都一樣）</p>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="title">📜 vs ⚖️ 治國方式</div>
+                <div class="content">
+                    <p><span class="highlight">儒家</span>：德治（用道德感化）</p>
+                    <p><span class="highlight">法家</span>：法治（用法律管理）</p>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="title">🏃 vs 🧘 生活態度</div>
+                <div class="content">
+                    <p><span class="highlight">儒家</span>：積極入世（改變社會）</p>
+                    <p><span class="highlight">道家</span>：清靜無為（順其自然）</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 記憶法區 -->
+    <div id="memory" class="content-section">
+        <h2 class="section-title">🧠 圖像記憶法</h2>
+        
+        <div class="memory-cards">
+            <div class="memory-card">
+                <div class="title">❤️ 儒家</div>
+                <div class="content">
+                    <p><strong>圖像：</strong>愛心有大有小</p>
+                    <p><strong>聯想：</strong>愛家人的心比較大，愛別人的心比較小</p>
+                    <p><strong>口訣：</strong>「先愛爸媽，再愛別人」</p>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="title">🌊 道家</div>
+                <div class="content">
+                    <p><strong>圖像：</strong>水往低處流</p>
+                    <p><strong>聯想：</strong>水不強求往高處，順其自然往下流</p>
+                    <p><strong>口訣：</strong>「順其自然不強求」</p>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="title">🤝 墨家</div>
+                <div class="content">
+                    <p><strong>圖像：</strong>握手不分你我</p>
+                    <p><strong>聯想：</strong>跟誰握手都一樣用力</p>
+                    <p><strong>口訣：</strong>「愛人不分親疏遠近」</p>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="title">⚖️ 法家</div>
+                <div class="content">
+                    <p><strong>圖像：</strong>天平公平秤</p>
+                    <p><strong>聯想：</strong>不管是誰，犯法就要受罰</p>
+                    <p><strong>口訣：</strong>「法律面前人人平等」</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="sub-title">🎯 考前速記</h3>
+        <table class="compare-table">
+            <tr>
+                <th style="background: #e67e22;">看到這個詞</th>
+                <th style="background: #e67e22;">就選這個學派</th>
+                <th style="background: #16a085;">看到這個人</th>
+                <th style="background: #16a085;">就選這個學派</th>
+            </tr>
+            <tr>
+                <td>仁、義、禮</td>
+                <td><strong>儒家</strong></td>
+                <td>孔子、孟子、荀子</td>
+                <td><strong>儒家</strong></td>
+            </tr>
+            <tr>
+                <td>道、自然、無為</td>
+                <td><strong>道家</strong></td>
+                <td>老子、莊子</td>
+                <td><strong>道家</strong></td>
+            </tr>
+            <tr>
+                <td>兼愛、非攻</td>
+                <td><strong>墨家</strong></td>
+                <td>墨子</td>
+                <td><strong>墨家</strong></td>
+            </tr>
+            <tr>
+                <td>法、術、勢</td>
+                <td><strong>法家</strong></td>
+                <td>韓非子、商鞅</td>
+                <td><strong>法家</strong></td>
+            </tr>
+            <tr>
+                <td>白馬非馬</td>
+                <td><strong>名家</strong></td>
+                <td>公孫龍</td>
+                <td><strong>名家</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <!-- 配對遊戲區 -->
+    <div id="matching" class="content-section">
+        <h2 class="section-title">🎯 配對遊戲</h2>
+        <p style="margin-bottom: 20px; color: #666;">點擊左邊的主張，再點擊右邊對應的學派：</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="matchProgressBar" style="width: 0%"></div>
+        </div>
+        
+        <div class="matching-game" id="matchingGame"></div>
+        
+        <div class="game-message" id="gameMessage"></div>
+        
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="resetMatching()">🔄 重新開始</button>
+        </div>
+    </div>
+    
+    <!-- 測驗區 -->
+    <div id="quiz" class="content-section">
+        <h2 class="section-title">✏️ 自我測驗</h2>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="quizProgressBar" style="width: 0%"></div>
+        </div>
+        
+        <div id="quizContainer"></div>
+        
+        <div class="btn-group">
+            <button class="btn btn-primary" id="submitBtn" onclick="submitQuiz()">提交答案</button>
+            <button class="btn btn-secondary" onclick="resetQuiz()">重新作答</button>
+        </div>
+        
+        <div class="score-display" id="scoreDisplay" style="display: none;">
+            <div class="score-number" id="scoreNumber">0</div>
+            <div class="score-text" id="scoreText">答對 0 題，共 10 題</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 切換區塊
+    function showSection(sectionId) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        event.target.classList.add('active');
+        
+        if (sectionId === 'matching') {
+            initMatching();
+        } else if (sectionId === 'quiz') {
+            initQuiz();
+        }
+    }
+    
+    // 顯示詳細資訊
+    function showDetail(school) {
+        document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('show'));
+        document.getElementById('detail-' + school).classList.add('show');
+    }
+    
+    // ===== 配對遊戲 =====
+    const matchingData = [
+        { left: "仁義禮", right: "儒家" },
+        { left: "道法自然", right: "道家" },
+        { left: "兼愛非攻", right: "墨家" },
+        { left: "法術勢", right: "法家" },
+        { left: "性善論", right: "孟子" },
+        { left: "性惡論", right: "荀子" }
+    ];
+    
+    let selectedLeft = null;
+    let matchedPairs = 0;
+    
+    function initMatching() {
+        const game = document.getElementById('matchingGame');
+        matchedPairs = 0;
+        selectedLeft = null;
+        
+        // 隨機排序
+        const leftItems = [...matchingData].sort(() => Math.random() - 0.5);
+        const rightItems = [...matchingData].sort(() => Math.random() - 0.5);
+        
+        game.innerHTML = `
+            <div class="matching-column" id="leftColumn">
+                ${leftItems.map((item, i) => `
+                    <div class="matching-item matching-left" data-value="${item.left}" onclick="selectLeft(this)">
+                        ${item.left}
+                    </div>
+                `).join('')}
+            </div>
+            <div class="matching-column" id="rightColumn">
+                ${rightItems.map((item, i) => `
+                    <div class="matching-item matching-right" data-value="${item.right}" onclick="selectRight(this)">
+                        ${item.right}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        document.getElementById('matchProgressBar').style.width = '0%';
+        document.getElementById('gameMessage').innerHTML = '';
+    }
+    
+    function selectLeft(el) {
+        if (el.classList.contains('matched')) return;
+        
+        document.querySelectorAll('.matching-left').forEach(item => item.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedLeft = el.dataset.value;
+    }
+    
+    function selectRight(el) {
+        if (!selectedLeft || el.classList.contains('matched')) return;
+        
+        const rightValue = el.dataset.value;
+        const correctPair = matchingData.find(item => item.left === selectedLeft);
+        
+        if (correctPair && correctPair.right === rightValue) {
+            // 正確配對
+            document.querySelector(`.matching-left[data-value="${selectedLeft}"]`).classList.add('matched', 'correct');
+            el.classList.add('matched', 'correct');
+            matchedPairs++;
+            
+            const progress = (matchedPairs / matchingData.length) * 100;
+            document.getElementById('matchProgressBar').style.width = progress + '%';
+            
+            if (matchedPairs === matchingData.length) {
+                document.getElementById('gameMessage').innerHTML = `
+                    <div class="game-score">🎉 太棒了！全部配對完成！</div>
+                `;
+            }
+        } else {
+            // 錯誤配對
+            el.classList.add('wrong');
+            setTimeout(() => el.classList.remove('wrong'), 500);
+        }
+        
+        document.querySelectorAll('.matching-left').forEach(item => item.classList.remove('selected'));
+        selectedLeft = null;
+    }
+    
+    function resetMatching() {
+        initMatching();
+    }
+    
+    // ===== 測驗系統 =====
+    const quizData = [
+        {
+            question: '下列哪一個學派主張「兼愛非攻」？',
+            options: ['儒家', '道家', '墨家', '法家'],
+            correct: 2,
+            explanation: '墨家的核心思想就是「兼愛」（愛所有人）和「非攻」（反對戰爭）。'
+        },
+        {
+            question: '「道可道，非常道」是哪位思想家的名言？',
+            options: ['孔子', '老子', '墨子', '韓非子'],
+            correct: 1,
+            explanation: '這是《老子》（道德經）開篇的名句，意思是可以說出來的道，就不是永恆的道。'
+        },
+        {
+            question: '法家主張用什麼來治理國家？',
+            options: ['仁義道德', '順其自然', '兼愛非攻', '法術勢'],
+            correct: 3,
+            explanation: '法家主張用「法」（法律）、「術」（手段）、「勢」（權威）來治理國家。'
+        },
+        {
+            question: '下列哪位人物被尊稱為「亞聖」？',
+            options: ['孔子', '孟子', '荀子', '老子'],
+            correct: 1,
+            explanation: '孟子被尊稱為「亞聖」，僅次於孔子（至聖先師）。'
+        },
+        {
+            question: '「性惡論」是哪位思想家的主張？',
+            options: ['孔子', '孟子', '荀子', '墨子'],
+            correct: 2,
+            explanation: '荀子主張人性本惡，善是後天學習而來的，這與孟子的性善論相對。'
+        },
+        {
+            question: '下列哪個主張屬於道家思想？',
+            options: ['有教無類', '無為而治', '尚賢節用', '嚴刑峻法'],
+            correct: 1,
+            explanation: '「無為而治」是道家的核心政治主張，意思是不過度干預，讓事物自然發展。'
+        },
+        {
+            question: '儒家和墨家對「愛」的看法有何不同？',
+            options: [
+                '儒家主張兼愛，墨家主張差等之愛',
+                '儒家主張差等之愛，墨家主張兼愛',
+                '兩者都主張兼愛',
+                '兩者都反對愛人'
+            ],
+            correct: 1,
+            explanation: '儒家主張「差等之愛」（先愛家人再愛別人），墨家主張「兼愛」（愛所有人都一樣）。'
+        },
+        {
+            question: '「猛狗社鼠」的寓言出自哪本書？',
+            options: ['《論語》', '《老子》', '《墨子》', '《韓非子》'],
+            correct: 3,
+            explanation: '「猛狗社鼠」出自《韓非子》，用來比喻阻擋人才的奸臣和依附權勢的小人。'
+        },
+        {
+            question: '「己所不欲，勿施於人」是誰說的？',
+            options: ['孔子', '老子', '墨子', '韓非子'],
+            correct: 0,
+            explanation: '這是孔子在《論語》中說的話，意思是自己不想要的，不要強加給別人。'
+        },
+        {
+            question: '下列哪個配對是正確的？',
+            options: [
+                '孔子—道家',
+                '老子—儒家',
+                '韓非子—法家',
+                '墨子—名家'
+            ],
+            correct: 2,
+            explanation: '韓非子是法家的集大成者，主張用法、術、勢來治理國家。'
+        }
+    ];
+    
+    let selectedAnswers = {};
+    
+    function initQuiz() {
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = '';
+        selectedAnswers = {};
+        
+        quizData.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'quiz-question';
+            questionDiv.innerHTML = `
+                <div class="question-text">
+                    <span class="question-number">${index + 1}</span>
+                    ${q.question}
+                </div>
+                <div class="options" id="options-${index}">
+                    ${q.options.map((opt, i) => `
+                        <button class="option" onclick="selectOption(${index}, ${i})">(${String.fromCharCode(65 + i)}) ${opt}</button>
+                    `).join('')}
+                </div>
+                <div class="feedback" id="feedback-${index}"></div>
+            `;
+            container.appendChild(questionDiv);
+        });
+        
+        document.getElementById('scoreDisplay').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        updateQuizProgress();
+    }
+    
+    function selectOption(questionIndex, optionIndex) {
+        const options = document.querySelectorAll(`#options-${questionIndex} .option`);
+        options.forEach(opt => opt.classList.remove('selected'));
+        options[optionIndex].classList.add('selected');
+        selectedAnswers[questionIndex] = optionIndex;
+        updateQuizProgress();
+    }
+    
+    function updateQuizProgress() {
+        const answered = Object.keys(selectedAnswers).length;
+        const total = quizData.length;
+        const percentage = (answered / total) * 100;
+        document.getElementById('quizProgressBar').style.width = percentage + '%';
+    }
+    
+    function submitQuiz() {
+        let score = 0;
+        
+        quizData.forEach((q, index) => {
+            const options = document.querySelectorAll(`#options-${index} .option`);
+            const feedback = document.getElementById(`feedback-${index}`);
+            const selected = selectedAnswers[index];
+            
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (selected !== undefined) {
+                if (selected === q.correct) {
+                    options[selected].classList.add('correct');
+                    feedback.className = 'feedback show correct';
+                    feedback.innerHTML = '✅ 正確！' + q.explanation;
+                    score++;
+                } else {
+                    options[selected].classList.add('wrong');
+                    options[q.correct].classList.add('correct');
+                    feedback.className = 'feedback show wrong';
+                    feedback.innerHTML = '❌ 答錯了。' + q.explanation;
+                }
+            } else {
+                options[q.correct].classList.add('correct');
+                feedback.className = 'feedback show wrong';
+                feedback.innerHTML = '⚠️ 未作答。' + q.explanation;
+            }
+        });
+        
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        scoreDisplay.style.display = 'block';
+        document.getElementById('scoreNumber').textContent = score * 10;
+        document.getElementById('scoreText').textContent = `答對 ${score} 題，共 ${quizData.length} 題`;
+        document.getElementById('submitBtn').disabled = true;
+        
+        scoreDisplay.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function resetQuiz() {
+        initQuiz();
+    }
+    
+    // 頁面載入
+    window.onload = function() {
+        // 預設不初始化遊戲和測驗，等用戶點擊時再初始化
+    };
+</script>
+```
+
+</body>
+</html>

@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>現在式 vs 現在進行式 - 綜合練習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .section-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+
+        .practice-section {
+            display: none;
+            padding: 30px;
+        }
+
+        .practice-section.active {
+            display: block;
+        }
+
+        .grammar-rules {
+            padding: 30px;
+            background: #fff3cd;
+            margin: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .grammar-rules h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border: 2px solid #667eea;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border: 2px solid #ddd;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .highlight-simple {
+            background: #d4edda;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #155724;
+        }
+
+        .highlight-continuous {
+            background: #cce5ff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #004085;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            padding: 20px;
+            border-left: 5px solid #dc3545;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .error-box h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .correct-box {
+            background: #d4edda;
+            padding: 20px;
+            border-left: 5px solid #28a745;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .correct-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .rule-box {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 3px solid #667eea;
+        }
+
+        .rule-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .example {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .question-hint {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 5px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            border: 3px solid #667eea;
+            background: white;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: #f0f0ff;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-size: 16px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 5px;
+        }
+
+        .next-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .decision-tree {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .decision-step {
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 5px solid #667eea;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .comparison-table {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 現在式 vs 現在進行式</h1>
+            <p>綜合練習 - 不要再搞混!</p>
+        </div>
+
+        <div class="section-tabs">
+            <div class="tab active" onclick="showSection('rules')">📖 關鍵差異</div>
+            <div class="tab" onclick="showSection('type1')">題型1:選時態</div>
+            <div class="tab" onclick="showSection('type2')">題型2:找錯誤</div>
+            <div class="tab" onclick="showSection('type3')">題型3:改句子</div>
+        </div>
+
+        <!-- 關鍵差異 -->
+        <div id="rules" class="practice-section active">
+            <div class="grammar-rules">
+                <h3>⚠️ 最常見的錯誤</h3>
+                
+                <div class="error-box">
+                    <h4>❌ 錯誤範例:</h4>
+                    <p style="font-size: 20px; margin: 10px 0;">
+                        <strong>He is don't play games.</strong>
+                    </p>
+                    <p style="font-size: 16px; color: #721c24;">
+                        → 混用了 be動詞(is) 和 助動詞(don't) !<br>
+                        → 一句話只能選一個系統!
+                    </p>
+                </div>
+
+                <div class="correct-box">
+                    <h4>✅ 正確寫法:</h4>
+                    <p style="font-size: 18px; margin: 10px 0;">
+                        • He <strong>doesn't play</strong> games. (一般現在式 - 習慣)<br>
+                        • He <strong>isn't playing</strong> games. (現在進行式 - 正在做)
+                    </p>
+                </div>
+            </div>
+
+            <div class="grammar-rules">
+                <h3>🎯 決策樹: 怎麼選?</h3>
+                
+                <div class="decision-tree">
+                    <div class="decision-step">
+                        <strong style="font-size: 18px; color: #667eea;">步驟1: 看時間副詞</strong>
+                        <p style="margin-top: 10px;">
+                            • 看到 <strong>now, right now, at the moment</strong> → 現在進行式<br>
+                            • 看到 <strong>every day, often, usually, always</strong> → 一般現在式
+                        </p>
+                    </div>
+
+                    <div class="decision-step">
+                        <strong style="font-size: 18px; color: #667eea;">步驟2: 看意思</strong>
+                        <p style="margin-top: 10px;">
+                            • <strong>正在做</strong>某事 → 現在進行式 (be + Ving)<br>
+                            • <strong>習慣、事實</strong> → 一般現在式 (動詞/動詞+s)
+                        </p>
+                    </div>
+
+                    <div class="decision-step">
+                        <strong style="font-size: 18px; color: #667eea;">步驟3: 選系統</strong>
+                        <p style="margin-top: 10px;">
+                            <span class="highlight-simple">一般現在式</span>: 用 do/does 或 don't/doesn't<br>
+                            <span class="highlight-continuous">現在進行式</span>: 用 am/is/are + Ving
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grammar-rules">
+                <h3>📊 完整比較表</h3>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>項目</th>
+                        <th>一般現在式</th>
+                        <th>現在進行式</th>
+                    </tr>
+                    <tr>
+                        <td><strong>用途</strong></td>
+                        <td>習慣、事實、真理</td>
+                        <td>正在進行的動作</td>
+                    </tr>
+                    <tr>
+                        <td><strong>肯定句</strong></td>
+                        <td>主詞 + 動詞/動詞+s<br>
+                        <span class="highlight-simple">He plays games.</span></td>
+                        <td>主詞 + am/is/are + Ving<br>
+                        <span class="highlight-continuous">He is playing games.</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>否定句</strong></td>
+                        <td>主詞 + don't/doesn't + 原形<br>
+                        <span class="highlight-simple">He doesn't play games.</span></td>
+                        <td>主詞 + am/is/are + not + Ving<br>
+                        <span class="highlight-continuous">He isn't playing games.</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>疑問句</strong></td>
+                        <td>Do/Does + 主詞 + 原形?<br>
+                        <span class="highlight-simple">Does he play games?</span></td>
+                        <td>Am/Is/Are + 主詞 + Ving?<br>
+                        <span class="highlight-continuous">Is he playing games?</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>時間副詞</strong></td>
+                        <td>every day, often, usually, always, never, sometimes</td>
+                        <td>now, right now, at the moment, today</td>
+                    </tr>
+                    <tr>
+                        <td><strong>關鍵字</strong></td>
+                        <td>do, does, don't, doesn't</td>
+                        <td>am, is, are, not, Ving</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="grammar-rules">
+                <h3>💡 記憶口訣</h3>
+                
+                <div class="rule-box">
+                    <div class="rule-title">口訣1: 一句話,一個系統!</div>
+                    <div class="example">
+                        ❌ 不能同時用 is 和 don't!<br>
+                        ❌ 不能同時用 does 和 are!<br>
+                        ✅ 選一個: 要嘛 be動詞 (am/is/are), 要嘛 助動詞 (do/does)
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">口訣2: 看到"ing" → 一定有be動詞!</div>
+                    <div class="example">
+                        ✅ He <strong>is</strong> playing games. (有 is + playing)<br>
+                        ❌ He playing games. (沒有 be動詞!)<br>
+                        ❌ He does playing games. (用錯!應該用 is)
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <div class="rule-title">口訣3: 否定句怎麼變?</div>
+                    <div class="example">
+                        <strong>一般現在式:</strong> 動詞消失 → 加 don't/doesn't<br>
+                        He play<s>s</s> → He <strong>doesn't play</strong><br>
+                        <br>
+                        <strong>現在進行式:</strong> be動詞加 not<br>
+                        He is playing → He <strong>is not</strong> playing
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 題型1: 選擇正確時態 -->
+        <div id="type1" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress1">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct1">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong1">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy1">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice1Area"></div>
+        </div>
+
+        <!-- 題型2: 找出錯誤 -->
+        <div id="type2" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress2">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct2">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong2">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy2">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice2Area"></div>
+        </div>
+
+        <!-- 題型3: 改正句子 -->
+        <div id="type3" class="practice-section">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress3">0/10</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correct3">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrong3">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy3">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+
+            <div id="practice3Area"></div>
+        </div>
+    </div>
+
+    <script>
+        // 題型1: 選擇正確時態
+        const type1Questions = [
+            {
+                question: "He _____ games every day. (他每天玩遊戲)",
+                hint: "💡 提示: every day → 習慣",
+                options: ["plays", "is playing", "play"],
+                correct: "plays",
+                explanation: "every day 表示習慣 → 用一般現在式 → He 是第三人稱單數,play + s"
+            },
+            {
+                question: "He _____ games now. (他現在正在玩遊戲)",
+                hint: "💡 提示: now → 正在做",
+                options: ["plays", "is playing", "play"],
+                correct: "is playing",
+                explanation: "now 表示正在做 → 用現在進行式 → He + is + playing"
+            },
+            {
+                question: "She usually _____ videos. (她通常看影片)",
+                hint: "💡 提示: usually → 習慣",
+                options: ["watches", "is watching", "watch"],
+                correct: "watches",
+                explanation: "usually 表示習慣 → 用一般現在式 → She 是第三人稱單數,watch + es"
+            },
+            {
+                question: "She _____ videos right now. (她現在正在看影片)",
+                hint: "💡 提示: right now → 正在做",
+                options: ["watches", "is watching", "watch"],
+                correct: "is watching",
+                explanation: "right now 表示正在做 → 用現在進行式 → She + is + watching"
+            },
+            {
+                question: "I often _____ English. (我常常學英文)",
+                hint: "💡 提示: often → 習慣",
+                options: ["study", "am studying", "studies"],
+                correct: "study",
+                explanation: "often 表示習慣 → 用一般現在式 → I 後面用原形動詞 study"
+            },
+            {
+                question: "I _____ English at the moment. (我現在正在學英文)",
+                hint: "💡 提示: at the moment → 正在做",
+                options: ["study", "am studying", "studies"],
+                correct: "am studying",
+                explanation: "at the moment 表示正在做 → 用現在進行式 → I + am + studying"
+            },
+            {
+                question: "They always _____ homework after school. (他們放學後總是做功課)",
+                hint: "💡 提示: always → 習慣",
+                options: ["do", "are doing", "does"],
+                correct: "do",
+                explanation: "always 表示習慣 → 用一般現在式 → They 後面用原形動詞 do"
+            },
+            {
+                question: "They _____ homework now. (他們現在正在做功課)",
+                hint: "💡 提示: now → 正在做",
+                options: ["do", "are doing", "does"],
+                correct: "are doing",
+                explanation: "now 表示正在做 → 用現在進行式 → They + are + doing"
+            },
+            {
+                question: "My mom _____ dinner every night. (我媽媽每晚煮晚餐)",
+                hint: "💡 提示: every night → 習慣",
+                options: ["cooks", "is cooking", "cook"],
+                correct: "cooks",
+                explanation: "every night 表示習慣 → 用一般現在式 → My mom 是第三人稱單數,cook + s"
+            },
+            {
+                question: "My mom _____ dinner now. (我媽媽現在正在煮晚餐)",
+                hint: "💡 提示: now → 正在做",
+                options: ["cooks", "is cooking", "cook"],
+                correct: "is cooking",
+                explanation: "now 表示正在做 → 用現在進行式 → My mom + is + cooking"
+            }
+        ];
+
+        // 題型2: 找出錯誤句子
+        const type2Questions = [
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 注意有沒有混用 be動詞 和 助動詞",
+                options: [
+                    "He plays games every day.",
+                    "He is don't play games.",
+                    "He doesn't play games."
+                ],
+                correct: "He is don't play games.",
+                explanation: "❌ He is don't play games. → 混用了 is 和 don't!\n✅ 正確: He doesn't play games. 或 He isn't playing games."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 現在進行式一定要有 be動詞",
+                options: [
+                    "He is playing games now.",
+                    "He playing games now.",
+                    "He plays games now."
+                ],
+                correct: "He playing games now.",
+                explanation: "❌ He playing games now. → playing 前面缺少 be動詞!\n✅ 正確: He is playing games now."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 一句話只能有一個動詞系統",
+                options: [
+                    "She is watching videos.",
+                    "She does watching videos.",
+                    "She watches videos."
+                ],
+                correct: "She does watching videos.",
+                explanation: "❌ She does watching videos. → does 不能跟 watching 一起用!\n✅ 正確: She is watching videos. 或 She watches videos."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 否定句要用 don't/doesn't 或 am/is/are + not",
+                options: [
+                    "I don't play games.",
+                    "I am not playing games.",
+                    "I am don't play games."
+                ],
+                correct: "I am don't play games.",
+                explanation: "❌ I am don't play games. → 混用了 am 和 don't!\n✅ 正確: I don't play games. 或 I'm not playing games."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 疑問句要用 Do/Does 或 Am/Is/Are",
+                options: [
+                    "Does he play games?",
+                    "Is he playing games?",
+                    "Does he is playing games?"
+                ],
+                correct: "Does he is playing games?",
+                explanation: "❌ Does he is playing games? → 混用了 Does 和 is!\n✅ 正確: Does he play games? 或 Is he playing games?"
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 第三人稱單數現在式要加 s",
+                options: [
+                    "She play games every day.",
+                    "She plays games every day.",
+                    "She is playing games now."
+                ],
+                correct: "She play games every day.",
+                explanation: "❌ She play games. → She 是第三人稱單數,動詞要加 s!\n✅ 正確: She plays games."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 否定句中,doesn't 後面要用原形動詞",
+                options: [
+                    "He doesn't plays games.",
+                    "He doesn't play games.",
+                    "He isn't playing games."
+                ],
+                correct: "He doesn't plays games.",
+                explanation: "❌ He doesn't plays games. → doesn't 後面要用原形動詞 play!\n✅ 正確: He doesn't play games."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 現在進行式否定是 be動詞 + not",
+                options: [
+                    "She isn't watching videos.",
+                    "She doesn't watching videos.",
+                    "She doesn't watch videos."
+                ],
+                correct: "She doesn't watching videos.",
+                explanation: "❌ She doesn't watching videos. → doesn't 不能跟 watching 一起!\n✅ 正確: She isn't watching videos. 或 She doesn't watch videos."
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 疑問句中,Does 後面要用原形動詞",
+                options: [
+                    "Does he plays games?",
+                    "Does he play games?",
+                    "Is he playing games?"
+                ],
+                correct: "Does he plays games?",
+                explanation: "❌ Does he plays games? → Does 後面要用原形動詞 play!\n✅ 正確: Does he play games?"
+            },
+            {
+                question: "下面哪一句是「錯的」?",
+                hint: "💡 提示: 時間副詞要配對正確的時態",
+                options: [
+                    "He is playing games now.",
+                    "He plays games now.",
+                    "He is playing games every day."
+                ],
+                correct: "He is playing games every day.",
+                explanation: "❌ He is playing games every day. → every day 要用一般現在式!\n✅ 正確: He plays games every day."
+            }
+        ];
+
+        // 題型3: 改正句子
+        const type3Questions = [
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>He is don't play games.</strong>",
+                hint: "💡 提示: 不能混用 is 和 don't",
+                options: [
+                    "He doesn't play games.",
+                    "He isn't playing games.",
+                    "以上皆可"
+                ],
+                correct: "以上皆可",
+                explanation: "✅ 兩個都對!<br>• He doesn't play games. (一般現在式否定)<br>• He isn't playing games. (現在進行式否定)"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>She playing games now.</strong>",
+                hint: "💡 提示: playing 前面缺少什麼?",
+                options: [
+                    "She plays games now.",
+                    "She is playing games now.",
+                    "She does playing games now."
+                ],
+                correct: "She is playing games now.",
+                explanation: "✅ She is playing games now.<br>現在進行式要有 be動詞 (is) + Ving (playing)"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>He does watching videos.</strong>",
+                hint: "💡 提示: does 不能跟 watching 一起用",
+                options: [
+                    "He does watch videos.",
+                    "He is watching videos.",
+                    "He watching videos."
+                ],
+                correct: "He is watching videos.",
+                explanation: "✅ He is watching videos.<br>watching (Ving) 要配 be動詞 (is),不是 does"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>I am don't play games.</strong>",
+                hint: "💡 提示: 不能混用 am 和 don't",
+                options: [
+                    "I don't play games.",
+                    "I'm not playing games.",
+                    "以上皆可"
+                ],
+                correct: "以上皆可",
+                explanation: "✅ 兩個都對!<br>• I don't play games. (一般現在式否定)<br>• I'm not playing games. (現在進行式否定)"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>She don't plays games.</strong>",
+                hint: "💡 提示: She 是第三人稱單數",
+                options: [
+                    "She doesn't play games.",
+                    "She doesn't plays games.",
+                    "She don't play games."
+                ],
+                correct: "She doesn't play games.",
+                explanation: "✅ She doesn't play games.<br>She 要用 doesn't,後面用原形動詞 play"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>He doesn't watching videos.</strong>",
+                hint: "💡 提示: doesn't 後面要用原形動詞",
+                options: [
+                    "He doesn't watch videos.",
+                    "He isn't watching videos.",
+                    "以上皆可"
+                ],
+                correct: "以上皆可",
+                explanation: "✅ 兩個都對!<br>• He doesn't watch videos. (一般現在式否定)<br>• He isn't watching videos. (現在進行式否定)"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>Does he is playing games?</strong>",
+                hint: "💡 提示: 不能混用 Does 和 is",
+                options: [
+                    "Does he play games?",
+                    "Is he playing games?",
+                    "以上皆可"
+                ],
+                correct: "以上皆可",
+                explanation: "✅ 兩個都對!<br>• Does he play games? (一般現在式疑問)<br>• Is he playing games? (現在進行式疑問)"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>She play games every day.</strong>",
+                hint: "💡 提示: She 是第三人稱單數",
+                options: [
+                    "She plays games every day.",
+                    "She is playing games every day.",
+                    "She playing games every day."
+                ],
+                correct: "She plays games every day.",
+                explanation: "✅ She plays games every day.<br>every day 用一般現在式,She 是第三人稱單數要加 s"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>I am play games now.</strong>",
+                hint: "💡 提示: am 後面要加什麼?",
+                options: [
+                    "I play games now.",
+                    "I am playing games now.",
+                    "I am plays games now."
+                ],
+                correct: "I am playing games now.",
+                explanation: "✅ I am playing games now.<br>現在進行式: be動詞 (am) + Ving (playing)"
+            },
+            {
+                question: "改正這個句子:<br><strong style='color: #dc3545;'>They is playing games.</strong>",
+                hint: "💡 提示: They 要用哪個 be動詞?",
+                options: [
+                    "They are playing games.",
+                    "They is play games.",
+                    "They am playing games."
+                ],
+                correct: "They are playing games.",
+                explanation: "✅ They are playing games.<br>They 要用 are,不是 is"
+            }
+        ];
+
+        let currentType = 1;
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let answered = false;
+
+        function showSection(section) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.practice-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+
+            if (section === 'type1') {
+                currentType = 1;
+                startPractice(1);
+            } else if (section === 'type2') {
+                currentType = 2;
+                startPractice(2);
+            } else if (section === 'type3') {
+                currentType = 3;
+                startPractice(3);
+            }
+        }
+
+        function startPractice(type) {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+            updateStats(type);
+            showQuestion(type);
+        }
+
+        function showQuestion(type) {
+            const questions = type === 1 ? type1Questions : 
+                            type === 2 ? type2Questions : type3Questions;
+
+            if (currentQuestion >= questions.length) {
+                showComplete(type);
+                return;
+            }
+
+            answered = false;
+            const q = questions[currentQuestion];
+            const practiceArea = document.getElementById(`practice${type}Area`);
+
+            const optionsHTML = q.options.map(opt => `
+                <button class="option-btn" onclick="checkAnswer${type}('${opt.replace(/'/g, "\\'").replace(/\n/g, '\\n')}')">${opt}</button>
+            `).join('');
+
+            practiceArea.innerHTML = `
+                <div class="question-card">
+                    <div class="question-text">${q.question}</div>
+                    <div class="question-hint">${q.hint}</div>
+                    <div class="options">
+                        ${optionsHTML}
+                    </div>
+                    <div id="feedback${type}"></div>
+                </div>
+            `;
+        }
+
+        function checkAnswer1(selected) {
+            if (answered) return;
+            answered = true;
+
+            const q = type1Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type1 .option-btn');
+            const feedback = document.getElementById('feedback1');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === q.correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === q.correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(1)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${q.correct}</strong>
+                    <div class="explanation">${q.explanation}</div>
+                    <button class="next-btn" onclick="nextQuestion(1)">下一題</button>
+                `;
+            }
+
+            updateStats(1);
+        }
+
+        function checkAnswer2(selected) {
+            if (answered) return;
+            answered = true;
+
+            const q = type2Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type2 .option-btn');
+            const feedback = document.getElementById('feedback2');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === q.correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === q.correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確! 你找到錯誤了!
+                    <div class="explanation">${q.explanation.replace(/\n/g, '<br>')}</div>
+                    <button class="next-btn" onclick="nextQuestion(2)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 錯誤的句子是: <strong>${q.correct}</strong>
+                    <div class="explanation">${q.explanation.replace(/\n/g, '<br>')}</div>
+                    <button class="next-btn" onclick="nextQuestion(2)">下一題</button>
+                `;
+            }
+
+            updateStats(2);
+        }
+
+        function checkAnswer3(selected) {
+            if (answered) return;
+            answered = true;
+
+            const q = type3Questions[currentQuestion];
+            const buttons = document.querySelectorAll('#type3 .option-btn');
+            const feedback = document.getElementById('feedback3');
+
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === q.correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === q.correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    ✅ 正確!
+                    <div class="explanation">${q.explanation.replace(/\n/g, '<br>')}</div>
+                    <button class="next-btn" onclick="nextQuestion(3)">下一題</button>
+                `;
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `
+                    ❌ 答錯了! 正確答案是: <strong>${q.correct}</strong>
+                    <div class="explanation">${q.explanation.replace(/\n/g, '<br>')}</div>
+                    <button class="next-btn" onclick="nextQuestion(3)">下一題</button>
+                `;
+            }
+
+            updateStats(3);
+        }
+
+        function nextQuestion(type) {
+            currentQuestion++;
+            updateStats(type);
+            showQuestion(type);
+        }
+
+        function updateStats(type) {
+            const total = correctAnswers + wrongAnswers;
+            const accuracy = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+            const questions = type === 1 ? type1Questions : 
+                            type === 2 ? type2Questions : type3Questions;
+
+            document.getElementById(`correct${type}`).textContent = correctAnswers;
+            document.getElementById(`wrong${type}`).textContent = wrongAnswers;
+            document.getElementById(`accuracy${type}`).textContent = accuracy + '%';
+
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById(`progress${type}`).style.width = progress + '%';
+            document.getElementById(`progress${type}`).textContent = `${currentQuestion}/${questions.length}`;
+        }
+
+        function showComplete(type) {
+            const accuracy = Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+            const practiceArea = document.getElementById(`practice${type}Area`);
+
+            let message = '';
+            let emoji = '';
+            if (accuracy === 100) {
+                message = '完美!完全搞懂了!';
+                emoji = '🏆';
+            } else if (accuracy >= 80) {
+                message = '很棒!快要完全懂了!';
+                emoji = '🎉';
+            } else if (accuracy >= 60) {
+                message = '不錯!再多練習!';
+                emoji = '👍';
+            } else {
+                message = '加油!要多複習!';
+                emoji = '💪';
+            }
+
+            const typeNames = ['', '選擇時態', '找出錯誤', '改正句子'];
+
+            practiceArea.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">${emoji}</div>
+                    <h2 style="font-size: 32px; color: #667eea; margin-bottom: 20px;">${message}</h2>
+                    <div style="font-size: 24px; margin-bottom: 30px;">
+                        <p>題型${type}: <strong>${typeNames[type]}</strong></p>
+                        <p>答對: <strong style="color: #28a745;">${correctAnswers}</strong></p>
+                        <p>答錯: <strong style="color: #dc3545;">${wrongAnswers}</strong></p>
+                        <p>正確率: <strong style="color: #667eea;">${accuracy}%</strong></p>
+                    </div>
+                    <button class="next-btn" onclick="startPractice(${type})">再練習一次</button>
+                    <button class="next-btn" style="background: #6c757d;" onclick="showSection('rules')">返回文法規則</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

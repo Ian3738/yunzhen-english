@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>氣候變遷單字練習 - 15個重點單字</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress-container {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            min-width: 100px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .practice-area {
+            padding: 40px;
+            min-height: 400px;
+        }
+
+        .question {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .question-type {
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .option-btn {
+            padding: 20px;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            font-weight: bold;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .option-btn.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .option-btn.wrong {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .next-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .word-list {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .word-list h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .word-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .word-en {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .word-zh {
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .wrong-words {
+            padding: 20px;
+            background: #fff3cd;
+        }
+
+        .wrong-words h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 30px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .question-text {
+                font-size: 24px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 氣候變遷單字練習</h1>
+            <p>15個重點單字 - 反覆練習,輕鬆記憶!</p>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('zh-to-en')">看中文選英文</button>
+            <button class="mode-btn" onclick="setMode('en-to-zh')">看英文選中文</button>
+            <button class="mode-btn" onclick="setMode('review')">複習錯題</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0/15</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="correctCount">0</div>
+                    <div class="stat-label">答對</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="wrongCount">0</div>
+                    <div class="stat-label">答錯</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="accuracy">0%</div>
+                    <div class="stat-label">正確率</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="practice-area" id="practiceArea">
+            <!-- 練習題目會在這裡顯示 -->
+        </div>
+
+        <div class="word-list">
+            <h3>📚 15個重點單字</h3>
+            <div class="word-grid" id="wordList">
+                <!-- 單字卡片會在這裡顯示 -->
+            </div>
+        </div>
+
+        <div class="wrong-words" id="wrongWords" style="display: none;">
+            <h3>⚠️ 需要加強的單字</h3>
+            <div class="word-grid" id="wrongWordList">
+                <!-- 錯誤單字會在這裡顯示 -->
+            </div>
+            <button class="reset-btn" onclick="resetWrongWords()">清除錯題記錄</button>
+        </div>
+    </div>
+
+    <script>
+        // 15個重點單字
+        const vocabulary = [
+            { en: "melt", zh: "融化" },
+            { en: "tide", zh: "潮汐" },
+            { en: "shift", zh: "轉移" },
+            { en: "overall", zh: "整體的" },
+            { en: "generation", zh: "世代" },
+            { en: "cease", zh: "停止" },
+            { en: "commerce", zh: "商業" },
+            { en: "solid", zh: "固體的" },
+            { en: "pole", zh: "極地" },
+            { en: "vast", zh: "廣大的" },
+            { en: "tranquil", zh: "寧靜的" },
+            { en: "grim", zh: "嚴峻的" },
+            { en: "joint", zh: "共同的" },
+            { en: "curb", zh: "抑制" },
+            { en: "sweep", zh: "清掃" }
+        ];
+
+        let currentMode = 'zh-to-en';
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let wrongWords = new Set();
+        let questions = [];
+        let answered = false;
+
+        // 初始化
+        function init() {
+            displayWordList();
+            loadWrongWords();
+            startPractice();
+        }
+
+        // 顯示單字列表
+        function displayWordList() {
+            const wordList = document.getElementById('wordList');
+            wordList.innerHTML = vocabulary.map(word => `
+                <div class="word-card" onclick="speakWord('${word.en}')">
+                    <div class="word-en">${word.en}</div>
+                    <div class="word-zh">${word.zh}</div>
+                </div>
+            `).join('');
+        }
+
+        // 語音朗讀(如果瀏覽器支援)
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 設定模式
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (mode === 'review') {
+                if (wrongWords.size === 0) {
+                    alert('太棒了!目前沒有需要複習的錯題!');
+                    return;
+                }
+            }
+            
+            startPractice();
+        }
+
+        // 開始練習
+        function startPractice() {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            answered = false;
+            
+            if (currentMode === 'review') {
+                questions = Array.from(wrongWords).map(en => 
+                    vocabulary.find(v => v.en === en)
+                ).filter(v => v);
+                
+                if (questions.length === 0) {
+                    alert('沒有需要複習的單字!');
+                    return;
+                }
+            } else {
+                questions = [...vocabulary].sort(() => Math.random() - 0.5);
+            }
+            
+            updateStats();
+            showQuestion();
+        }
+
+        // 顯示題目
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+
+            answered = false;
+            const word = questions[currentQuestion];
+            const isZhToEn = currentMode === 'zh-to-en' || currentMode === 'review';
+            
+            const questionText = isZhToEn ? word.zh : word.en;
+            const correctAnswer = isZhToEn ? word.en : word.zh;
+            
+            // 生成選項
+            const options = generateOptions(correctAnswer, isZhToEn);
+            
+            const practiceArea = document.getElementById('practiceArea');
+            practiceArea.innerHTML = `
+                <div class="question">
+                    <div class="question-text">${questionText}</div>
+                    <div class="question-type">${isZhToEn ? '請選擇正確的英文單字' : '請選擇正確的中文意思'}</div>
+                </div>
+                <div class="options">
+                    ${options.map(opt => `
+                        <button class="option-btn" onclick="checkAnswer('${opt}', '${correctAnswer}')">${opt}</button>
+                    `).join('')}
+                </div>
+                <div id="feedback"></div>
+            `;
+        }
+
+        // 生成選項
+        function generateOptions(correctAnswer, isZhToEn) {
+            const options = [correctAnswer];
+            const pool = vocabulary.filter(v => 
+                (isZhToEn ? v.en : v.zh) !== correctAnswer
+            );
+            
+            while (options.length < 4 && pool.length > 0) {
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                const option = isZhToEn ? pool[randomIndex].en : pool[randomIndex].zh;
+                if (!options.includes(option)) {
+                    options.push(option);
+                }
+                pool.splice(randomIndex, 1);
+            }
+            
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        // 檢查答案
+        function checkAnswer(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            const word = questions[currentQuestion];
+            
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selected) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                correctAnswers++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✅ 正確!<br><button class="next-btn" onclick="nextQuestion()">下一題</button>`;
+                wrongWords.delete(word.en);
+            } else {
+                wrongAnswers++;
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `❌ 答錯了!<br>正確答案是: <strong>${word.en}</strong> - ${word.zh}<br><button class="next-btn" onclick="nextQuestion()">下一題</button>`;
+                wrongWords.add(word.en);
+            }
+            
+            saveWrongWords();
+            updateStats();
+            updateWrongWordsList();
+        }
+
+        // 下一題
+        function nextQuestion() {
+            currentQuestion++;
+            updateStats();
+            showQuestion();
+        }
+
+        // 更新統計
+        function updateStats() {
+            const total = correctAnswers + wrongAnswers;
+            const accuracy = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+            
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('wrongCount').textContent = wrongAnswers;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            
+            const progress = questions.length > 0 ? (currentQuestion / questions.length) * 100 : 0;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressFill').textContent = `${currentQuestion}/${questions.length}`;
+        }
+
+        // 顯示結果
+        function showResult() {
+            const accuracy = Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+            const practiceArea = document.getElementById('practiceArea');
+            
+            let message = '';
+            let emoji = '';
+            if (accuracy >= 90) {
+                message = '太棒了!你完全掌握了!';
+                emoji = '🎉';
+            } else if (accuracy >= 70) {
+                message = '不錯!再多練習就更好了!';
+                emoji = '👍';
+            } else {
+                message = '繼續努力!多練習錯題!';
+                emoji = '💪';
+            }
+            
+            practiceArea.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">${emoji}</div>
+                    <h2 style="font-size: 32px; color: #667eea; margin-bottom: 20px;">${message}</h2>
+                    <div style="font-size: 24px; margin-bottom: 30px;">
+                        <p>答對: <strong style="color: #28a745;">${correctAnswers}</strong></p>
+                        <p>答錯: <strong style="color: #dc3545;">${wrongAnswers}</strong></p>
+                        <p>正確率: <strong style="color: #667eea;">${accuracy}%</strong></p>
+                    </div>
+                    <button class="next-btn" onclick="startPractice()">再練習一次</button>
+                    ${wrongWords.size > 0 ? '<button class="next-btn" style="background: #dc3545;" onclick="setMode(\'review\')">複習錯題</button>' : ''}
+                </div>
+            `;
+        }
+
+        // 儲存錯題
+        function saveWrongWords() {
+            localStorage.setItem('wrongWords', JSON.stringify(Array.from(wrongWords)));
+        }
+
+        // 載入錯題
+        function loadWrongWords() {
+            const saved = localStorage.getItem('wrongWords');
+            if (saved) {
+                wrongWords = new Set(JSON.parse(saved));
+                updateWrongWordsList();
+            }
+        }
+
+        // 更新錯題列表
+        function updateWrongWordsList() {
+            const wrongWordsDiv = document.getElementById('wrongWords');
+            const wrongWordList = document.getElementById('wrongWordList');
+            
+            if (wrongWords.size === 0) {
+                wrongWordsDiv.style.display = 'none';
+                return;
+            }
+            
+            wrongWordsDiv.style.display = 'block';
+            wrongWordList.innerHTML = Array.from(wrongWords).map(en => {
+                const word = vocabulary.find(v => v.en === en);
+                return word ? `
+                    <div class="word-card">
+                        <div class="word-en">${word.en}</div>
+                        <div class="word-zh">${word.zh}</div>
+                    </div>
+                ` : '';
+            }).join('');
+        }
+
+        // 重置錯題
+        function resetWrongWords() {
+            if (confirm('確定要清除所有錯題記錄嗎?')) {
+                wrongWords.clear();
+                saveWrongWords();
+                updateWrongWordsList();
+            }
+        }
+
+        // 頁面載入時初始化
+        init();
+    </script>
+</body>
+</html>

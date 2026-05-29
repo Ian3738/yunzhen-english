@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第十一課 真愛 練習系統</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: #2c3e50; font-size: 2.2em; margin-bottom: 10px; }
+        .subtitle { color: #555; font-size: 1.1em; }
+        .progress-container {
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .progress-bar { background: #e0e0e0; border-radius: 10px; height: 20px; overflow: hidden; }
+        .progress-fill {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            height: 100%; border-radius: 10px; transition: width 0.5s ease;
+        }
+        .progress-text { text-align: center; margin-top: 10px; font-size: 1.1em; color: #666; }
+        .question-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .question-card.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .question-number {
+            background: #3498db; color: white; padding: 8px 20px;
+            border-radius: 20px; font-size: 0.9em; display: inline-block; margin-bottom: 15px;
+        }
+        .question-type {
+            background: #e8f5e9; color: #2e7d32; padding: 5px 15px;
+            border-radius: 15px; font-size: 0.85em; margin-left: 10px;
+        }
+        .question-text { font-size: 1.3em; line-height: 1.8; margin-bottom: 25px; color: #333; }
+        .question-text .blank { border-bottom: 2px solid #3498db; padding: 0 30px; color: #3498db; }
+        .options { display: flex; flex-direction: column; gap: 15px; }
+        .option {
+            background: #f8f9fa; border: 3px solid transparent; border-radius: 15px;
+            padding: 18px 25px; font-size: 1.15em; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; gap: 15px;
+        }
+        .option:hover { background: #e3f2fd; border-color: #90caf9; }
+        .option.selected { background: #e3f2fd; border-color: #2196f3; }
+        .option.correct { background: #e8f5e9; border-color: #4caf50; }
+        .option.wrong { background: #ffebee; border-color: #f44336; }
+        .option-letter {
+            background: #3498db; color: white; width: 35px; height: 35px;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-weight: bold; flex-shrink: 0;
+        }
+        .option.correct .option-letter { background: #4caf50; }
+        .option.wrong .option-letter { background: #f44336; }
+        .fill-blank-input {
+            font-size: 1.2em; padding: 15px 20px; border: 3px solid #ddd;
+            border-radius: 10px; width: 100%; max-width: 400px;
+            margin-bottom: 15px; transition: border-color 0.3s;
+        }
+        .fill-blank-input:focus { outline: none; border-color: #3498db; }
+        .fill-blank-input.correct { border-color: #4caf50; background: #e8f5e9; }
+        .fill-blank-input.wrong { border-color: #f44336; background: #ffebee; }
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 15px; display: none; }
+        .feedback.show { display: block; animation: fadeIn 0.3s ease; }
+        .feedback.correct { background: #e8f5e9; border-left: 5px solid #4caf50; }
+        .feedback.wrong { background: #ffebee; border-left: 5px solid #f44336; }
+        .feedback-icon { font-size: 2em; margin-bottom: 10px; }
+        .feedback-text { font-size: 1.1em; line-height: 1.6; }
+        .btn-container { display: flex; justify-content: space-between; margin-top: 25px; gap: 15px; flex-wrap: wrap; }
+        .btn {
+            padding: 15px 35px; border: none; border-radius: 25px;
+            font-size: 1.1em; cursor: pointer; transition: all 0.3s; font-family: inherit;
+        }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-secondary:hover { background: #d0d0d0; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-next { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; display: none; }
+        .result-card {
+            background: white; border-radius: 20px; padding: 40px;
+            text-align: center; display: none; box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .result-card.active { display: block; animation: fadeIn 0.5s ease; }
+        .result-score { font-size: 4em; font-weight: bold; color: #4caf50; margin-bottom: 20px; }
+        .result-message { font-size: 1.5em; margin-bottom: 30px; color: #333; }
+        .result-detail { background: #f5f5f5; padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: left; }
+        .hint-box {
+            background: #fff8e1; border: 2px dashed #ffc107;
+            border-radius: 10px; padding: 15px; margin-top: 15px; display: none;
+        }
+        .hint-box.show { display: block; }
+        .hint-title { color: #f57c00; font-weight: bold; margin-bottom: 5px; }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .question-text { font-size: 1.1em; }
+            .option { padding: 15px 20px; font-size: 1em; }
+            .btn { padding: 12px 25px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📖 第十一課 真愛 練習系統</h1>
+            <p class="subtitle">作者：以撒．艾西莫夫</p>
+        </header>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+            </div>
+            <div class="progress-text" id="progressText">第 1 題 / 共 10 題</div>
+        </div>
+        <div id="questionsContainer"></div>
+        <div class="result-card" id="resultCard">
+            <h2 style="margin-bottom: 20px;">🎉 練習完成！</h2>
+            <div class="result-score" id="resultScore">0/10</div>
+            <div class="result-message" id="resultMessage"></div>
+            <div class="result-detail" id="resultDetail"></div>
+            <button class="btn btn-primary" onclick="restartQuiz()">🔄 重新練習</button>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            { type: 'choice', question: '〈真愛〉的作者是誰？', options: ['黃海', '張系國', '以撒．艾西莫夫', '倪匡'], answer: 2, hint: '這位作家被稱為「現代機器人故事之父」，是俄裔美國人。', explanation: '以撒．艾西莫夫是〈真愛〉的作者，被稱為「現代機器人故事之父」。' },
+            { type: 'choice', question: '本文的敘事者「喬」是什麼身分？', options: ['程式設計師', '電腦程式（AI）', '圖書館員', '機器人'], answer: 1, hint: '喬是米爾頓創造的，可以連結世界各地的資料庫。', explanation: '喬是電腦程式（AI），是米爾頓創造的，本文由喬的第一人稱視角敘述。' },
+            { type: 'choice', question: '米爾頓請喬幫他做什麼事？', options: ['分析股票市場', '尋找「真愛」', '設計新程式', '管理公司資料'], answer: 1, hint: '這篇小說的標題就是答案的關鍵字喔！', explanation: '米爾頓請喬幫他尋找「真愛」，這也是本文的主要情節。' },
+            { type: 'fill', question: '艾西莫夫被稱為「現代 ______ 故事之父」。', answer: '機器人', hint: '艾西莫夫創造了「機器人學三大法則」，他的代表作是《機器人》系列。', explanation: '艾西莫夫被稱為「現代機器人故事之父」，他創造了「機器人學三大法則」。' },
+            { type: 'choice', question: '喬最後找到的「真愛」對象叫什麼名字？', options: ['米爾頓', '夏芮蒂', '盛姬', '瑪莉'], answer: 1, hint: '她是威奇托市歷史圖書館的選書員。', explanation: '夏芮蒂是喬最後找到的「真愛」對象，她是威奇托市歷史圖書館的選書員。' },
+            { type: 'choice', question: '「機器人學三大法則」的第二法則是什麼？', options: ['機器人不得傷害人類', '機器人必須服從人類的命令', '機器人必須保護自己', '機器人不得說謊'], answer: 1, hint: '三大法則的順序是：不傷害人類 → 服從命令 → 保護自己', explanation: '第二法則是「機器人必須服從人類的命令」（除非違背第一法則）。' },
+            { type: 'choice', question: '米爾頓最後因為什麼罪名被逮捕？', options: ['詐欺罪', '瀆職罪', '傷害罪', '竊盜罪'], answer: 1, hint: '「瀆」讀音同「讀」，意思是「有虧職守」。', explanation: '米爾頓因為「瀆職罪」被逮捕，因為他假公濟私，為私人理由調動人員。' },
+            { type: 'fill', question: '〈真愛〉這篇文章的文體是「______ 小說」。', answer: '科幻', hint: '這種小說主要描述人類對科技變化所做出的反應。', explanation: '〈真愛〉是科幻小說，主要描述人類對科技變化所做出的反應。' },
+            { type: 'choice', question: '本文使用什麼敘事觀點？', options: ['第一人稱（由喬敘述）', '第二人稱', '第三人稱（全知觀點）', '第一人稱（由米爾頓敘述）'], answer: 0, hint: '文章開頭是「我叫『喬』，這是同事米爾頓．大衛森對我的稱呼。」', explanation: '本文使用第一人稱敘事，由電腦程式「喬」來敘述故事。' },
+            { type: 'choice', question: '關於本文的主題，下列敘述何者正確？', options: ['讚揚科技的進步帶來的便利', '反思真愛的本質及科技對人類的影響', '描述程式設計師的日常生活', '教導讀者如何使用電腦'], answer: 1, hint: '這篇科幻小說帶有諷刺意味，讓讀者思考「什麼才是真愛」。', explanation: '本文的主題是「反思真愛的本質及科技對人類的影響」，帶有諷刺意味。' }
+        ];
+        
+        let currentQ = 0, score = 0, answered = [];
+        
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = questions.map((q, i) => `
+                <div class="question-card ${i === 0 ? 'active' : ''}" data-q="${i}">
+                    <span class="question-number">第 ${i + 1} 題</span>
+                    <span class="question-type">${q.type === 'choice' ? '選擇題' : '填空題'}</span>
+                    <p class="question-text">${q.question}</p>
+                    ${q.type === 'choice' ? `
+                        <div class="options">
+                            ${q.options.map((opt, j) => `
+                                <div class="option" data-idx="${j}" onclick="selectOpt(${i}, this)">
+                                    <span class="option-letter">${String.fromCharCode(65 + j)}</span>
+                                    <span>${opt}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <input type="text" class="fill-blank-input" id="fill${i}" placeholder="請輸入答案..." oninput="enableCheck(${i})">
+                    `}
+                    <div class="feedback" id="fb${i}"><div class="feedback-icon"></div><div class="feedback-text"></div></div>
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" onclick="showHint(${i})">💡 提示</button>
+                        <button class="btn btn-primary" id="chk${i}" onclick="checkAns(${i})" disabled>確認答案</button>
+                        <button class="btn btn-next" id="next${i}" onclick="nextQ(${i})">下一題 →</button>
+                    </div>
+                    <div class="hint-box" id="hint${i}"><div class="hint-title">💡 提示</div>${q.hint}</div>
+                </div>
+            `).join('');
+        }
+        
+        function selectOpt(qIdx, el) {
+            if (answered[qIdx]) return;
+            document.querySelectorAll(`[data-q="${qIdx}"] .option`).forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById(`chk${qIdx}`).disabled = false;
+        }
+        
+        function enableCheck(qIdx) {
+            const val = document.getElementById(`fill${qIdx}`).value.trim();
+            document.getElementById(`chk${qIdx}`).disabled = val === '';
+        }
+        
+        function showHint(qIdx) {
+            document.getElementById(`hint${qIdx}`).classList.toggle('show');
+        }
+        
+        function checkAns(qIdx) {
+            if (answered[qIdx]) return;
+            answered[qIdx] = true;
+            const q = questions[qIdx];
+            let correct = false;
+            const fb = document.getElementById(`fb${qIdx}`);
+            
+            if (q.type === 'choice') {
+                const sel = document.querySelector(`[data-q="${qIdx}"] .option.selected`);
+                if (!sel) return;
+                const idx = parseInt(sel.dataset.idx);
+                correct = idx === q.answer;
+                document.querySelectorAll(`[data-q="${qIdx}"] .option`).forEach((o, i) => {
+                    o.style.pointerEvents = 'none';
+                    if (i === q.answer) o.classList.add('correct');
+                    else if (i === idx && !correct) o.classList.add('wrong');
+                });
+            } else {
+                const input = document.getElementById(`fill${qIdx}`);
+                const val = input.value.trim();
+                correct = val === q.answer;
+                input.classList.add(correct ? 'correct' : 'wrong');
+                input.disabled = true;
+                if (!correct) input.value = val + ' → 正確答案：' + q.answer;
+            }
+            
+            if (correct) score++;
+            fb.innerHTML = `<div class="feedback-icon">${correct ? '✅' : '❌'}</div><div class="feedback-text">${correct ? '答對了！' : '答錯了！'}${q.explanation}</div>`;
+            fb.classList.add('show', correct ? 'correct' : 'wrong');
+            document.getElementById(`chk${qIdx}`).style.display = 'none';
+            document.getElementById(`next${qIdx}`).style.display = 'inline-block';
+        }
+        
+        function nextQ(qIdx) {
+            document.querySelector(`[data-q="${qIdx}"]`).classList.remove('active');
+            if (qIdx + 1 < questions.length) {
+                currentQ = qIdx + 1;
+                document.querySelector(`[data-q="${currentQ}"]`).classList.add('active');
+                document.getElementById('progressFill').style.width = ((currentQ + 1) / questions.length * 100) + '%';
+                document.getElementById('progressText').textContent = `第 ${currentQ + 1} 題 / 共 ${questions.length} 題`;
+            } else {
+                showResult();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('resultCard').classList.add('active');
+            document.getElementById('resultScore').textContent = `${score}/${questions.length}`;
+            const pct = score / questions.length * 100;
+            let msg = '';
+            if (pct === 100) msg = '🏆 太棒了！全部答對！';
+            else if (pct >= 80) msg = '😊 很好！繼續保持！';
+            else if (pct >= 60) msg = '👍 不錯！再接再厲！';
+            else msg = '💪 加油！多複習一下課文！';
+            document.getElementById('resultMessage').textContent = msg;
+            document.getElementById('resultDetail').innerHTML = `
+                <p><strong>✅ 答對：</strong>${score} 題</p>
+                <p><strong>❌ 答錯：</strong>${questions.length - score} 題</p>
+                <p><strong>📊 正確率：</strong>${pct.toFixed(0)}%</p>
+            `;
+        }
+        
+        function restartQuiz() {
+            currentQ = 0; score = 0; answered = [];
+            document.getElementById('resultCard').classList.remove('active');
+            renderQuestions();
+            document.getElementById('progressFill').style.width = '10%';
+            document.getElementById('progressText').textContent = '第 1 題 / 共 10 題';
+        }
+        
+        renderQuestions();
+    </script>
+</body>
+</html>

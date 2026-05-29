@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1 單字練習 The Bet</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0eb;
+  --card: #ffffff;
+  --primary: #3a6ea5;
+  --primary-dark: #2a4f7a;
+  --accent: #f5a623;
+  --success: #3aaa6a;
+  --danger: #e05050;
+  --text: #2a2a2a;
+  --muted: #7a7a8c;
+  --border: #e0d9d0;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  background-image: radial-gradient(circle at 20% 20%, #e8f0fa 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, #fdf3e3 0%, transparent 50%);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── HOME ── */
+#home {
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  text-align: center;
+}
+.home-logo {
+  font-size: 3.5em;
+  margin-bottom: 8px;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.home-title {
+  font-size: 1.9em;
+  font-weight: 900;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+.home-sub {
+  color: var(--muted);
+  font-size: 0.95em;
+  margin-bottom: 32px;
+}
+.sets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto 32px;
+}
+.set-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+.set-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--primary);
+}
+.set-card:nth-child(2)::before { background: var(--accent); }
+.set-card:nth-child(3)::before { background: var(--success); }
+.set-card:nth-child(4)::before { background: #a065c5; }
+.set-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+.set-num {
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.set-words {
+  font-size: 1em;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.set-hint {
+  font-size: 0.8em;
+  color: var(--muted);
+}
+.set-badge {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: #f0f4f8;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--primary);
+}
+.set-badge.done { background: #d4f0e4; color: var(--success); }
+
+.wrong-bank-btn {
+  background: #fff0f0;
+  border: 2px solid #fbbcbc;
+  border-radius: var(--radius);
+  padding: 14px 28px;
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--danger);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+}
+.wrong-bank-btn:hover { background: #ffd6d6; }
+.wrong-bank-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* ── STUDY SCREEN ── */
+#study {
+  flex-direction: column;
+  padding: 0;
+}
+.study-header {
+  background: var(--primary-dark);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.back-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  padding: 7px 14px;
+  font-size: 0.9em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.25); }
+.study-title { font-size: 1em; font-weight: 800; flex: 1; }
+.study-progress { font-size: 0.85em; opacity: 0.8; }
+
+.cards-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.vocab-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  width: 100%;
+  max-width: 620px;
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--primary);
+  position: relative;
+}
+.vc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.vc-word { font-size: 1.5em; font-weight: 900; color: var(--primary-dark); }
+.vc-pos { font-size: 0.75em; background: #eef4fb; color: var(--primary); border-radius: 6px; padding: 2px 8px; font-weight: 700; }
+.vc-phonetic { font-size: 0.9em; color: var(--muted); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.speak-btn {
+  background: var(--primary);
+  border: none;
+  border-radius: 50%;
+  width: 30px; height: 30px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9em;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { background: var(--primary-dark); transform: scale(1.1); }
+.speak-btn:active { transform: scale(0.95); }
+.vc-meaning { font-size: 1.1em; font-weight: 800; color: var(--text); margin: 8px 0; }
+.vc-ex { font-size: 0.88em; color: #444; line-height: 1.6; margin-top: 8px; padding: 10px 12px; background: #f8f6f2; border-radius: 10px; }
+.vc-ex-tr { font-size: 0.82em; color: var(--muted); margin-top: 4px; }
+.vc-colloc { font-size: 0.8em; color: var(--primary); margin-top: 10px; line-height: 1.7; }
+.colloc-label { font-weight: 800; }
+
+.start-quiz-btn {
+  width: 100%; max-width: 620px;
+  padding: 16px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1.1em;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 16px rgba(58,110,165,0.3);
+}
+.start-quiz-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+/* ── QUIZ SCREEN ── */
+#quiz {
+  flex-direction: column;
+}
+.quiz-header {
+  background: var(--primary-dark);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.quiz-meta { flex: 1; }
+.quiz-label { font-size: 0.8em; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+.quiz-title-txt { font-size: 1em; font-weight: 800; }
+.progress-wrap { margin-top: 6px; }
+.pbar-bg { height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+.pbar-fill { height: 6px; background: var(--accent); border-radius: 3px; transition: width 0.4s; }
+
+.quiz-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 620px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  margin-bottom: 20px;
+}
+.q-num { font-size: 0.8em; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.q-word {
+  font-size: 2em;
+  font-weight: 900;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+.q-phonetic {
+  font-size: 0.9em;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 620px;
+}
+@media(max-width: 480px) { .options-grid { grid-template-columns: 1fr; } }
+
+.opt-btn {
+  padding: 14px 12px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  line-height: 1.4;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: #eef4fb;
+  transform: translateY(-2px);
+}
+.opt-btn.correct {
+  background: #d4f0e4;
+  border-color: var(--success);
+  color: #1a6640;
+}
+.opt-btn.wrong {
+  background: #fde8e8;
+  border-color: var(--danger);
+  color: #8a2020;
+}
+.opt-btn:disabled { cursor: default; }
+
+.feedback-row {
+  width: 100%; max-width: 620px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1em;
+  font-weight: 800;
+  margin: 16px 0;
+}
+.feedback-row.good { color: var(--success); }
+.feedback-row.bad { color: var(--danger); }
+
+.next-btn {
+  width: 100%; max-width: 620px;
+  padding: 15px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1em;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  display: none;
+}
+.next-btn:hover { background: var(--primary-dark); }
+
+/* ── RESULT SCREEN ── */
+#result {
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+.result-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.score-ring {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(var(--primary) calc(var(--pct)*1%), #e0e8f5 0%);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  position: relative;
+}
+.score-inner {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.score-num { font-size: 1.8em; font-weight: 900; color: var(--primary-dark); line-height: 1; }
+.score-denom { font-size: 0.75em; color: var(--muted); font-weight: 600; }
+.result-emoji { font-size: 2.5em; margin-bottom: 8px; }
+.result-msg { font-size: 1.25em; font-weight: 800; color: var(--primary-dark); margin-bottom: 6px; }
+.result-sub { font-size: 0.9em; color: var(--muted); margin-bottom: 24px; }
+
+.wrong-review { text-align: left; margin: 16px 0 24px; }
+.wr-title { font-weight: 800; color: var(--danger); margin-bottom: 10px; font-size: 0.95em; }
+.wr-item {
+  background: #fff8f8;
+  border-left: 4px solid #f5b8b8;
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+.wr-word { font-weight: 800; color: var(--primary-dark); }
+.wr-wrong { color: var(--danger); }
+.wr-right { color: var(--success); font-weight: 700; }
+
+.result-btns { display: flex; flex-direction: column; gap: 10px; }
+.rbtn {
+  padding: 13px;
+  border-radius: 14px;
+  border: none;
+  font-size: 1em;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+}
+.rbtn-retry { background: var(--primary); color: #fff; }
+.rbtn-retry:hover { background: var(--primary-dark); }
+.rbtn-wrong { background: #fde8e8; color: var(--danger); border: 2px solid #f5b8b8; }
+.rbtn-wrong:hover { background: #fad0d0; }
+.rbtn-home { background: #f0f4f8; color: var(--muted); }
+.rbtn-home:hover { background: #e0e8f2; color: var(--primary-dark); }
+.rbtn:disabled { opacity: 0.4; cursor: default; }
+</style>
+</head>
+<body>
+
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home">
+  <div class="home-logo">📚</div>
+  <div class="home-title">L1 單字練習</div>
+  <div class="home-sub">The Bet｜每次練習 3 個單字</div>
+
+  <div class="sets-grid" id="setsGrid"></div>
+
+  <button class="wrong-bank-btn" id="wrongBankBtn" onclick="startWrongBank()" disabled>
+    ❌ 練習錯題庫 <span id="wrongCount">（0 個）</span>
+  </button>
+</div>
+
+<!-- ══ STUDY ══ -->
+<div class="screen" id="study">
+  <div class="study-header">
+    <button class="back-btn" onclick="goHome()">← 首頁</button>
+    <div class="study-title" id="studyTitle">單字學習</div>
+    <div class="study-progress" id="studyProgress"></div>
+  </div>
+  <div class="cards-wrap" id="cardsWrap">
+    <!-- vocab cards injected here -->
+    <button class="start-quiz-btn" onclick="startQuiz()">我記住了，開始測驗 →</button>
+  </div>
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goHome()">← 首頁</button>
+    <div class="quiz-meta">
+      <div class="quiz-label">測驗中</div>
+      <div class="quiz-title-txt" id="quizTitleTxt"></div>
+      <div class="progress-wrap">
+        <div class="pbar-bg"><div class="pbar-fill" id="pbarFill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="quizCounter" style="font-size:0.9em;opacity:0.8;white-space:nowrap;"></div>
+  </div>
+  <div class="quiz-body">
+    <div class="question-card">
+      <div class="q-num" id="qNum"></div>
+      <div class="q-word" id="qWord"></div>
+      <div class="q-phonetic">
+        <span id="qPhonetic"></span>
+        <button class="speak-btn" id="qSpeakBtn" onclick="speakCurrent()" title="聽發音">🔊</button>
+      </div>
+    </div>
+    <div class="options-grid" id="optsGrid"></div>
+    <div class="feedback-row" id="feedbackRow"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()"></button>
+  </div>
+</div>
+
+<!-- ══ RESULT ══ -->
+<div class="screen" id="result">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="score-ring" id="scoreRing">
+      <div class="score-inner">
+        <div class="score-num" id="scoreNum"></div>
+        <div class="score-denom" id="scoreDenom"></div>
+      </div>
+    </div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="wrong-review" id="wrongReview"></div>
+    <div class="result-btns">
+      <button class="rbtn rbtn-retry" onclick="retryCurrentSet()">🔄 再練一次這組</button>
+      <button class="rbtn rbtn-wrong" id="practiceWrongBtn" onclick="startWrongBank()">❌ 練習錯題</button>
+      <button class="rbtn rbtn-home" onclick="goHome()">🏠 回首頁</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 單字資料 ──
+const ALL_VOCAB = [
+  { word:"prison",    phonetic:"[ˋprɪzn]",    pos:"n.",     meaning:"監獄",         example:"The bad man went to prison for five years.",        exTr:"那個壞人坐了五年牢。",           colloc:["go to prison","send sb. to prison","in prison"] },
+  { word:"claim",     phonetic:"[klem]",       pos:"v./n.",  meaning:"宣稱；說法",   example:"He claimed that he did not eat the cake.",          exTr:"他聲稱他沒有吃那塊蛋糕。",       colloc:["claim that...","make a false claim","claim credit for"] },
+  { word:"guilty",    phonetic:"[ˋgɪltɪ]",    pos:"adj.",   meaning:"有罪的；內疚的",example:"The man was found guilty of stealing.",             exTr:"那名男子被裁定偷竊罪成立。",     colloc:["be guilty of","feel guilty","not guilty"] },
+  { word:"murder",    phonetic:"[ˋmɝdɚ]",     pos:"v./n.",  meaning:"謀殺",         example:"The police are looking for the murderer.",         exTr:"警方正在尋找兇手。",             colloc:["commit murder","attempted murder","murderer 兇手"] },
+  { word:"abandon",   phonetic:"[əˋbændən]",   pos:"v.",     meaning:"放棄；拋棄",   example:"He abandoned his old car on the street.",          exTr:"他把舊車丟在街上。",             colloc:["abandon a plan","abandon sb.","abandon hope"] },
+  { word:"rumor",     phonetic:"[ˋrumɚ]",      pos:"n.",     meaning:"謠言；傳聞",   example:"There is a rumor that the teacher is leaving.",    exTr:"有傳言說那位老師要離開了。",     colloc:["spread a rumor","deny a rumor","Rumor has it that..."] },
+  { word:"intention", phonetic:"[ɪnˋtɛnʃən]", pos:"n.",     meaning:"打算；意圖",   example:"Her intention was to help, not to hurt.",          exTr:"她的本意是幫忙，不是傷害人。",   colloc:["intention to V","good intention","with the intention of"] },
+  { word:"insist",    phonetic:"[ɪnˋsɪst]",   pos:"v.",     meaning:"堅持",         example:"He insisted on paying for dinner.",                exTr:"他堅持要付晚餐的錢。",           colloc:["insist on V-ing","insist that...","insistence n.堅持"] },
+  { word:"penalty",   phonetic:"[ˋpɛnḷtɪ]",   pos:"n.",     meaning:"懲罰；罰款",   example:"You will get a penalty if you break the rule.",    exTr:"如果你違規，你會受到懲罰。",     colloc:["receive a penalty","the death penalty","pay a penalty"] },
+  { word:"surrender", phonetic:"[səˋrɛndɚ]",  pos:"v./n.",  meaning:"投降；交出",   example:"The thief surrendered to the police.",             exTr:"那名小偷向警察投降。",           colloc:["surrender to sb.","surrender A to B","unconditional surrender 無條件投降"] },
+];
+
+// 每組 3 個單字
+const SETS = [];
+for (let i = 0; i < ALL_VOCAB.length; i += 3) {
+  SETS.push(ALL_VOCAB.slice(i, Math.min(i + 3, ALL_VOCAB.length)));
+}
+const SET_NAMES = ["第一組","第二組","第三組","第四組"];
+
+// ── 狀態 ──
+let currentSetIdx = -1;
+let currentSetVocab = [];
+let isWrongBank = false;
+let questions = [];
+let qIdx = 0;
+let score = 0;
+let wrongItems = [];      // 本次錯題
+let globalWrong = {};     // 全局錯題庫 word → vocab obj
+let setDone = {};         // 哪幾組完成了
+
+// ── TTS ──
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+function speakCurrent() {
+  const w = document.getElementById('qWord').textContent;
+  if (w) speak(w);
+}
+
+// ── HOME ──
+function buildHome() {
+  const grid = document.getElementById('setsGrid');
+  grid.innerHTML = '';
+  SETS.forEach((set, i) => {
+    const done = setDone[i];
+    const card = document.createElement('div');
+    card.className = 'set-card';
+    card.onclick = () => startSet(i);
+    card.innerHTML = `
+      <div class="set-num">${SET_NAMES[i] || '第'+(i+1)+'組'}</div>
+      <div class="set-words">${set.map(v => v.word).join(' · ')}</div>
+      <div class="set-hint">${set.length} 個單字</div>
+      <div class="set-badge ${done ? 'done' : ''}">${done ? '✅ 完成' : '開始練習'}</div>
+    `;
+    grid.appendChild(card);
+  });
+  const wc = Object.keys(globalWrong).length;
+  document.getElementById('wrongCount').textContent = `（${wc} 個）`;
+  document.getElementById('wrongBankBtn').disabled = wc === 0;
+}
+
+function goHome() {
+  showScreen('home');
+  buildHome();
+}
+
+// ── START SET ──
+function startSet(idx) {
+  currentSetIdx = idx;
+  isWrongBank = false;
+  currentSetVocab = SETS[idx];
+  showStudy();
+}
+
+function startWrongBank() {
+  isWrongBank = true;
+  currentSetIdx = -1;
+  currentSetVocab = Object.values(globalWrong);
+  if (currentSetVocab.length === 0) return;
+  showStudy();
+}
+
+// ── STUDY ──
+function showStudy() {
+  document.getElementById('studyTitle').textContent = isWrongBank ? '錯題複習' : (SET_NAMES[currentSetIdx] || '單字學習');
+  document.getElementById('studyProgress').textContent = currentSetVocab.length + ' 個單字';
+
+  const wrap = document.getElementById('cardsWrap');
+  wrap.innerHTML = '';
+
+  currentSetVocab.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = `
+      <div class="vc-top">
+        <div class="vc-word">${v.word}</div>
+        <div class="vc-pos">${v.pos}</div>
+      </div>
+      <div class="vc-phonetic">
+        ${v.phonetic}
+        <button class="speak-btn" onclick="speak('${v.word}')" title="聽發音">🔊</button>
+      </div>
+      <div class="vc-meaning">${v.meaning}</div>
+      <div class="vc-ex">
+        📌 ${v.example}
+        <div class="vc-ex-tr">${v.exTr}</div>
+      </div>
+      <div class="vc-colloc"><span class="colloc-label">搭配詞：</span>${v.colloc.join('　')}</div>
+    `;
+    wrap.appendChild(card);
+  });
+
+  const startBtn = document.createElement('button');
+  startBtn.className = 'start-quiz-btn';
+  startBtn.textContent = '我記住了，開始測驗 →';
+  startBtn.onclick = startQuiz;
+  wrap.appendChild(startBtn);
+
+  showScreen('study');
+}
+
+// ── QUIZ ──
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startQuiz() {
+  // 每個單字出現兩次（提高練習密度）
+  const base = [...currentSetVocab, ...currentSetVocab];
+  questions = shuffle(base);
+  qIdx = 0; score = 0; wrongItems = [];
+  document.getElementById('quizTitleTxt').textContent = isWrongBank ? '錯題練習' : (SET_NAMES[currentSetIdx] || '測驗');
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = questions.length;
+  const q = questions[qIdx];
+  const pct = (qIdx / total) * 100;
+
+  document.getElementById('pbarFill').style.width = pct + '%';
+  document.getElementById('quizCounter').textContent = `${qIdx + 1} / ${total}`;
+  document.getElementById('qNum').textContent = `第 ${qIdx + 1} 題`;
+  document.getElementById('qWord').textContent = q.word;
+  document.getElementById('qPhonetic').textContent = q.phonetic;
+  document.getElementById('feedbackRow').textContent = '';
+  document.getElementById('feedbackRow').className = 'feedback-row';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // 干擾選項：從全部單字中隨機挑不同的
+  const distractors = shuffle(ALL_VOCAB.filter(v => v.word !== q.word)).slice(0, 3);
+  const opts = shuffle([q, ...distractors]);
+
+  const grid = document.getElementById('optsGrid');
+  grid.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt.meaning;
+    btn.onclick = () => handleAnswer(opt.meaning, q.meaning, q);
+    grid.appendChild(btn);
+  });
+}
+
+function handleAnswer(chosen, correct, vocabObj) {
+  // 鎖定
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+    else if (b.textContent === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedbackRow');
+  const nb = document.getElementById('nextBtn');
+
+  if (chosen === correct) {
+    score++;
+    fb.textContent = '✅ 答對了！';
+    fb.className = 'feedback-row good';
+    // 從錯題庫移除（如果有的話）
+    delete globalWrong[vocabObj.word];
+  } else {
+    fb.textContent = `❌ 正確答案是「${correct}」`;
+    fb.className = 'feedback-row bad';
+    globalWrong[vocabObj.word] = vocabObj;
+    // 記錄錯誤（只記一次）
+    if (!wrongItems.find(w => w.word === vocabObj.word)) {
+      wrongItems.push({ word: vocabObj.word, correct });
+    }
+  }
+
+  nb.style.display = 'block';
+  nb.textContent = qIdx + 1 >= questions.length ? '查看結果 →' : '下一題 →';
+}
+
+function nextQuestion() {
+  qIdx++;
+  if (qIdx >= questions.length) showResult();
+  else renderQuestion();
+}
+
+// ── RESULT ──
+function showResult() {
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('scoreRing').style.setProperty('--pct', pct);
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreDenom').textContent = `/ ${total}`;
+
+  let emoji, msg, sub;
+  if (pct >= 90)      { emoji='🏆'; msg='太厲害了！'; sub='幾乎全對，繼續保持！'; }
+  else if (pct >= 70) { emoji='👍'; msg='做得很好！'; sub='再複習一下錯的單字就完美了！'; }
+  else if (pct >= 50) { emoji='💪'; msg='加油！'; sub='多練習幾次，你一定可以的！'; }
+  else                { emoji='📖'; msg='再練一次吧！'; sub='先回去看單字表，再重新測驗看看。'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultMsg').textContent = msg;
+  document.getElementById('resultSub').textContent = sub;
+
+  const wr = document.getElementById('wrongReview');
+  wr.innerHTML = '';
+  if (wrongItems.length > 0) {
+    wr.innerHTML = `<div class="wr-title">❌ 這次答錯的單字：</div>`;
+    wrongItems.forEach(w => {
+      const d = document.createElement('div');
+      d.className = 'wr-item';
+      d.innerHTML = `<span class="wr-word">${w.word}</span> → 正確意思：<span class="wr-right">${w.correct}</span>`;
+      wr.appendChild(d);
+    });
+  } else {
+    wr.innerHTML = `<div style="color:var(--success);font-weight:800;text-align:center;padding:12px 0;">🎉 全部答對，完美！</div>`;
+  }
+
+  // 錯題練習按鈕
+  const pwb = document.getElementById('practiceWrongBtn');
+  const wc = Object.keys(globalWrong).length;
+  pwb.disabled = wc === 0;
+  pwb.textContent = `❌ 練習錯題（${wc} 個）`;
+
+  if (!isWrongBank) setDone[currentSetIdx] = true;
+
+  showScreen('result');
+}
+
+function retryCurrentSet() {
+  startQuiz();
+}
+
+// ── UTILS ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── INIT ──
+buildHome();
+</script>
+</body>
+</html>

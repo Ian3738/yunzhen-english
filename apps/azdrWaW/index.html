@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be 動詞問句練習 | Be Verb Questions Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .instructions {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .rule-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #ffc107;
+        }
+
+        .rule-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .exercise-section {
+            margin-top: 30px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .statement {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .input-area {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .check-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .check-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .hint-btn {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .hint-btn:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .show-answer-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .show-answer-btn:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .answer {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+            font-size: 1.1em;
+        }
+
+        .score-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .reset-btn {
+            background: white;
+            color: #667eea;
+            margin-top: 20px;
+            padding: 12px 30px;
+            font-size: 1.1em;
+        }
+
+        .reset-btn:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Be 動詞問句練習</h1>
+        <p class="subtitle">Be Verb Questions Practice</p>
+        
+        <div class="instructions">
+            <h3>📚 練習說明 Instructions</h3>
+            <p>將下列陳述句改成問句。記得要把 be 動詞移到句首！</p>
+            <p style="color: #666; margin-top: 5px;">Transform the statements below into questions. Remember to move the be verb to the beginning!</p>
+        </div>
+
+        <div class="rule-box">
+            <h4>🔑 重要規則 Key Rules:</h4>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><strong>Be 動詞移到句首</strong> (Move be verb to the beginning)</li>
+                <li><strong>主詞放在 be 動詞後面</strong> (Subject comes after be verb)</li>
+                <li><strong>句尾加問號</strong> (Add question mark at the end)</li>
+                <li><strong>首字母大寫</strong> (Capitalize the first letter)</li>
+            </ul>
+            <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px;">
+                <p><strong>範例 Example:</strong></p>
+                <p style="color: #666;">Statement: He is a teacher.</p>
+                <p style="color: #28a745;">Question: Is he a teacher?</p>
+            </div>
+        </div>
+
+        <div class="exercise-section">
+            <div id="exercises"></div>
+        </div>
+
+        <div class="score-section">
+            <h3>📊 你的成績 Your Score</h3>
+            <div class="score">
+                <span id="correct-count">0</span> / <span id="total-count">0</span>
+            </div>
+            <button class="reset-btn" onclick="resetExercises()">🔄 重新開始 Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // 練習題目
+        const exercises = [
+            {
+                statement: "She is happy.",
+                answer: "Is she happy?",
+                hint: "把 'is' 移到句首，記得大寫 I"
+            },
+            {
+                statement: "They are students.",
+                answer: "Are they students?",
+                hint: "把 'are' 移到句首，記得大寫 A"
+            },
+            {
+                statement: "I am ready.",
+                answer: "Am I ready?",
+                hint: "把 'am' 移到句首，記得大寫 A"
+            },
+            {
+                statement: "He is from Taiwan.",
+                answer: "Is he from Taiwan?",
+                hint: "把 'is' 移到句首"
+            },
+            {
+                statement: "We are late.",
+                answer: "Are we late?",
+                hint: "把 'are' 移到句首"
+            },
+            {
+                statement: "The book is interesting.",
+                answer: "Is the book interesting?",
+                hint: "把 'is' 移到 'the book' 前面"
+            },
+            {
+                statement: "You are tired.",
+                answer: "Are you tired?",
+                hint: "把 'are' 移到句首"
+            },
+            {
+                statement: "It is cold today.",
+                answer: "Is it cold today?",
+                hint: "把 'is' 移到句首"
+            },
+            {
+                statement: "The children are playing.",
+                answer: "Are the children playing?",
+                hint: "把 'are' 移到 'the children' 前面"
+            },
+            {
+                statement: "Mary is a doctor.",
+                answer: "Is Mary a doctor?",
+                hint: "把 'is' 移到 'Mary' 前面"
+            }
+        ];
+
+        let correctAnswers = 0;
+        let attemptedQuestions = new Set();
+
+        function initializeExercises() {
+            const container = document.getElementById('exercises');
+            container.innerHTML = '';
+            
+            exercises.forEach((exercise, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <span class="question-number">Question ${index + 1}</span>
+                    <div class="statement">
+                        <strong>Statement:</strong> ${exercise.statement}
+                    </div>
+                    <div class="input-area">
+                        <input type="text" 
+                               id="answer-${index}" 
+                               placeholder="Type your question here..."
+                               onkeypress="handleEnter(event, ${index})">
+                    </div>
+                    <div class="button-group">
+                        <button class="check-btn" onclick="checkAnswer(${index})">✓ Check 檢查</button>
+                        <button class="hint-btn" onclick="showHint(${index})">💡 Hint 提示</button>
+                        <button class="show-answer-btn" onclick="showAnswer(${index})">👁️ Answer 答案</button>
+                    </div>
+                    <div id="hint-${index}" class="hint"></div>
+                    <div id="answer-display-${index}" class="answer"></div>
+                    <div id="feedback-${index}" class="feedback"></div>
+                `;
+                container.appendChild(card);
+            });
+            
+            updateScore();
+        }
+
+        function handleEnter(event, index) {
+            if (event.key === 'Enter') {
+                checkAnswer(index);
+            }
+        }
+
+        function checkAnswer(index) {
+            const userAnswer = document.getElementById(`answer-${index}`).value.trim();
+            const correctAnswer = exercises[index].answer;
+            const feedback = document.getElementById(`feedback-${index}`);
+            
+            if (userAnswer === '') {
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                feedback.innerHTML = '❌ Please enter an answer! 請輸入答案！';
+                return;
+            }
+            
+            // 標記此題已作答
+            if (!attemptedQuestions.has(index)) {
+                attemptedQuestions.add(index);
+                
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                    correctAnswers++;
+                }
+            }
+            
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '✅ Excellent! 太棒了！';
+            } else {
+                feedback.className = 'feedback incorrect';
+                let errorMessage = '❌ Not quite right. 不太對喔。';
+                
+                // 提供具體的錯誤提示
+                if (!userAnswer.endsWith('?')) {
+                    errorMessage += ' Don\'t forget the question mark! 別忘了問號！';
+                } else if (!userAnswer.toLowerCase().startsWith('is') && 
+                          !userAnswer.toLowerCase().startsWith('are') && 
+                          !userAnswer.toLowerCase().startsWith('am')) {
+                    errorMessage += ' Remember to start with the be verb! 記得用 be 動詞開頭！';
+                }
+                
+                feedback.innerHTML = errorMessage;
+            }
+            
+            feedback.style.display = 'block';
+            updateScore();
+        }
+
+        function showHint(index) {
+            const hint = document.getElementById(`hint-${index}`);
+            hint.innerHTML = `💡 <strong>Hint:</strong> ${exercises[index].hint}`;
+            hint.style.display = 'block';
+        }
+
+        function showAnswer(index) {
+            const answerDisplay = document.getElementById(`answer-display-${index}`);
+            answerDisplay.innerHTML = `📝 <strong>Correct Answer:</strong> ${exercises[index].answer}`;
+            answerDisplay.style.display = 'block';
+        }
+
+        function updateScore() {
+            document.getElementById('correct-count').textContent = correctAnswers;
+            document.getElementById('total-count').textContent = exercises.length;
+        }
+
+        function resetExercises() {
+            correctAnswers = 0;
+            attemptedQuestions.clear();
+            
+            // 清空所有輸入和反饋
+            exercises.forEach((_, index) => {
+                document.getElementById(`answer-${index}`).value = '';
+                document.getElementById(`feedback-${index}`).style.display = 'none';
+                document.getElementById(`hint-${index}`).style.display = 'none';
+                document.getElementById(`answer-display-${index}`).style.display = 'none';
+            });
+            
+            updateScore();
+        }
+
+        // 初始化練習
+        initializeExercises();
+    </script>
+</body>
+</html>

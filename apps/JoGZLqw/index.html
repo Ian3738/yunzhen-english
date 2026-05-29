@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be 動詞 (現在式) 句子重組練習</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #005a9c;
+            border-bottom: 2px solid #005a9c;
+            padding-bottom: 5px;
+        }
+        #quiz-container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        #translation-text {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 20px;
+        }
+        
+        /* 答案區域 */
+        #answer-area {
+            min-height: 50px;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            margin-bottom: 20px;
+        }
+        /* 單字按鈕的容器 */
+        #word-bank {
+            padding: 10px 0;
+            margin-bottom: 15px;
+        }
+        
+        /* 答案區和單字庫中的按鈕 */
+        .word-button {
+            font-size: 1.1em;
+            padding: 8px 12px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .word-button:hover {
+            background-color: #0056b3;
+        }
+        
+        /* 放在答案區的按鈕，顏色稍淺 */
+        #answer-area .word-button {
+            background-color: #5bc0de;
+        }
+        #answer-area .word-button:hover {
+            background-color: #31b0d5;
+        }
+
+        /* 控制按鈕 (送出/重置) */
+        #controls {
+            margin-top: 15px;
+        }
+        #submit-button, #reset-button {
+            font-size: 1.2em;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        #submit-button {
+            background-color: #28a745;
+            color: white;
+        }
+        #submit-button:hover {
+            background-color: #218838;
+        }
+        #reset-button {
+            background-color: #ffc107;
+            color: #333;
+        }
+        #reset-button:hover {
+            background-color: #e0a800;
+        }
+
+        #feedback-text {
+            font-size: 1.1em;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        #score-text {
+            font-size: 1.1em;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Be 動詞 (現在式) 句子重組練習</h1>
+    <p>請依照下方的中文翻譯，點擊英文單字按鈕，將它們排列成正確的句子。</p>
+
+    <div id="quiz-container">
+        <p id="score-text">進度: 0 / 0</p>
+        <p id="question-text">請翻譯並重組：</p>
+        <h2 id="translation-text">中文翻譯載入中...</h2>
+
+        <div id="answer-area"></div>
+        
+        <div id="word-bank"></div>
+
+        <div id="controls">
+            <button id="submit-button">檢查答案</button>
+            <button id="reset-button">清除重排</button>
+        </div>
+        <p id="feedback-text"></p>
+    </div>
+
+    <script>
+        // 題庫 (包含中文、英文句子、以及結尾標點)
+        let questions = [
+            { chinese: "我是一個老師。", sentence: "I am a teacher", punctuation: "." },
+            { chinese: "她很開心嗎？", sentence: "Is she happy", punctuation: "?" },
+            { chinese: "他們正在打籃球。", sentence: "They are playing basketball", punctuation: "." },
+            { chinese: "他不是我的兄弟。", sentence: "He is not my brother", punctuation: "." }, // 否定句
+            { chinese: "你是一個好學生嗎？", sentence: "Are you a good student", punctuation: "?" }, // 問句
+            { chinese: "你的名字是什麼？", sentence: "What is your name", punctuation: "?" }, // Wh-問句
+            { chinese: "那些貓正在睡覺。", sentence: "The cats are sleeping", punctuation: "." },
+            { chinese: "這本書很有趣。", sentence: "This book is interesting", punctuation: "." },
+            { chinese: "我們不餓。", sentence: "We are not hungry", punctuation: "." }, // 否定句
+            { chinese: "今天天氣很好。", sentence: "It is a sunny day today", punctuation: "." }
+        ];
+
+        const originalQuestionCount = questions.length;
+        let missedQuestions = [];
+        let isReviewMode = false;
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // 獲取 HTML 元素
+        const scoreText = document.getElementById('score-text');
+        const translationText = document.getElementById('translation-text');
+        const answerArea = document.getElementById('answer-area');
+        const wordBank = document.getElementById('word-bank');
+        const submitButton = document.getElementById('submit-button');
+        const resetButton = document.getElementById('reset-button');
+        const feedbackText = document.getElementById('feedback-text');
+
+        // 【新增】隨機打亂陣列 (Fisher-Yates shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 【新增】開始錯題複習
+        function startReviewSession() {
+            isReviewMode = true;
+            questions = missedQuestions;
+            missedQuestions = [];
+            currentQuestionIndex = 0;
+            feedbackText.textContent = "開始錯題複習！加油！";
+            feedbackText.className = '';
+            setTimeout(loadQuestion, 2000);
+        }
+
+        // 載入問題的函式 (已修改)
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                // (處理測驗完成或開始複習的邏輯...)
+                if (missedQuestions.length > 0) {
+                    startReviewSession();
+                } else {
+                    translationText.textContent = "恭喜你！全部完成了！";
+                    document.getElementById('question-text').style.display = 'none';
+                    answerArea.style.display = 'none';
+                    wordBank.style.display = 'none';
+                    document.getElementById('controls').style.display = 'none';
+                    if (isReviewMode) {
+                        feedbackText.textContent = `太棒了！所有錯題都已複習完畢！`;
+                    } else {
+                        feedbackText.textContent = `太厲害了！第一輪全對！`;
+                    }
+                    feedbackText.className = 'correct';
+                    scoreText.textContent = `最終得分: ${score} / ${originalQuestionCount}`;
+                }
+                return;
+            }
+
+            // 清空工作區
+            answerArea.innerHTML = '';
+            wordBank.innerHTML = '';
+            feedbackText.textContent = '';
+
+            let q = questions[currentQuestionIndex];
+            
+            // 顯示中文
+            translationText.textContent = q.chinese;
+            
+            // 更新進度
+            if (isReviewMode) {
+                scoreText.textContent = `錯題複習 ${currentQuestionIndex + 1} / ${questions.length}`;
+            } else {
+                scoreText.textContent = `進度 ${currentQuestionIndex + 1} / ${originalQuestionCount}`;
+            }
+
+            // 產生單字按鈕
+            let words = q.sentence.split(' ');
+            words = shuffleArray(words); // 打亂單字
+            
+            words.forEach(word => {
+                let btn = document.createElement('button');
+                btn.className = 'word-button';
+                btn.textContent = word;
+                btn.onclick = () => moveButton(btn, 'toAnswer'); // 綁定點擊事件
+                wordBank.appendChild(btn);
+            });
+        }
+        
+        // 【新增】移動按鈕的函式 (在答案區與單字庫之間移動)
+        function moveButton(button, direction) {
+            if (direction === 'toAnswer') {
+                // 從 wordBank 移動到 answerArea
+                answerArea.appendChild(button);
+                button.onclick = () => moveButton(button, 'toBank');
+            } else {
+                // 從 answerArea 移動回 wordBank
+                wordBank.appendChild(button);
+                button.onclick = () => moveButton(button, 'toAnswer');
+            }
+        }
+        
+        // 【新增】清除重排 (Reset)
+        function resetCurrentQuestion() {
+            // 把所有在 answerArea 的按鈕移回 wordBank
+            let answerButtons = answerArea.querySelectorAll('.word-button');
+            answerButtons.forEach(btn => {
+                wordBank.appendChild(btn);
+                btn.onclick = () => moveButton(btn, 'toAnswer');
+            });
+            feedbackText.textContent = '';
+        }
+
+        // 檢查答案的函式 (已修改)
+        function checkAnswer() {
+            // 1. 獲取答案區的所有按鈕
+            let answerButtons = answerArea.querySelectorAll('.word-button');
+            
+            // 2. 將按鈕文字組合成一個句子
+            let userAnswer = [];
+            answerButtons.forEach(btn => {
+                userAnswer.push(btn.textContent);
+            });
+            let userAnswerString = userAnswer.join(' '); // 用空格組合
+            
+            // 3. 獲取正確答案 (不含標點)
+            let correctAnswer = questions[currentQuestionIndex].sentence;
+
+            if (userAnswerString === correctAnswer) {
+                feedbackText.textContent = "答對了！ (Correct!)";
+                feedbackText.className = 'correct';
+                
+                // 顯示完整句子 (包含標點)
+                answerArea.innerHTML = `<p style="font-size: 1.2em; color: green;">${correctAnswer}${questions[currentQuestionIndex].punctuation}</p>`;
+                
+                if (!isReviewMode) {
+                    score++;
+                }
+                
+                // 延遲 1.5 秒後跳到下一題
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 1500);
+
+            } else {
+                // --- 答錯了 ---
+                feedbackText.textContent = `答錯了。請再試一次！`;
+                feedbackText.className = 'incorrect';
+
+                // 【核心功能】將這筆錯題加入到 missedQuestions 陣列中
+                const currentQuestionData = questions[currentQuestionIndex];
+                if (!missedQuestions.some(item => item.chinese === currentQuestionData.chinese)) {
+                    missedQuestions.push(currentQuestionData);
+                }
+            }
+            
+            // 更新分數顯示
+            if (isReviewMode) {
+                scoreText.textContent = `得分: ${score} / ${originalQuestionCount} (複習中...)`;
+            } else {
+                scoreText.textContent = `得分: ${score} / ${originalQuestionCount}`;
+            }
+        }
+
+        // 綁定事件
+        submitButton.addEventListener('click', checkAnswer);
+        resetButton.addEventListener('click', resetCurrentQuestion);
+        
+        // 初始載入第一題
+        loadQuestion();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE KHTML>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文片語練習 (可重試版)</title>
+    <style>
+        /* === 基本頁面樣式 === */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #005a9c;
+        }
+        
+        h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            color: #333;
+        }
+
+        /* === (第一部分) 卡片樣式 === */
+        p.instructions {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .phrase {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #004a80;
+        }
+
+        .details {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+        }
+
+        .card.active .details {
+            display: block;
+        }
+
+        .meaning {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #d9534f;
+        }
+
+        .example {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+            padding-left: 15px;
+            border-left: 3px solid #f0ad4e;
+        }
+
+        /* === (第二部分) 互動練習樣式 === */
+        #practice-section {
+            padding: 20px;
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        #question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        
+        #translation-text {
+            font-size: 1rem;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 20px; 
+        }
+        
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            color: #007bff;
+            transition: all 0.2s ease;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* 當按鈕被禁用時的樣式 */
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8; /* 讓它看起來有點不一樣 */
+        }
+
+        /* 正確的按鈕 (即使被禁用) */
+        .option-btn.correct {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+            opacity: 1;
+        }
+
+        /* 錯誤的按鈕 (即使被禁用) */
+        .option-btn.incorrect {
+            background-color: #d9534f;
+            color: white;
+            border-color: #d9534f;
+            opacity: 0.7; /* 錯誤的可以更透明一點 */
+        }
+
+        .button-container {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        #next-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: white;
+            background-color: #007bff; 
+            display: none; /* 預設隱藏 */
+        }
+        #next-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #feedback-text {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-height: 1.2em; /* 確保有空間顯示回饋文字，防止跳動 */
+        }
+
+        .correct {
+            color: #28a745;
+        }
+
+        .incorrect {
+            color: #d9534f;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>英文片語練習</h1>
+        <h2>複習卡片</h2>
+        <p class="instructions">點擊下方的卡片，來顯示或隱藏中文意思和例句。</p>
+
+        <div class="card">
+            <div class="phrase">turn ... into</div>
+            <div class="details">
+                <div class="meaning">把...變成...</div>
+                <div class="example">
+                    A great artist turns a simple block of wood into a masterpiece.
+                    <br>
+                    (一位偉大的藝術家把一塊簡單的木頭變成了傑作。)
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="phrase">feast one's eyes on</div>
+            <div class="details">
+                <div class="meaning">大飽眼福；盡情欣賞</div>
+                <div class="example">
+                    We feast our eyes on the stunning mountain scenery.
+                    <br>
+                    (我們盡情欣賞著迷人的山景。)
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="phrase">face to face</div>
+            <div class="details">
+                <div class="meaning">面對面地</div>
+                <div class="example">
+                    I think it's better to discuss this face to face.
+                    <br>
+                    (我認為我們最好面對面討論這件事。)
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="phrase">stand out</div>
+            <div class="details">
+                <div class="meaning">脫穎而出；突出</div>
+                <div class="example">
+                    Her bright red coat makes her stand out in the crowd.
+                    <br>
+                    (她鮮紅色的外套讓她在人群中很顯眼。)
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="phrase">fall in love with</div>
+            <div class="details">
+                <div class="meaning">愛上...</div>
+                <div class="example">
+                    He falls in love with painting every time he visits the museum.
+                    <br>
+                    (他每次參觀博物館時都會愛上繪畫。)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="practice-section">
+        <h2>互動練習 (選擇題)</h2>
+        <p class="instructions">請根據句意，選擇最適合的片語。</p>
+
+        <div id="quiz-container">
+            <p id="question-text">題目載入中...</p>
+            <p id="translation-text"></p>
+            
+            <div id="options-container"></div>
+            
+            <div class="button-container">
+                <button id="next-btn">下一題</button>
+            </div>
+            <p id="feedback-text"></p>
+        </div>
+    </div>
+
+    <script>
+        // --- 第一部分：卡片點擊 ---
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // --- 第二部分：互動練習 (選擇題) ---
+        
+        const allPhrases = [
+            "turn ... into",
+            "feast one's eyes on",
+            "face to face",
+            "stand out",
+            "fall in love with"
+        ];
+        
+        let quizData = [
+            {
+                question: "A great artist can ______ a simple block of wood ______ a masterpiece.",
+                answer: "turn ... into",
+                translation: "(一位偉大的藝術家可以把一塊簡單的木頭變成了傑作。)"
+            },
+            {
+                question: "From our balcony, we ______ the stunning mountain scenery.",
+                answer: "feast one's eyes on",
+                translation: "(在我們的陽台上，我們盡情欣賞迷人的山景。)"
+            },
+            {
+                question: "It's much better to discuss this sensitive issue ______.",
+                answer: "face to face",
+                translation: "(這種敏感問題最好還是面對面討論。)"
+            },
+            {
+                question: "His bright blue shirt really makes him ______ in the crowd.",
+                answer: "stand out",
+                translation: "(他鮮豔的藍色襯衫讓他在人群中真的很突出。)"
+            },
+            {
+                question: "Many tourists ______ Paris the moment they see the Eiffel Tower.",
+                answer: "fall in love with",
+                translation: "(很多遊客一看到艾菲爾鐵塔就愛上了巴黎。)"
+            }
+        ];
+
+        // 獲取 HTML 元素
+        const questionText = document.getElementById('question-text');
+        const translationText = document.getElementById('translation-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const feedbackText = document.getElementById('feedback-text');
+
+        let currentQuestionIndex = 0;
+
+        // 隨機排序函式
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // 載入題目
+        function loadQuestion() {
+            feedbackText.textContent = '';
+            feedbackText.className = '';
+            optionsContainer.innerHTML = ''; 
+            nextBtn.style.display = 'none';
+
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionText.textContent = currentQuestion.question;
+            translationText.textContent = currentQuestion.translation;
+
+            // 產生選項 (隨機)
+            const correctAnswer = currentQuestion.answer;
+            let distractors = allPhrases.filter(phrase => phrase !== correctAnswer);
+            shuffleArray(distractors); 
+            
+            let options = [correctAnswer, distractors[0], distractors[1]];
+            shuffleArray(options); // 打亂選項順序
+
+            // 建立選項按鈕
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => checkAnswer(option, correctAnswer, button));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // 【更新】檢查答案的邏輯
+        function checkAnswer(selectedOption, correctAnswer, clickedButton) {
+            
+            // 檢查答案並給予反饋
+            if (selectedOption === correctAnswer) {
+                // --- 答對了 ---
+                feedbackText.textContent = '正確！';
+                feedbackText.className = 'correct';
+                clickedButton.classList.add('correct');
+                
+                // 禁用所有按鈕
+                const allOptionButtons = document.querySelectorAll('.option-btn');
+                allOptionButtons.forEach(btn => {
+                    btn.disabled = true;
+                });
+                
+                // 顯示「下一題」按鈕
+                nextBtn.style.display = 'inline-block';
+
+            } else {
+                // --- 答錯了 ---
+                feedbackText.textContent = '不對喔，再試一次！';
+                feedbackText.className = 'incorrect';
+                
+                // 只禁用這個錯誤的按鈕
+                clickedButton.classList.add('incorrect');
+                clickedButton.disabled = true; 
+                
+                // *** 關鍵：不要顯示 "Next"，也不要禁用其他按鈕 ***
+            }
+        }
+
+        // 下一題
+        function showNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= quizData.length) {
+                currentQuestionIndex = 0;
+                shuffleArray(quizData); // 打亂題目順序
+                alert('恭喜你完成所有練習！將重新開始。');
+            }
+            loadQuestion();
+        }
+
+        // 綁定事件
+        nextBtn.addEventListener('click', showNextQuestion);
+
+        // 程式開始
+        shuffleArray(quizData); // 打亂題目順序
+        loadQuestion(); // 載入第一題
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L4 文法練習 Living under Nature's Wing</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f7f0;
+  --card: #ffffff;
+  --primary: #2d7d46;
+  --primary-dark: #1a4d2b;
+  --accent: #f5a623;
+  --success: #2faa6a;
+  --danger: #e05050;
+  --text: #222;
+  --muted: #7a7a8c;
+  --border: #c8e6c9;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 10% 10%, #c8e6c9 0%, transparent 45%),
+    radial-gradient(circle at 90% 90%, #fff8dc 0%, transparent 45%);
+  min-height: 100vh; color: var(--text);
+}
+
+/* ── HOME ── */
+.home-wrap { display:flex; flex-direction:column; align-items:center; padding:36px 20px 60px; min-height:100vh; }
+.home-logo { font-size:3em; animation:float 3s ease-in-out infinite; margin-bottom:8px; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.home-title { font-size:1.75em; font-weight:900; color:var(--primary-dark); margin-bottom:4px; }
+.home-sub { font-size:0.9em; color:var(--muted); margin-bottom:28px; }
+
+.pattern-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:640px; margin-bottom:30px; }
+@media(max-width:480px){ .pattern-grid { grid-template-columns:1fr; } }
+.pattern-card { background:var(--card); border-radius:18px; padding:24px 20px; box-shadow:var(--shadow); cursor:pointer; border:2.5px solid transparent; transition:all 0.22s; position:relative; overflow:hidden; text-align:center; }
+.pattern-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; border-radius:18px 18px 0 0; }
+.pattern-card:nth-child(1)::before { background:var(--primary); }
+.pattern-card:nth-child(2)::before { background:#e67e22; }
+.pattern-card:hover { border-color:var(--primary); transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,0.13); }
+.pc-icon { font-size:2em; margin-bottom:10px; }
+.pc-name { font-size:1em; font-weight:900; color:var(--primary-dark); margin-bottom:6px; }
+.pc-formula { font-size:0.78em; background:#e8f5e9; color:var(--primary); border-radius:8px; padding:4px 10px; font-weight:700; margin-bottom:8px; display:inline-block; }
+.pc-desc { font-size:0.82em; color:var(--muted); line-height:1.5; }
+
+/* ── QUIZ PAGE ── */
+.quiz-page { display:none; flex-direction:column; min-height:100vh; }
+.quiz-page.active { display:flex; }
+.qp-bar { background:var(--primary-dark); color:#fff; padding:14px 18px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.qp-back { background:rgba(255,255,255,0.15); border:none; border-radius:10px; color:#fff; padding:7px 14px; font-size:0.88em; font-weight:800; cursor:pointer; font-family:inherit; }
+.qp-back:hover { background:rgba(255,255,255,0.25); }
+.qp-info { flex:1; }
+.qp-label { font-size:0.75em; opacity:0.7; letter-spacing:1px; text-transform:uppercase; }
+.qp-name { font-size:0.95em; font-weight:800; }
+.pbar-bg { height:5px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:5px; }
+.pbar-fill { height:5px; background:var(--accent); border-radius:3px; transition:width 0.4s; }
+.qp-counter { font-size:0.88em; opacity:0.8; }
+
+.qp-body { flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:22px 16px; gap:14px; }
+
+/* question types */
+.q-card { background:var(--card); border-radius:var(--radius); padding:24px 22px; width:100%; max-width:660px; box-shadow:var(--shadow); }
+.q-tag { font-size:0.72em; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.q-num { font-size:0.82em; color:var(--muted); font-weight:700; margin-bottom:6px; }
+.q-prompt { font-size:1.05em; font-weight:700; color:var(--primary-dark); margin-bottom:6px; line-height:1.6; }
+.q-zh { font-size:0.88em; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+
+/* MC */
+.mc-opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media(max-width:480px){ .mc-opts { grid-template-columns:1fr; } }
+.mc-opt { padding:13px 12px; background:#f5f9f5; border:2px solid var(--border); border-radius:12px; font-size:0.97em; font-weight:700; color:var(--text); cursor:pointer; font-family:inherit; text-align:center; transition:all 0.18s; }
+.mc-opt:hover:not(:disabled) { border-color:var(--primary); background:#e8f5e9; transform:translateY(-2px); }
+.mc-opt.correct { background:#d4f0e4; border-color:var(--success); color:#155a35; }
+.mc-opt.wrong   { background:#fde8e8; border-color:var(--danger); color:#8a2020; }
+.mc-opt:disabled { cursor:default; }
+
+/* Fill-in */
+.fill-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.fill-in { border:none; border-bottom:2.5px solid var(--primary); background:transparent; font-size:1.05em; font-weight:700; color:var(--primary-dark); font-family:inherit; padding:2px 6px; min-width:120px; text-align:center; outline:none; }
+.fill-in:focus { border-color:var(--accent); }
+.fill-in.correct { border-color:var(--success); color:var(--success); }
+.fill-in.wrong { border-color:var(--danger); color:var(--danger); }
+.fill-in:disabled { }
+.fill-submit { padding:10px 22px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-size:0.95em; font-weight:800; cursor:pointer; font-family:inherit; transition:background 0.18s; }
+.fill-submit:hover:not(:disabled) { background:var(--primary-dark); }
+.fill-submit:disabled { opacity:0.4; cursor:default; }
+
+/* rearrange */
+.word-bank { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; min-height:44px; }
+.answer-slots { display:flex; flex-wrap:wrap; gap:8px; border:2px dashed var(--border); border-radius:12px; padding:10px 12px; min-height:50px; margin-bottom:14px; align-items:center; }
+.word-chip { background:#e8f5e9; border:2px solid var(--primary); border-radius:8px; padding:6px 13px; font-size:0.92em; font-weight:800; color:var(--primary-dark); cursor:pointer; transition:all 0.15s; user-select:none; }
+.word-chip:hover { background:#c8e6c9; transform:scale(1.05); }
+.word-chip.placed { background:var(--primary); color:#fff; }
+.word-chip.disabled { cursor:default; }
+.rearrange-submit { padding:10px 22px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-size:0.95em; font-weight:800; cursor:pointer; font-family:inherit; }
+.rearrange-submit:disabled { opacity:0.4; cursor:default; }
+
+.fb-row { width:100%; max-width:660px; min-height:36px; display:flex; align-items:center; justify-content:center; font-size:1em; font-weight:800; }
+.fb-row.good { color:var(--success); }
+.fb-row.bad  { color:var(--danger); }
+
+.next-btn { width:100%; max-width:660px; padding:15px; border:none; border-radius:var(--radius); background:var(--primary); color:#fff; font-size:1em; font-weight:800; cursor:pointer; font-family:inherit; display:none; }
+.next-btn:hover { background:var(--primary-dark); }
+
+/* hint */
+.hint-box { background:#fffde7; border:1.5px solid #ffe082; border-radius:10px; padding:10px 14px; font-size:0.85em; color:#7a5d00; margin-bottom:10px; line-height:1.6; }
+
+/* result */
+.result-page { display:none; flex-direction:column; align-items:center; justify-content:center; padding:36px 16px; min-height:100vh; }
+.result-page.active { display:flex; }
+.result-wrap { background:var(--card); border-radius:22px; padding:36px 26px; width:100%; max-width:540px; box-shadow:0 8px 40px rgba(0,0,0,0.1); text-align:center; }
+.score-ring { width:120px; height:120px; border-radius:50%; background:conic-gradient(var(--primary) calc(var(--pct)*1%), #c8e6c9 0%); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+.score-inner { width:88px; height:88px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-big { font-size:1.9em; font-weight:900; color:var(--primary-dark); line-height:1; }
+.score-of  { font-size:0.72em; color:var(--muted); font-weight:700; }
+.res-emoji { font-size:2.4em; margin-bottom:8px; }
+.res-msg { font-size:1.2em; font-weight:900; color:var(--primary-dark); margin-bottom:4px; }
+.res-sub { font-size:0.88em; color:var(--muted); margin-bottom:22px; }
+.wrong-review { text-align:left; margin-bottom:20px; }
+.wr-ttl { font-weight:800; color:var(--danger); font-size:0.9em; margin-bottom:10px; }
+.wr-item { background:#fff8f8; border-left:4px solid #f5b8b8; border-radius:0 9px 9px 0; padding:10px 14px; margin-bottom:8px; font-size:0.86em; line-height:1.6; }
+.wr-q { color:var(--muted); font-size:0.9em; margin-bottom:3px; }
+.wr-a { color:var(--success); font-weight:800; }
+.res-btns { display:flex; flex-direction:column; gap:10px; }
+.rbtn { padding:13px; border-radius:13px; border:none; font-size:1em; font-weight:800; cursor:pointer; font-family:inherit; }
+.rbtn-retry { background:var(--primary); color:#fff; }
+.rbtn-home { background:#f0f4f8; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="home-wrap" id="homePage">
+  <div class="home-logo">🌿</div>
+  <div class="home-title">L4 文法練習</div>
+  <div class="home-sub">Living under Nature's Wing</div>
+  <div class="pattern-grid">
+    <div class="pattern-card" onclick="startPattern(0)">
+      <div class="pc-icon">👁️</div>
+      <div class="pc-name">句型一</div>
+      <div class="pc-formula">S + seem/appear + to VR / have p.p.</div>
+      <div class="pc-desc">表示「似乎；好像」<br>委婉推論的說法</div>
+    </div>
+    <div class="pattern-card" onclick="startPattern(1)">
+      <div class="pc-icon">🤲</div>
+      <div class="pc-name">句型二</div>
+      <div class="pc-formula">with + O + OC</div>
+      <div class="pc-desc">表示「附帶狀況」<br>伴隨發生的動作或狀態</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="quiz-page" id="quizPage">
+  <div class="qp-bar">
+    <button class="qp-back" onclick="goHome()">← 返回</button>
+    <div class="qp-info">
+      <div class="qp-label">文法練習</div>
+      <div class="qp-name" id="qpName"></div>
+      <div class="pbar-bg"><div class="pbar-fill" id="pbarFill" style="width:0%"></div></div>
+    </div>
+    <div class="qp-counter" id="qpCounter"></div>
+  </div>
+  <div class="qp-body" id="qpBody"></div>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="result-page" id="resultPage">
+  <div class="result-wrap">
+    <div class="res-emoji" id="resEmoji"></div>
+    <div class="score-ring" id="scoreRing">
+      <div class="score-inner">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-of" id="scoreOf"></div>
+      </div>
+    </div>
+    <div class="res-msg" id="resMsg"></div>
+    <div class="res-sub" id="resSub"></div>
+    <div class="wrong-review" id="wrongReview"></div>
+    <div class="res-btns">
+      <button class="rbtn rbtn-retry" onclick="retryPattern()">🔄 再練一次</button>
+      <button class="rbtn rbtn-home" onclick="goHome()">🏠 回首頁</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 題目資料 ──
+const PATTERNS = [
+  {
+    name: "seem / appear + to VR / have p.p.",
+    questions: [
+      // 選擇題
+      { type:"mc", tag:"選擇題",
+        prompt: "The cat ________ very tired. It has been sleeping all day.",
+        zh: "那隻貓看起來很累，它睡了一整天。",
+        opts: ["seem be","seems to be","seem to be","seems be"],
+        ans: "seems to be",
+        hint: "主詞 The cat 是第三人稱單數，用 seems；推論當下的狀態用 to + VR。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "She ________ the test already. She looks very relaxed now.",
+        zh: "她看起來已經考完試了。她現在看起來很放鬆。",
+        opts: ["seems to finish","seems to have finished","seem to have finished","seems finishing"],
+        ans: "seems to have finished",
+        hint: "「已經考完」發生在說話之前，用 seem + to have + p.p.。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "The students ________ bored in class. They keep looking out the window.",
+        zh: "學生們在課堂上看起來很無聊。他們一直往窗外看。",
+        opts: ["appear to be","appears to be","appear being","appears being"],
+        ans: "appear to be",
+        hint: "主詞 The students 是複數，用 appear；推論當下狀態用 to + VR。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "He ________ the email. I found it in the trash folder.",
+        zh: "他看起來已經刪了那封郵件。我在垃圾桶裡找到了它。",
+        opts: ["seems deleting","appears to delete","seems to have deleted","appear to have deleted"],
+        ans: "seems to have deleted",
+        hint: "主詞 He 是第三人稱單數，用 seems；刪信發生在說話之前，用 to have + p.p.。" },
+      // 填空題
+      { type:"fill", tag:"填空題",
+        prompt: "The road ________ ________ very icy. Be careful!",
+        zh: "這條路看起來很結冰。小心！",
+        ans: "seems to be",
+        hint: "推論當下的狀態，用 seem/appear + to + VR。" },
+      { type:"fill", tag:"填空題",
+        prompt: "My keys ________ ________ ________ in the office. I can't find them here.",
+        zh: "我的鑰匙看起來已經留在辦公室了，我在這裡找不到。",
+        ans: "seem to have been left",
+        hint: "「留下」發生在說話之前，且鑰匙是被留下（被動），用 to have been + p.p.。" },
+      // 改寫題
+      { type:"fill", tag:"句型改寫",
+        prompt: "It seems that the window is broken.\n→ The window ________ ________ ________ broken.",
+        zh: "窗戶看起來壞掉了。",
+        ans: "seems to be",
+        hint: "It seems that + S + V → S + seems/appears + to + VR（當下狀態）。" },
+      { type:"fill", tag:"句型改寫",
+        prompt: "It appears that she forgot her homework.\n→ She ________ ________ ________ her homework.",
+        zh: "她看起來已經忘記她的作業了。",
+        ans: "appears to have forgotten",
+        hint: "「忘記」發生在說話之前，用 appear + to have + p.p.。" },
+      // 排列題
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "這個故事似乎已經被改編成電影了。",
+        words: ["The","story","seems","to","have","been","made","into","a","movie"],
+        ans: "The story seems to have been made into a movie",
+        hint: "「被改編」發生在說話之前，且是被動，用 seems + to have been + p.p.。" },
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "他看起來很開心能回家。",
+        words: ["He","appears","to","be","happy","to","be","home"],
+        ans: "He appears to be happy to be home",
+        hint: "推論當下狀態，用 appears + to + VR。" },
+    ]
+  },
+  {
+    name: "with + O + OC",
+    questions: [
+      // 選擇題
+      { type:"mc", tag:"選擇題",
+        prompt: "She sat on the bench with her eyes ________ (close).",
+        zh: "她閉著眼睛坐在長椅上。",
+        opts: ["close","closing","closed","to close"],
+        ans: "closed",
+        hint: "眼睛「被閉上」是被動狀態，OC 用過去分詞（closed）。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "He walked into the room with his phone ________ (play) music.",
+        zh: "他走進房間，手機播放著音樂。",
+        opts: ["play","played","playing","to play"],
+        ans: "playing",
+        hint: "手機「正在播放」是主動進行中，OC 用現在分詞（playing）。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "Don't talk with your mouth ________ food.",
+        zh: "嘴巴裡有食物時不要說話。",
+        opts: ["full of","filling","filled","to fill"],
+        ans: "full of",
+        hint: "OC 是介系詞片語，表示受詞的「狀態」，用 full of。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "The teacher explained the answer with all students ________ carefully.",
+        zh: "老師解說答案，所有學生都在認真聽。",
+        opts: ["listen","listened","listening","to listen"],
+        ans: "listening",
+        hint: "學生「正在聽」是主動進行中，OC 用現在分詞（listening）。" },
+      // 填空題
+      { type:"fill", tag:"填空題",
+        prompt: "The boy fell asleep with the TV ________.",
+        zh: "那個男孩在電視播放著的情況下睡著了。",
+        ans: "playing",
+        hint: "電視「正在播放」是主動，OC 用現在分詞。" },
+      { type:"fill", tag:"填空題",
+        prompt: "She left the office with all the work ________.",
+        zh: "她在所有工作都完成的情況下離開辦公室。",
+        ans: "done / finished",
+        hint: "工作「已被完成」是被動，OC 用過去分詞。" },
+      // 合併句子
+      { type:"fill", tag:"句子合併",
+        prompt: "The cat sat on the sofa. Its tail was wagging.\n→ The cat sat on the sofa with its tail ________.",
+        zh: "那隻貓坐在沙發上，尾巴搖擺著。",
+        ans: "wagging",
+        hint: "尾巴「主動搖擺中」，OC 用現在分詞。" },
+      { type:"fill", tag:"句子合併",
+        prompt: "She gave a speech. Her hands were shaking.\n→ She gave a speech with her hands ________.",
+        zh: "她演講時雙手顫抖著。",
+        ans: "shaking",
+        hint: "手「主動顫抖中」，OC 用現在分詞。" },
+      // 排列題
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "他走進教室，書包背在肩上。",
+        words: ["He","walked","into","the","classroom","with","his","bag","on","his","shoulder"],
+        ans: "He walked into the classroom with his bag on his shoulder",
+        hint: "OC 是介系詞片語（on his shoulder），表示書包所在位置。" },
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "那個小女孩哭著睡著了，淚水掛在臉頰上。",
+        words: ["The","little","girl","fell","asleep","with","tears","running","down","her","cheeks"],
+        ans: "The little girl fell asleep with tears running down her cheeks",
+        hint: "淚水「主動流下」是主動進行中，OC 用現在分詞（running）。" },
+    ]
+  }
+];
+
+let curPatternIdx = 0;
+let curQuestions = [];
+let qIdx = 0, score = 0;
+let wrongItems = [];
+let answers = [];
+
+function goHome() {
+  document.getElementById('homePage').style.display = 'flex';
+  document.getElementById('quizPage').classList.remove('active');
+  document.getElementById('resultPage').classList.remove('active');
+}
+
+function startPattern(idx) {
+  curPatternIdx = idx;
+  curQuestions = PATTERNS[idx].questions;
+  qIdx = 0; score = 0; wrongItems = []; answers = new Array(curQuestions.length).fill(null);
+  document.getElementById('qpName').textContent = PATTERNS[idx].name;
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('quizPage').classList.add('active');
+  document.getElementById('resultPage').classList.remove('active');
+  renderQuestion();
+}
+
+function retryPattern() { startPattern(curPatternIdx); }
+
+function updateBar() {
+  const total = curQuestions.length;
+  document.getElementById('pbarFill').style.width = (qIdx / total * 100) + '%';
+  document.getElementById('qpCounter').textContent = `${qIdx + 1} / ${total}`;
+}
+
+function renderQuestion() {
+  updateBar();
+  const body = document.getElementById('qpBody');
+  body.innerHTML = '';
+  const q = curQuestions[qIdx];
+
+  const card = document.createElement('div');
+  card.className = 'q-card';
+
+  const hint = `<div class="hint-box">💡 提示：${q.hint}</div>`;
+  const promptLines = q.prompt.split('\n').map(l => `<div>${l}</div>`).join('');
+
+  if (q.type === 'mc') {
+    card.innerHTML = `
+      <div class="q-tag">${q.tag}</div>
+      <div class="q-num">第 ${qIdx + 1} 題 / 共 ${curQuestions.length} 題</div>
+      <div class="q-prompt">${promptLines}</div>
+      <div class="q-zh">${q.zh}</div>
+      ${hint}
+      <div class="mc-opts" id="mcOpts"></div>`;
+    body.appendChild(card);
+    const grid = document.getElementById('mcOpts');
+    q.opts.forEach(o => {
+      const btn = document.createElement('button');
+      btn.className = 'mc-opt';
+      btn.textContent = o;
+      btn.onclick = () => handleMC(o, q.ans, q, btn);
+      grid.appendChild(btn);
+    });
+
+  } else if (q.type === 'fill') {
+    card.innerHTML = `
+      <div class="q-tag">${q.tag}</div>
+      <div class="q-num">第 ${qIdx + 1} 題 / 共 ${curQuestions.length} 題</div>
+      <div class="q-prompt">${promptLines}</div>
+      <div class="q-zh">${q.zh}</div>
+      ${hint}
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <input class="fill-in" id="fillInput" type="text" placeholder="請輸入答案...">
+        <button class="fill-submit" id="fillBtn" onclick="handleFill('${q.ans.replace(/'/g,"\\'")}', '${q.prompt.replace(/'/g,"\\'")}')">確認</button>
+      </div>`;
+    body.appendChild(card);
+    const inp = document.getElementById('fillInput');
+    inp.addEventListener('keydown', e => { if(e.key==='Enter') handleFill(q.ans, q.prompt); });
+
+  } else if (q.type === 'rearrange') {
+    const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+    let placed = [];
+    card.innerHTML = `
+      <div class="q-tag">${q.tag}</div>
+      <div class="q-num">第 ${qIdx + 1} 題 / 共 ${curQuestions.length} 題</div>
+      <div class="q-prompt">${q.prompt}</div>
+      <div class="q-zh">${q.zh}</div>
+      ${hint}
+      <div style="font-size:0.82em;color:var(--muted);margin-bottom:6px;">點擊單字依序排列：</div>
+      <div class="word-bank" id="wordBank"></div>
+      <div style="font-size:0.82em;color:var(--muted);margin-bottom:6px;">你的答案：</div>
+      <div class="answer-slots" id="answerSlots"></div>
+      <div style="display:flex;gap:10px;">
+        <button class="rearrange-submit" id="raBtn" onclick="handleRearrange('${q.ans}')">確認答案</button>
+        <button class="rearrange-submit" style="background:#f0f4f8;color:var(--muted);" onclick="resetRearrange()">重設</button>
+      </div>`;
+    body.appendChild(card);
+
+    const bank = document.getElementById('wordBank');
+    const slots = document.getElementById('answerSlots');
+    let bankChips = [];
+
+    function renderBank() {
+      bank.innerHTML = '';
+      shuffled.forEach((w, i) => {
+        if (placed.includes(i)) return;
+        const chip = document.createElement('div');
+        chip.className = 'word-chip';
+        chip.textContent = w;
+        chip.onclick = () => {
+          placed.push(i);
+          renderBank(); renderSlots();
+        };
+        bank.appendChild(chip);
+      });
+    }
+    function renderSlots() {
+      slots.innerHTML = '';
+      if (placed.length === 0) { slots.innerHTML = '<span style="color:var(--muted);font-size:0.88em;">點擊上方單字加入...</span>'; return; }
+      placed.forEach((idx, pos) => {
+        const chip = document.createElement('div');
+        chip.className = 'word-chip placed';
+        chip.textContent = shuffled[idx];
+        chip.onclick = () => { placed.splice(pos, 1); renderBank(); renderSlots(); };
+        slots.appendChild(chip);
+      });
+    }
+    window.resetRearrange = () => { placed = []; renderBank(); renderSlots(); };
+    renderBank(); renderSlots();
+  }
+
+  // feedback + next
+  const fb = document.createElement('div');
+  fb.className = 'fb-row'; fb.id = 'fbRow';
+  body.appendChild(fb);
+  const nb = document.createElement('button');
+  nb.className = 'next-btn'; nb.id = 'nextBtn';
+  nb.textContent = qIdx + 1 >= curQuestions.length ? '查看結果 →' : '下一題 →';
+  nb.onclick = nextQ;
+  body.appendChild(nb);
+  body.scrollTop = 0;
+}
+
+function handleMC(chosen, correct, q, btn) {
+  document.querySelectorAll('.mc-opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+    else if (b.textContent === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+  const ok = chosen === correct;
+  if (ok) { score++; showFB('✅ 答對了！', true); }
+  else { showFB(`❌ 正確答案是：${correct}`, false); wrongItems.push({ prompt: q.prompt, ans: correct }); }
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function handleFill(correct, prompt) {
+  const inp = document.getElementById('fillInput');
+  const btn = document.getElementById('fillBtn');
+  const val = inp.value.trim().toLowerCase();
+  const correctLower = correct.toLowerCase();
+  // accept partial (any of the slash-separated answers)
+  const alternatives = correctLower.split('/').map(s => s.trim());
+  const ok = alternatives.some(a => val === a);
+  inp.disabled = true; btn.disabled = true;
+  if (ok) { score++; inp.classList.add('correct'); showFB('✅ 答對了！', true); }
+  else { inp.classList.add('wrong'); showFB(`❌ 參考答案：${correct}`, false); wrongItems.push({ prompt, ans: correct }); }
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function handleRearrange(correct) {
+  const btn = document.getElementById('raBtn');
+  btn.disabled = true;
+  const slots = document.getElementById('answerSlots');
+  const chips = slots.querySelectorAll('.word-chip');
+  const val = Array.from(chips).map(c => c.textContent).join(' ');
+  const ok = val.trim() === correct.trim();
+  document.querySelectorAll('.word-chip').forEach(c => c.onclick = null);
+  if (ok) { score++; showFB('✅ 答對了！', true); }
+  else { showFB(`❌ 正確句子：${correct}`, false); wrongItems.push({ prompt: curQuestions[qIdx].prompt, ans: correct }); }
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function showFB(msg, ok) {
+  const fb = document.getElementById('fbRow');
+  fb.textContent = msg; fb.className = 'fb-row ' + (ok ? 'good' : 'bad');
+}
+
+function nextQ() {
+  qIdx++;
+  if (qIdx >= curQuestions.length) showResult();
+  else renderQuestion();
+}
+
+function showResult() {
+  document.getElementById('quizPage').classList.remove('active');
+  document.getElementById('resultPage').classList.add('active');
+  const total = curQuestions.length;
+  const pct = Math.round(score / total * 100);
+  document.getElementById('scoreRing').style.setProperty('--pct', pct);
+  document.getElementById('scoreBig').textContent = score;
+  document.getElementById('scoreOf').textContent = `/ ${total}`;
+  const [emoji, msg, sub] =
+    pct >= 90 ? ['🏆','太棒了！','幾乎全對，文法掌握得很好！'] :
+    pct >= 70 ? ['👍','做得不錯！','再複習一下錯的題目就更好了！'] :
+    pct >= 50 ? ['💪','加油！','多練幾次，你一定可以的！'] :
+               ['📖','再看一次提示吧！','回去看例句，再試一次看看。'];
+  document.getElementById('resEmoji').textContent = emoji;
+  document.getElementById('resMsg').textContent = msg;
+  document.getElementById('resSub').textContent = sub;
+  const wr = document.getElementById('wrongReview');
+  wr.innerHTML = '';
+  if (wrongItems.length) {
+    wr.innerHTML = `<div class="wr-ttl">❌ 這次答錯的題目：</div>`;
+    wrongItems.forEach(w => {
+      const d = document.createElement('div');
+      d.className = 'wr-item';
+      const qLines = w.prompt.split('\n').map(l=>`<div>${l}</div>`).join('');
+      d.innerHTML = `<div class="wr-q">${qLines}</div><div class="wr-a">✅ ${w.ans}</div>`;
+      wr.appendChild(d);
+    });
+  } else {
+    wr.innerHTML = `<div style="color:var(--success);font-weight:800;text-align:center;padding:10px 0;">🎉 全部答對！太厲害了！</div>`;
+  }
+}
+</script>
+</body>
+</html>

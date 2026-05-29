@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文現在式練習 | English Present Tense Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .grammar-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grammar-box h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+
+        .example {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .exercise {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .question {
+            margin: 15px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            margin: 10px 0;
+        }
+
+        .radio-group label {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .radio-group label:hover {
+            background: #e0e0e0;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 10px;
+            color: #856404;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .hint {
+            background: #fff9c4;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #fbc02d;
+            font-size: 0.9em;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 1.5em;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .section h2 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Present Tense Practice</h1>
+        <p class="subtitle">現在式時態練習 - Master Your English!</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('grammar')">文法說明</div>
+            <div class="tab" onclick="showTab('simple')">簡單現在式</div>
+            <div class="tab" onclick="showTab('continuous')">現在進行式</div>
+            <div class="tab" onclick="showTab('perfect')">現在完成式</div>
+            <div class="tab" onclick="showTab('mixed')">綜合練習</div>
+        </div>
+
+        <!-- 文法說明 -->
+        <div id="grammar" class="tab-content active">
+            <div class="section">
+                <h2>📚 Present Tenses Overview</h2>
+                
+                <div class="grammar-box">
+                    <h3>1. Simple Present (簡單現在式)</h3>
+                    <p><strong>用途：</strong>習慣、事實、時間表</p>
+                    <p><strong>結構：</strong>主詞 + V / V-s/es (第三人稱單數)</p>
+                    <div class="example">
+                        <p>✓ I <strong>study</strong> English every day. (習慣)</p>
+                        <p>✓ She <strong>works</strong> at a bank. (事實)</p>
+                        <p>✓ The train <strong>leaves</strong> at 9 AM. (時間表)</p>
+                    </div>
+                </div>
+
+                <div class="grammar-box">
+                    <h3>2. Present Continuous (現在進行式)</h3>
+                    <p><strong>用途：</strong>正在進行的動作、暫時狀況、計劃</p>
+                    <p><strong>結構：</strong>主詞 + am/is/are + V-ing</p>
+                    <div class="example">
+                        <p>✓ I <strong>am reading</strong> a book now. (正在進行)</p>
+                        <p>✓ She <strong>is living</strong> in Taipei this month. (暫時)</p>
+                        <p>✓ We <strong>are meeting</strong> tomorrow. (計劃)</p>
+                    </div>
+                </div>
+
+                <div class="grammar-box">
+                    <h3>3. Present Perfect (現在完成式)</h3>
+                    <p><strong>用途：</strong>過去到現在的經驗、剛完成的動作、持續狀態</p>
+                    <p><strong>結構：</strong>主詞 + have/has + 過去分詞</p>
+                    <div class="example">
+                        <p>✓ I <strong>have visited</strong> Japan three times. (經驗)</p>
+                        <p>✓ She <strong>has just finished</strong> her homework. (剛完成)</p>
+                        <p>✓ They <strong>have lived</strong> here for 10 years. (持續)</p>
+                    </div>
+                </div>
+
+                <div class="grammar-box">
+                    <h3>4. Present Perfect Continuous (現在完成進行式)</h3>
+                    <p><strong>用途：</strong>強調動作的持續性</p>
+                    <p><strong>結構：</strong>主詞 + have/has + been + V-ing</p>
+                    <div class="example">
+                        <p>✓ I <strong>have been studying</strong> for 3 hours. (持續進行)</p>
+                        <p>✓ It <strong>has been raining</strong> all day. (持續狀態)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 簡單現在式練習 -->
+        <div id="simple" class="tab-content">
+            <div class="section">
+                <h2>簡單現在式 Practice</h2>
+                
+                <div class="exercise">
+                    <h3>Exercise 1: Fill in the blanks</h3>
+                    <div class="hint">💡 記得第三人稱單數要加 -s 或 -es！</div>
+                    
+                    <div class="question">
+                        1. She _____ (work) at a hospital.
+                        <input type="text" id="simple1" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        2. They _____ (play) basketball every weekend.
+                        <input type="text" id="simple2" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        3. My brother _____ (watch) TV every evening.
+                        <input type="text" id="simple3" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        4. I _____ (not/like) spicy food.
+                        <input type="text" id="simple4" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        5. _____ you _____ (speak) English?
+                        <input type="text" id="simple5a" placeholder="First blank" style="width: 48%; margin-right: 2%;">
+                        <input type="text" id="simple5b" placeholder="Second blank" style="width: 48%;">
+                    </div>
+                    
+                    <button onclick="checkSimple()">Check Answers</button>
+                    <button onclick="resetSimple()">Reset</button>
+                    
+                    <div id="simpleFeeback" class="feedback"></div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Exercise 2: Choose the correct form</h3>
+                    
+                    <div class="question">
+                        1. The sun _____ in the east.
+                        <div class="radio-group">
+                            <label><input type="radio" name="simple_mc1" value="rise">rise</label>
+                            <label><input type="radio" name="simple_mc1" value="rises">rises</label>
+                            <label><input type="radio" name="simple_mc1" value="rising">rising</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        2. Water _____ at 100°C.
+                        <div class="radio-group">
+                            <label><input type="radio" name="simple_mc2" value="boil">boil</label>
+                            <label><input type="radio" name="simple_mc2" value="boils">boils</label>
+                            <label><input type="radio" name="simple_mc2" value="boiling">boiling</label>
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkSimpleMC()">Check Multiple Choice</button>
+                    <div id="simpleMCFeedback" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 現在進行式練習 -->
+        <div id="continuous" class="tab-content">
+            <div class="section">
+                <h2>現在進行式 Practice</h2>
+                
+                <div class="exercise">
+                    <h3>Exercise 1: Form the present continuous</h3>
+                    <div class="hint">💡 記得用 be 動詞 (am/is/are) + V-ing！</div>
+                    
+                    <div class="question">
+                        1. I _____ (study) for my exam right now.
+                        <input type="text" id="cont1" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        2. They _____ (not/work) today.
+                        <input type="text" id="cont2" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        3. _____ she _____ (cook) dinner?
+                        <input type="text" id="cont3a" placeholder="First blank" style="width: 48%; margin-right: 2%;">
+                        <input type="text" id="cont3b" placeholder="Second blank" style="width: 48%;">
+                    </div>
+                    
+                    <div class="question">
+                        4. The children _____ (play) in the garden.
+                        <input type="text" id="cont4" placeholder="Your answer">
+                    </div>
+                    
+                    <button onclick="checkContinuous()">Check Answers</button>
+                    <button onclick="resetContinuous()">Reset</button>
+                    
+                    <div id="contFeedback" class="feedback"></div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Exercise 2: Simple Present vs Present Continuous</h3>
+                    <p>Choose the correct tense for each sentence.</p>
+                    
+                    <div class="question">
+                        1. Look! It _____ outside.
+                        <div class="radio-group">
+                            <label><input type="radio" name="cont_mc1" value="rains">rains</label>
+                            <label><input type="radio" name="cont_mc1" value="is raining">is raining</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        2. I usually _____ coffee in the morning.
+                        <div class="radio-group">
+                            <label><input type="radio" name="cont_mc2" value="drink">drink</label>
+                            <label><input type="radio" name="cont_mc2" value="am drinking">am drinking</label>
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkContMC()">Check Multiple Choice</button>
+                    <div id="contMCFeedback" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 現在完成式練習 -->
+        <div id="perfect" class="tab-content">
+            <div class="section">
+                <h2>現在完成式 Practice</h2>
+                
+                <div class="exercise">
+                    <h3>Exercise 1: Form the present perfect</h3>
+                    <div class="hint">💡 記得用 have/has + 過去分詞！</div>
+                    
+                    <div class="question">
+                        1. I _____ (finish) my homework.
+                        <input type="text" id="perf1" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        2. She _____ (not/see) that movie yet.
+                        <input type="text" id="perf2" placeholder="Your answer">
+                    </div>
+                    
+                    <div class="question">
+                        3. _____ you ever _____ (be) to Paris?
+                        <input type="text" id="perf3a" placeholder="First blank" style="width: 48%; margin-right: 2%;">
+                        <input type="text" id="perf3b" placeholder="Second blank" style="width: 48%;">
+                    </div>
+                    
+                    <div class="question">
+                        4. They _____ (live) here since 2010.
+                        <input type="text" id="perf4" placeholder="Your answer">
+                    </div>
+                    
+                    <button onclick="checkPerfect()">Check Answers</button>
+                    <button onclick="resetPerfect()">Reset</button>
+                    
+                    <div id="perfFeedback" class="feedback"></div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Exercise 2: Time expressions</h3>
+                    <p>Match the correct time expression with present perfect.</p>
+                    
+                    <div class="question">
+                        1. I have known him _____ five years.
+                        <div class="radio-group">
+                            <label><input type="radio" name="perf_mc1" value="since">since</label>
+                            <label><input type="radio" name="perf_mc1" value="for">for</label>
+                            <label><input type="radio" name="perf_mc1" value="ago">ago</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        2. She has worked here _____ 2020.
+                        <div class="radio-group">
+                            <label><input type="radio" name="perf_mc2" value="since">since</label>
+                            <label><input type="radio" name="perf_mc2" value="for">for</label>
+                            <label><input type="radio" name="perf_mc2" value="in">in</label>
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkPerfMC()">Check Multiple Choice</button>
+                    <div id="perfMCFeedback" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 綜合練習 -->
+        <div id="mixed" class="tab-content">
+            <div class="section">
+                <h2>綜合練習 Mixed Practice</h2>
+                
+                <div class="timer" id="timer">Time: 00:00</div>
+                
+                <div class="exercise">
+                    <h3>Choose the correct tense</h3>
+                    <p>Read each sentence carefully and choose the most appropriate tense.</p>
+                    
+                    <div class="question">
+                        1. I _____ English for three years now.
+                        <div class="radio-group">
+                            <label><input type="radio" name="mixed1" value="study">study</label>
+                            <label><input type="radio" name="mixed1" value="am studying">am studying</label>
+                            <label><input type="radio" name="mixed1" value="have been studying">have been studying</label>
+                            <label><input type="radio" name="mixed1" value="have studied">have studied</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        2. She usually _____ to work, but today she _____ the bus.
+                        <div class="radio-group">
+                            <label><input type="radio" name="mixed2" value="drives/takes">drives / takes</label>
+                            <label><input type="radio" name="mixed2" value="drives/is taking">drives / is taking</label>
+                            <label><input type="radio" name="mixed2" value="is driving/takes">is driving / takes</label>
+                            <label><input type="radio" name="mixed2" value="has driven/takes">has driven / takes</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        3. Look! Someone _____ their wallet on the bench.
+                        <div class="radio-group">
+                            <label><input type="radio" name="mixed3" value="leaves">leaves</label>
+                            <label><input type="radio" name="mixed3" value="is leaving">is leaving</label>
+                            <label><input type="radio" name="mixed3" value="has left">has left</label>
+                            <label><input type="radio" name="mixed3" value="left">left</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        4. The Earth _____ around the Sun.
+                        <div class="radio-group">
+                            <label><input type="radio" name="mixed4" value="revolves">revolves</label>
+                            <label><input type="radio" name="mixed4" value="is revolving">is revolving</label>
+                            <label><input type="radio" name="mixed4" value="has revolved">has revolved</label>
+                            <label><input type="radio" name="mixed4" value="has been revolving">has been revolving</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        5. I _____ this book. Can I borrow another one?
+                        <div class="radio-group">
+                            <label><input type="radio" name="mixed5" value="already read">already read</label>
+                            <label><input type="radio" name="mixed5" value="am already reading">am already reading</label>
+                            <label><input type="radio" name="mixed5" value="have already read">have already read</label>
+                            <label><input type="radio" name="mixed5" value="already reading">already reading</label>
+                        </div>
+                    </div>
+                    
+                    <button onclick="checkMixed()">Submit All</button>
+                    <button onclick="resetMixed()">Reset Quiz</button>
+                    <button onclick="startTimer()">Start Timer</button>
+                    
+                    <div id="mixedFeedback" class="feedback"></div>
+                    <div id="finalScore" class="score" style="display:none;"></div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Sentence Transformation</h3>
+                    <p>Rewrite the sentences using the tense indicated in brackets.</p>
+                    
+                    <div class="question">
+                        1. I go to school every day. (Present Continuous - temporary situation)
+                        <input type="text" id="trans1" placeholder="Your answer" style="width: 100%;">
+                    </div>
+                    
+                    <div class="question">
+                        2. She is reading a book. (Present Perfect)
+                        <input type="text" id="trans2" placeholder="Your answer" style="width: 100%;">
+                    </div>
+                    
+                    <div class="question">
+                        3. They lived in Tokyo for 5 years. (Present Perfect - they still live there)
+                        <input type="text" id="trans3" placeholder="Your answer" style="width: 100%;">
+                    </div>
+                    
+                    <button onclick="checkTransformation()">Check Transformation</button>
+                    <div id="transFeedback" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Timer functionality
+        let startTime;
+        let timerInterval;
+
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const elapsed = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('timer').textContent = 
+                `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Simple Present checking
+        function checkSimple() {
+            const answers = {
+                simple1: 'works',
+                simple2: 'play',
+                simple3: 'watches',
+                simple4: "don't like",
+                simple5a: 'Do',
+                simple5b: 'speak'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let key in answers) {
+                const input = document.getElementById(key);
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = answers[key].toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.style.borderColor = '#4CAF50';
+                    correct++;
+                } else {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+            
+            const feedback = document.getElementById('simpleFeeback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `
+                <strong>Score: ${correct}/${total}</strong><br>
+                ${correct === total ? '🎉 Perfect! Well done!' : 
+                `Keep practicing! Correct answers: works, play, watches, don't like, Do/speak`}
+            `;
+            feedback.style.display = 'block';
+        }
+
+        function resetSimple() {
+            const inputs = ['simple1', 'simple2', 'simple3', 'simple4', 'simple5a', 'simple5b'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.style.borderColor = '#ddd';
+            });
+            document.getElementById('simpleFeeback').style.display = 'none';
+        }
+
+        // Simple Present Multiple Choice
+        function checkSimpleMC() {
+            const answers = {
+                simple_mc1: 'rises',
+                simple_mc2: 'boils'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let name in answers) {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected && selected.value === answers[name]) {
+                    correct++;
+                }
+            }
+            
+            const feedback = document.getElementById('simpleMCFeedback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `Score: ${correct}/${total}. ${correct === total ? 'Excellent!' : 'Review: The sun rises (3rd person), Water boils (3rd person)'}`;
+            feedback.style.display = 'block';
+        }
+
+        // Present Continuous checking
+        function checkContinuous() {
+            const answers = {
+                cont1: 'am studying',
+                cont2: "aren't working",
+                cont3a: 'Is',
+                cont3b: 'cooking',
+                cont4: 'are playing'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let key in answers) {
+                const input = document.getElementById(key);
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = answers[key].toLowerCase();
+                
+                // Also accept alternative forms
+                let isCorrect = userAnswer === correctAnswer;
+                if (key === 'cont2' && userAnswer === "are not working") isCorrect = true;
+                
+                if (isCorrect) {
+                    input.style.borderColor = '#4CAF50';
+                    correct++;
+                } else {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+            
+            const feedback = document.getElementById('contFeedback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `Score: ${correct}/${total}. ${correct === total ? '🌟 Excellent work!' : 'Review the be + V-ing structure!'}`;
+            feedback.style.display = 'block';
+        }
+
+        function resetContinuous() {
+            const inputs = ['cont1', 'cont2', 'cont3a', 'cont3b', 'cont4'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.style.borderColor = '#ddd';
+            });
+            document.getElementById('contFeedback').style.display = 'none';
+        }
+
+        // Present Continuous Multiple Choice
+        function checkContMC() {
+            const answers = {
+                cont_mc1: 'is raining',
+                cont_mc2: 'drink'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let name in answers) {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected && selected.value === answers[name]) {
+                    correct++;
+                }
+            }
+            
+            const feedback = document.getElementById('contMCFeedback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `Score: ${correct}/${total}. Remember: "Look!" indicates now (continuous), "usually" indicates habit (simple)`;
+            feedback.style.display = 'block';
+        }
+
+        // Present Perfect checking
+        function checkPerfect() {
+            const answers = {
+                perf1: 'have finished',
+                perf2: "hasn't seen",
+                perf3a: 'Have',
+                perf3b: 'been',
+                perf4: 'have lived'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let key in answers) {
+                const input = document.getElementById(key);
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = answers[key].toLowerCase();
+                
+                // Accept alternative forms
+                let isCorrect = userAnswer === correctAnswer;
+                if (key === 'perf2' && userAnswer === "has not seen") isCorrect = true;
+                
+                if (isCorrect) {
+                    input.style.borderColor = '#4CAF50';
+                    correct++;
+                } else {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+            
+            const feedback = document.getElementById('perfFeedback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `Score: ${correct}/${total}. ${correct === total ? '🏆 Outstanding!' : 'Remember: have/has + past participle'}`;
+            feedback.style.display = 'block';
+        }
+
+        function resetPerfect() {
+            const inputs = ['perf1', 'perf2', 'perf3a', 'perf3b', 'perf4'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.style.borderColor = '#ddd';
+            });
+            document.getElementById('perfFeedback').style.display = 'none';
+        }
+
+        // Present Perfect Multiple Choice
+        function checkPerfMC() {
+            const answers = {
+                perf_mc1: 'for',
+                perf_mc2: 'since'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let name in answers) {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected && selected.value === answers[name]) {
+                    correct++;
+                }
+            }
+            
+            const feedback = document.getElementById('perfMCFeedback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `Score: ${correct}/${total}. Remember: FOR + period of time, SINCE + point in time`;
+            feedback.style.display = 'block';
+        }
+
+        // Mixed Practice checking
+        function checkMixed() {
+            const answers = {
+                mixed1: 'have been studying',
+                mixed2: 'drives/is taking',
+                mixed3: 'has left',
+                mixed4: 'revolves',
+                mixed5: 'have already read'
+            };
+            
+            let correct = 0;
+            let total = Object.keys(answers).length;
+            
+            for (let name in answers) {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected && selected.value === answers[name]) {
+                    correct++;
+                }
+            }
+            
+            // Stop timer if running
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            const feedback = document.getElementById('mixedFeedback');
+            const score = document.getElementById('finalScore');
+            
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `
+                <strong>Quiz Complete!</strong><br>
+                Correct: ${correct}/${total}<br>
+                ${correct === total ? '🎊 Perfect score! You\'re a present tense master!' : 
+                correct >= 3 ? '👍 Good job! Keep practicing!' : 'Keep studying! Review the grammar section.'}
+            `;
+            feedback.style.display = 'block';
+            
+            score.innerHTML = `
+                <h3>Final Score: ${(correct/total*100).toFixed(0)}%</h3>
+                <p>Time taken: ${document.getElementById('timer').textContent}</p>
+            `;
+            score.style.display = 'block';
+        }
+
+        function resetMixed() {
+            const questions = ['mixed1', 'mixed2', 'mixed3', 'mixed4', 'mixed5'];
+            questions.forEach(name => {
+                const radios = document.querySelectorAll(`input[name="${name}"]`);
+                radios.forEach(radio => radio.checked = false);
+            });
+            
+            document.getElementById('mixedFeedback').style.display = 'none';
+            document.getElementById('finalScore').style.display = 'none';
+            document.getElementById('timer').textContent = 'Time: 00:00';
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+        }
+
+        // Transformation exercise
+        function checkTransformation() {
+            const possibleAnswers = {
+                trans1: ['i am going to school these days', "i'm going to school these days"],
+                trans2: ['she has read a book', "she's read a book"],
+                trans3: ['they have lived in tokyo for 5 years', "they've lived in tokyo for 5 years"]
+            };
+            
+            let correct = 0;
+            let total = Object.keys(possibleAnswers).length;
+            
+            for (let key in possibleAnswers) {
+                const input = document.getElementById(key);
+                const userAnswer = input.value.trim().toLowerCase();
+                
+                if (possibleAnswers[key].includes(userAnswer)) {
+                    input.style.borderColor = '#4CAF50';
+                    correct++;
+                } else {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+            
+            const feedback = document.getElementById('transFeedback');
+            feedback.className = correct === total ? 'feedback correct' : 'feedback incorrect';
+            feedback.innerHTML = `
+                Score: ${correct}/${total}<br>
+                ${correct === total ? '💯 Perfect transformation skills!' : 
+                `Sample answers:<br>
+                1. I'm going to school these days.<br>
+                2. She has read a book.<br>
+                3. They have lived in Tokyo for 5 years.`}
+            `;
+            feedback.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>113考古題練習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .version-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .version-selector select {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .version-selector select:hover {
+            background: #f7f7ff;
+        }
+
+        .sentence-container {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            position: relative;
+            border: 2px solid #e1e5ff;
+        }
+
+        .sentence {
+            font-size: 24px;
+            line-height: 1.8;
+            color: #333;
+            cursor: default;
+            user-select: none;
+        }
+
+        .word {
+            display: inline-block;
+            padding: 5px 8px;
+            margin: 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .word:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .word.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .word.blank {
+            border-bottom: 3px solid #667eea;
+            color: #764ba2;
+            font-weight: bold;
+            padding: 5px 15px;
+        }
+
+        .translation-popup {
+            position: absolute;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            min-width: 150px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .translation-popup.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .translation-popup .original {
+            font-size: 18px;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .translation-popup .chinese {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .translation-popup .speak-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .translation-popup .speak-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0f2ff;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .speed-control label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .speed-control input[type="range"] {
+            width: 100px;
+        }
+
+        .speed-value {
+            color: #667eea;
+            font-weight: bold;
+            min-width: 35px;
+        }
+
+        .chinese-translation {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .chinese-translation.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .chinese-translation h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .chinese-translation p {
+            color: #856404;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .sentence {
+                font-size: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 113考古題練習</h1>
+        
+        <div class="version-selector">
+            <label for="version">選擇句子：</label>
+            <select id="version" onchange="changeVersion()">
+                <option value="1">句子 1 - Heavy rain delayed</option>
+                <option value="2">句子 2 - Health is determined</option>
+                <option value="3">句子 3 - Made a complaint</option>
+                <option value="4">句子 4 - Steps to ensure</option>
+                <option value="5">句子 5 - Great accomplishments</option>
+                <option value="6">句子 6 - Composed largely</option>
+                <option value="7">句子 7 - Crops are advocated</option>
+                <option value="8">句子 8 - False alarms</option>
+                <option value="9">句子 9 - Shortage of eggs</option>
+                <option value="10">句子 10 - Structurally sound</option>
+            </select>
+        </div>
+
+        <div class="sentence-container">
+            <div id="sentence" class="sentence"></div>
+            <div id="translationPopup" class="translation-popup"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="speakFullSentence()">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"/>
+                </svg>
+                播放整句
+            </button>
+            
+            <button class="btn" onclick="toggleTranslation()">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z"/>
+                </svg>
+                顯示中文翻譯
+            </button>
+
+            <div class="speed-control">
+                <label for="speed">語速：</label>
+                <input type="range" id="speed" min="0.5" max="2" value="1" step="0.1" oninput="updateSpeed()">
+                <span class="speed-value" id="speedValue">1.0</span>
+            </div>
+        </div>
+
+        <div id="chineseTranslation" class="chinese-translation">
+            <h3>中文翻譯</h3>
+            <p id="translationText"></p>
+        </div>
+    </div>
+
+    <script>
+        // 單字字典
+        const dictionary = {
+            "heavy": "沉重的、大量的",
+            "rain": "雨、下雨",
+            "cancelled": "取消",
+            "scheduled": "安排、排定",
+            "delayed": "延遲、推遲",
+            "removed": "移除、去除",
+            "the": "這個、那個",
+            "start": "開始",
+            "of": "的、屬於",
+            "that": "那個",
+            "baseball": "棒球",
+            "game": "比賽、遊戲",
+            "by": "被、由、經由",
+            "one": "一個",
+            "hour": "小時",
+            "our": "我們的",
+            "health": "健康",
+            "is": "是",
+            "awarded": "授予、頒發",
+            "determined": "決定、確定",
+            "summarized": "總結、概括",
+            "observed": "觀察、遵守",
+            "in": "在...裡",
+            "part": "部分",
+            "what": "什麼",
+            "we": "我們",
+            "eat": "吃",
+            "and": "和、並且",
+            "how": "如何、怎麼",
+            "much": "很多、多少",
+            "exercise": "運動、練習",
+            "do": "做",
+            "have": "有、擁有",
+            "made": "做、製造",
+            "a": "一個",
+            "complaint": "投訴、抱怨",
+            "discount": "折扣",
+            "remark": "評論、言論",
+            "fortune": "財富、運氣",
+            "to": "到、向",
+            "police": "警察",
+            "about": "關於",
+            "smoke": "煙、煙霧",
+            "from": "從、來自",
+            "nearby": "附近的",
+            "restaurant": "餐廳",
+            "after": "之後",
+            "accident": "事故、意外",
+            "company": "公司",
+            "taking": "採取",
+            "new": "新的",
+            "steps": "步驟、措施",
+            "advise": "建議、勸告",
+            "resist": "抵抗、反抗",
+            "withdraw": "撤回、退出",
+            "ensure": "確保、保證",
+            "safety": "安全",
+            "its": "它的",
+            "employees": "員工",
+            "at": "在",
+            "work": "工作",
+            "maria": "瑪麗亞",
+            "curie": "居里",
+            "was": "是(過去式)",
+            "honored": "榮譽、表彰",
+            "with": "用、和",
+            "two": "兩個",
+            "nobel": "諾貝爾",
+            "prizes": "獎、獎品",
+            "for": "為了、因為",
+            "her": "她的",
+            "great": "偉大的",
+            "exposures": "曝光、暴露",
+            "accomplishments": "成就、成績",
+            "constructions": "建設、建築",
+            "landmarks": "地標、里程碑",
+            "as": "作為、如同",
+            "researcher": "研究員",
+            "both": "兩者都",
+            "physics": "物理學",
+            "chemistry": "化學",
+            "audience": "觀眾",
+            "jay": "周杰倫",
+            "chou's": "周杰倫的",
+            "concerts": "演唱會",
+            "composed": "組成、構成",
+            "nearly": "幾乎、將近",
+            "largely": "主要地、大部分地",
+            "perfectly": "完美地、完全地",
+            "barely": "幾乎不、勉強",
+            "young": "年輕的",
+            "people": "人們",
+            "you": "你",
+            "could": "能夠、可以",
+            "hardly": "幾乎不",
+            "see": "看見",
+            "middle-aged": "中年的",
+            "old": "老的",
+            "adults": "成年人",
+            "there": "那裡",
+            "genetically": "基因地",
+            "modified": "修改的、改良的",
+            "crops": "作物、農作物",
+            "are": "是(複數)",
+            "advocated": "提倡、支持",
+            "enclosed": "圍住、封閉",
+            "consulted": "諮詢、商量",
+            "negotiated": "協商、談判",
+            "their": "他們的",
+            "low": "低的",
+            "production": "生產",
+            "costs": "成本",
+            "high": "高的",
+            "productivity": "生產力",
+            "they": "他們",
+            "may": "可能",
+            "thus": "因此、所以",
+            "be": "是、成為",
+            "tool": "工具",
+            "reduce": "減少",
+            "world": "世界",
+            "hunger": "飢餓",
+            "first": "第一個",
+            "three": "三個",
+            "bomb": "炸彈",
+            "alerts": "警報",
+            "were": "是(過去式複數)",
+            "wrong": "錯誤的、不對的",
+            "bitter": "苦的、痛苦的",
+            "false": "錯誤的、虛假的",
+            "silent": "沉默的、無聲的",
+            "alarms": "警報",
+            "but": "但是",
+            "fourth": "第四個",
+            "real": "真實的",
+            "bird": "鳥",
+            "flu": "流感",
+            "killed": "殺死",
+            "thousands": "數千",
+            "chickens": "雞",
+            "this": "這個",
+            "country": "國家",
+            "vacancy": "空缺、空位",
+            "distribution": "分配、分布",
+            "formula": "公式、配方",
+            "shortage": "短缺、不足",
+            "eggs": "雞蛋",
+            "near": "接近的、附近的",
+            "future": "未來",
+            "possibility": "可能性",
+            "temple": "寺廟",
+            "still": "仍然",
+            "structurally": "結構上地",
+            "sound": "穩固的、健全的",
+            "valuable": "有價值的、貴重的",
+            "suitable": "合適的、適當的",
+            "confident": "自信的、有信心的",
+            "it": "它",
+            "stand": "站立、屹立",
+            "another": "另一個",
+            "five": "五",
+            "hundred": "百",
+            "years": "年"
+        };
+
+        // 版本內容
+        const versions = {
+            1: {
+                text: "Heavy rain delayed the start of that baseball game by one hour.",
+                blanks: ["delayed"],
+                translation: "大雨使那場棒球比賽的開始時間延遲了一小時。"
+            },
+            2: {
+                text: "Our health is determined in part by what we eat and how much exercise we do.",
+                blanks: ["determined"],
+                translation: "我們的健康部分取決於我們吃什麼和做多少運動。"
+            },
+            3: {
+                text: "We have made a complaint to the police about the smoke from a nearby restaurant.",
+                blanks: ["complaint"],
+                translation: "我們已經向警方投訴附近餐廳的煙霧問題。"
+            },
+            4: {
+                text: "After the accident, the company is taking new steps to ensure the safety of its employees at work.",
+                blanks: ["ensure"],
+                translation: "事故發生後，公司正在採取新措施來確保員工在工作中的安全。"
+            },
+            5: {
+                text: "Maria Curie was honored with two Nobel Prizes for her great accomplishments as a researcher in both physics and chemistry.",
+                blanks: ["accomplishments"],
+                translation: "瑪麗·居里因其在物理和化學研究方面的偉大成就而獲得兩項諾貝爾獎。"
+            },
+            6: {
+                text: "The audience in Jay Chou's concerts was composed largely of young people. You could hardly see middle-aged and old adults there.",
+                blanks: ["largely"],
+                translation: "周杰倫演唱會的觀眾主要由年輕人組成。你幾乎看不到中老年人。"
+            },
+            7: {
+                text: "Genetically modified crops are advocated for their low production costs and high productivity. They may thus be a tool to reduce world hunger.",
+                blanks: ["advocated"],
+                translation: "基因改造作物因其低生產成本和高生產力而被提倡。因此它們可能是減少世界飢餓的工具。"
+            },
+            8: {
+                text: "The first three bomb alerts were false alarms, but the fourth was real.",
+                blanks: ["false"],
+                translation: "前三次炸彈警報是虛驚，但第四次是真的。"
+            },
+            9: {
+                text: "Bird flu killed thousands of chickens in this country. A shortage of eggs in the near future is a real possibility.",
+                blanks: ["shortage"],
+                translation: "禽流感在這個國家殺死了數千隻雞。在不久的將來，雞蛋短缺是很有可能的。"
+            },
+            10: {
+                text: "This old temple is still structurally sound. It could stand another five hundred years.",
+                blanks: ["sound"],
+                translation: "這座古廟在結構上仍然很穩固。它還能再屹立五百年。"
+            }
+        };
+
+        let currentVersion = 1;
+        let speechRate = 1.0;
+        let currentPopup = null;
+
+        function initializeSentence() {
+            const version = versions[currentVersion];
+            const words = version.text.split(/\s+/);
+            const sentenceElement = document.getElementById('sentence');
+            sentenceElement.innerHTML = '';
+
+            words.forEach((word, index) => {
+                // 分離單字和標點符號
+                const punctuation = word.match(/[,.!?;:]$/);
+                const cleanWord = word.replace(/[,.!?;:]$/, '');
+                
+                const wordElement = document.createElement('span');
+                
+                // 檢查是否為空格單字
+                if (version.blanks && version.blanks.includes(cleanWord.toLowerCase())) {
+                    wordElement.className = 'word blank';
+                } else {
+                    wordElement.className = 'word';
+                }
+                
+                wordElement.textContent = cleanWord;
+                wordElement.onclick = () => translateWord(cleanWord, wordElement);
+                sentenceElement.appendChild(wordElement);
+                
+                // 添加標點符號
+                if (punctuation) {
+                    const punctNode = document.createTextNode(punctuation[0]);
+                    sentenceElement.appendChild(punctNode);
+                }
+                
+                // 添加空格（除了最後一個單字）
+                if (index < words.length - 1) {
+                    const spaceNode = document.createTextNode(' ');
+                    sentenceElement.appendChild(spaceNode);
+                }
+            });
+
+            // 更新中文翻譯
+            document.getElementById('translationText').textContent = version.translation;
+        }
+
+        function translateWord(word, element) {
+            // 移除之前的活動狀態
+            document.querySelectorAll('.word.active').forEach(w => w.classList.remove('active'));
+            
+            // 添加活動狀態
+            element.classList.add('active');
+            
+            const cleanWord = word.toLowerCase().replace(/[,.!?;:]/, '');
+            const translation = dictionary[cleanWord] || '未找到翻譯';
+            
+            // 創建或更新彈出窗口
+            const popup = document.getElementById('translationPopup');
+            popup.innerHTML = `
+                <div class="original">${word}</div>
+                <div class="chinese">${translation}</div>
+                <button class="speak-btn" onclick="speakWord('${word}')">🔊 發音</button>
+            `;
+            
+            // 計算位置
+            const rect = element.getBoundingClientRect();
+            const containerRect = element.closest('.sentence-container').getBoundingClientRect();
+            
+            popup.style.left = `${rect.left - containerRect.left}px`;
+            popup.style.top = `${rect.bottom - containerRect.top + 10}px`;
+            
+            // 顯示彈出窗口
+            popup.classList.add('show');
+            
+            // 3秒後自動隱藏
+            if (currentPopup) {
+                clearTimeout(currentPopup);
+            }
+            currentPopup = setTimeout(() => {
+                popup.classList.remove('show');
+                element.classList.remove('active');
+            }, 3000);
+        }
+
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = speechRate;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakFullSentence() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(versions[currentVersion].text);
+                utterance.lang = 'en-US';
+                utterance.rate = speechRate;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function toggleTranslation() {
+            const translationDiv = document.getElementById('chineseTranslation');
+            translationDiv.classList.toggle('show');
+        }
+
+        function updateSpeed() {
+            const speedSlider = document.getElementById('speed');
+            speechRate = parseFloat(speedSlider.value);
+            document.getElementById('speedValue').textContent = speechRate.toFixed(1);
+        }
+
+        function changeVersion() {
+            const versionSelect = document.getElementById('version');
+            currentVersion = parseInt(versionSelect.value);
+            initializeSentence();
+            
+            // 隱藏翻譯和彈出窗口
+            document.getElementById('chineseTranslation').classList.remove('show');
+            document.getElementById('translationPopup').classList.remove('show');
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSentence();
+        });
+
+        // 點擊其他地方關閉彈出窗口
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('word') && !e.target.closest('.translation-popup')) {
+                document.getElementById('translationPopup').classList.remove('show');
+                document.querySelectorAll('.word.active').forEach(w => w.classList.remove('active'));
+            }
+        });
+    </script>
+</body>
+</html>

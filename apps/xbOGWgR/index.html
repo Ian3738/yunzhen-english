@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文文法複習</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            color: #333;
+            font-weight: bold;
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .tab-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .grammar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+        .grammar-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .grammar-table td {
+            border: 2px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        .grammar-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            font-size: 1.1rem;
+        }
+        .example-box {
+            background: #e7f5ff;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .example-box .en {
+            font-size: 1.2rem;
+            color: #1971c2;
+            font-weight: bold;
+        }
+        .example-box .zh {
+            color: #666;
+            margin-top: 5px;
+        }
+        .practice-area {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .practice-title {
+            font-size: 1.3rem;
+            color: #495057;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .question {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .option-btn {
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        .option-btn.correct {
+            background: #51cf66;
+            border-color: #51cf66;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: #ff6b6b;
+            border-color: #ff6b6b;
+            color: white;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 1.1rem;
+        }
+        .feedback.correct {
+            display: block;
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+        .feedback.wrong {
+            display: block;
+            background: #ffe3e3;
+            color: #c92a2a;
+        }
+        .score-area {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .score {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .reset-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .reset-btn:hover {
+            background: #5a67d8;
+        }
+        .pronoun-card {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        .arrow {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin: 0 10px;
+        }
+        @media (max-width: 600px) {
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            .grammar-table {
+                font-size: 0.9rem;
+            }
+            .grammar-table th, .grammar-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 英文文法複習</h1>
+        
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('bev')">Be 動詞</button>
+            <button class="tab-btn" onclick="showTab('possessive')">所有格</button>
+            <button class="tab-btn" onclick="showTab('object')">受詞</button>
+            <button class="tab-btn" onclick="showTab('verb')">一般動詞</button>
+            <button class="tab-btn" onclick="showTab('practice')">綜合練習</button>
+        </div>
+
+        <!-- Be 動詞 -->
+        <div id="bev" class="tab-content active">
+            <h2 class="section-title">Be 動詞（is / am / are）</h2>
+            
+            <div class="highlight-box">
+                💡 <strong>記憶口訣：</strong>我用 am，你用 are，is 用在他她它！
+            </div>
+
+            <table class="grammar-table">
+                <tr>
+                    <th>主詞</th>
+                    <th>Be 動詞</th>
+                    <th>例句</th>
+                </tr>
+                <tr>
+                    <td><strong>I</strong>（我）</td>
+                    <td style="color:#e74c3c; font-weight:bold; font-size:1.3rem;">am</td>
+                    <td>I <span style="color:#e74c3c">am</span> a student.</td>
+                </tr>
+                <tr>
+                    <td><strong>You</strong>（你/你們）</td>
+                    <td style="color:#27ae60; font-weight:bold; font-size:1.3rem;">are</td>
+                    <td>You <span style="color:#27ae60">are</span> my friend.</td>
+                </tr>
+                <tr>
+                    <td><strong>We</strong>（我們）</td>
+                    <td style="color:#27ae60; font-weight:bold; font-size:1.3rem;">are</td>
+                    <td>We <span style="color:#27ae60">are</span> happy.</td>
+                </tr>
+                <tr>
+                    <td><strong>They</strong>（他們）</td>
+                    <td style="color:#27ae60; font-weight:bold; font-size:1.3rem;">are</td>
+                    <td>They <span style="color:#27ae60">are</span> teachers.</td>
+                </tr>
+                <tr>
+                    <td><strong>He</strong>（他）</td>
+                    <td style="color:#3498db; font-weight:bold; font-size:1.3rem;">is</td>
+                    <td>He <span style="color:#3498db">is</span> tall.</td>
+                </tr>
+                <tr>
+                    <td><strong>She</strong>（她）</td>
+                    <td style="color:#3498db; font-weight:bold; font-size:1.3rem;">is</td>
+                    <td>She <span style="color:#3498db">is</span> kind.</td>
+                </tr>
+                <tr>
+                    <td><strong>It</strong>（它）</td>
+                    <td style="color:#3498db; font-weight:bold; font-size:1.3rem;">is</td>
+                    <td>It <span style="color:#3498db">is</span> a cat.</td>
+                </tr>
+                <tr>
+                    <td><strong>The dog</strong>（單數名詞）</td>
+                    <td style="color:#3498db; font-weight:bold; font-size:1.3rem;">is</td>
+                    <td>The dog <span style="color:#3498db">is</span> cute.</td>
+                </tr>
+                <tr>
+                    <td><strong>The dogs</strong>（複數名詞）</td>
+                    <td style="color:#27ae60; font-weight:bold; font-size:1.3rem;">are</td>
+                    <td>The dogs <span style="color:#27ae60">are</span> cute.</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                ⚠️ <strong>注意：</strong>「You and I」用 <strong>are</strong>（因為是兩個人）
+            </div>
+        </div>
+
+        <!-- 所有格 -->
+        <div id="possessive" class="tab-content">
+            <h2 class="section-title">所有格（表示「...的」）</h2>
+            
+            <div class="highlight-box">
+                💡 <strong>所有格</strong>放在名詞前面，表示「誰的東西」
+            </div>
+
+            <table class="grammar-table">
+                <tr>
+                    <th>主格（主詞）</th>
+                    <th>所有格（...的）</th>
+                    <th>例句</th>
+                </tr>
+                <tr>
+                    <td>I（我）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">my（我的）</td>
+                    <td>This is <span style="color:#9b59b6">my</span> book.</td>
+                </tr>
+                <tr>
+                    <td>you（你）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">your（你的）</td>
+                    <td>This is <span style="color:#9b59b6">your</span> pen.</td>
+                </tr>
+                <tr>
+                    <td>he（他）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">his（他的）</td>
+                    <td>This is <span style="color:#9b59b6">his</span> bag.</td>
+                </tr>
+                <tr>
+                    <td>she（她）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">her（她的）</td>
+                    <td>This is <span style="color:#9b59b6">her</span> cat.</td>
+                </tr>
+                <tr>
+                    <td>it（它）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">its（它的）</td>
+                    <td>The dog likes <span style="color:#9b59b6">its</span> food.</td>
+                </tr>
+                <tr>
+                    <td>we（我們）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">our（我們的）</td>
+                    <td>This is <span style="color:#9b59b6">our</span> school.</td>
+                </tr>
+                <tr>
+                    <td>they（他們）</td>
+                    <td style="color:#9b59b6; font-weight:bold; font-size:1.2rem;">their（他們的）</td>
+                    <td>This is <span style="color:#9b59b6">their</span> house.</td>
+                </tr>
+            </table>
+
+            <div class="example-box">
+                <div class="en">📌 「你媽媽」= your mother</div>
+                <div class="zh">「你」要改成所有格「your」+ 名詞「mother」</div>
+            </div>
+
+            <div class="example-box">
+                <div class="en">📌 「他的書」= his book</div>
+                <div class="zh">「他」要改成所有格「his」+ 名詞「book」</div>
+            </div>
+        </div>
+
+        <!-- 受詞 -->
+        <div id="object" class="tab-content">
+            <h2 class="section-title">受詞（動作的對象）</h2>
+            
+            <div class="highlight-box">
+                💡 <strong>受詞</strong>放在動詞後面，表示「動作的對象」
+            </div>
+
+            <table class="grammar-table">
+                <tr>
+                    <th>主格（主詞）</th>
+                    <th>受格（受詞）</th>
+                    <th>例句</th>
+                </tr>
+                <tr>
+                    <td>I（我）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">me（我）</td>
+                    <td>She likes <span style="color:#e67e22">me</span>.（她喜歡我）</td>
+                </tr>
+                <tr>
+                    <td>you（你）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">you（你）</td>
+                    <td>I like <span style="color:#e67e22">you</span>.（我喜歡你）</td>
+                </tr>
+                <tr>
+                    <td>he（他）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">him（他）</td>
+                    <td>I see <span style="color:#e67e22">him</span>.（我看見他）</td>
+                </tr>
+                <tr>
+                    <td>she（她）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">her（她）</td>
+                    <td>I help <span style="color:#e67e22">her</span>.（我幫助她）</td>
+                </tr>
+                <tr>
+                    <td>it（它）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">it（它）</td>
+                    <td>I want <span style="color:#e67e22">it</span>.（我要它）</td>
+                </tr>
+                <tr>
+                    <td>we（我們）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">us（我們）</td>
+                    <td>He helps <span style="color:#e67e22">us</span>.（他幫助我們）</td>
+                </tr>
+                <tr>
+                    <td>they（他們）</td>
+                    <td style="color:#e67e22; font-weight:bold; font-size:1.2rem;">them（他們）</td>
+                    <td>I know <span style="color:#e67e22">them</span>.（我認識他們）</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                ⚠️ <strong>注意：</strong>「her」可以是「她的」（所有格）或「她」（受詞），要看位置！
+                <br>・Her book（她的書）→ 所有格
+                <br>・I help her（我幫助她）→ 受詞
+            </div>
+        </div>
+
+        <!-- 一般動詞 -->
+        <div id="verb" class="tab-content">
+            <h2 class="section-title">一般動詞現在式</h2>
+            
+            <div class="highlight-box">
+                💡 <strong>規則：</strong>第三人稱單數（He / She / It / 單數名詞）→ 動詞要加 <strong>s</strong> 或 <strong>es</strong>
+            </div>
+
+            <table class="grammar-table">
+                <tr>
+                    <th>主詞</th>
+                    <th>動詞形式</th>
+                    <th>例句</th>
+                </tr>
+                <tr>
+                    <td>I / You / We / They</td>
+                    <td style="color:#16a085; font-weight:bold;">原形動詞</td>
+                    <td>They <span style="color:#16a085">play</span> basketball.</td>
+                </tr>
+                <tr>
+                    <td>He / She / It / 單數名詞</td>
+                    <td style="color:#e74c3c; font-weight:bold;">動詞 + s / es</td>
+                    <td>She <span style="color:#e74c3c">plays</span> basketball.</td>
+                </tr>
+            </table>
+
+            <h3 style="margin-top:30px; color:#333;">📝 動詞變化規則</h3>
+            
+            <table class="grammar-table">
+                <tr>
+                    <th>規則</th>
+                    <th>原形</th>
+                    <th>第三人稱單數</th>
+                </tr>
+                <tr>
+                    <td>大部分動詞：加 <strong>s</strong></td>
+                    <td>play, like, read</td>
+                    <td style="color:#e74c3c">plays, likes, reads</td>
+                </tr>
+                <tr>
+                    <td>字尾 s, sh, ch, x, o：加 <strong>es</strong></td>
+                    <td>go, do, watch</td>
+                    <td style="color:#e74c3c">goes, does, watches</td>
+                </tr>
+                <tr>
+                    <td>字尾子音 + y：去 y 加 <strong>ies</strong></td>
+                    <td>study, cry</td>
+                    <td style="color:#e74c3c">studies, cries</td>
+                </tr>
+                <tr>
+                    <td>特殊變化</td>
+                    <td>have</td>
+                    <td style="color:#e74c3c">has</td>
+                </tr>
+            </table>
+
+            <div class="example-box">
+                <div class="en">✅ He goes to school. ❌ He go to school.</div>
+                <div class="zh">他去學校。（He 是第三人稱單數，go 要加 es）</div>
+            </div>
+
+            <div class="example-box">
+                <div class="en">✅ She does her homework. ❌ She do her homework.</div>
+                <div class="zh">她做她的作業。（She 是第三人稱單數，do 要加 es）</div>
+            </div>
+        </div>
+
+        <!-- 綜合練習 -->
+        <div id="practice" class="tab-content">
+            <h2 class="section-title">🎯 綜合練習</h2>
+            
+            <div class="practice-area">
+                <div class="practice-title">📝 選出正確答案</div>
+                
+                <div id="questions-container"></div>
+
+                <div class="score-area" id="score-area" style="display:none;">
+                    <div class="score">得分：<span id="score">0</span> / <span id="total">0</span></div>
+                    <button class="reset-btn" onclick="resetQuiz()">🔄 重新練習</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "I _____ a student.", options: ["am", "is", "are"], answer: 0, type: "Be動詞" },
+            { q: "She _____ happy.", options: ["am", "is", "are"], answer: 1, type: "Be動詞" },
+            { q: "They _____ my friends.", options: ["am", "is", "are"], answer: 2, type: "Be動詞" },
+            { q: "The cat _____ cute.", options: ["am", "is", "are"], answer: 1, type: "Be動詞" },
+            { q: "We _____ classmates.", options: ["am", "is", "are"], answer: 2, type: "Be動詞" },
+            { q: "This is _____ book. (我的)", options: ["I", "my", "me"], answer: 1, type: "所有格" },
+            { q: "_____ mother is a teacher. (他的)", options: ["He", "Him", "His"], answer: 2, type: "所有格" },
+            { q: "I love _____ cat. (她的)", options: ["she", "her", "hers"], answer: 1, type: "所有格" },
+            { q: "This is _____ school. (我們的)", options: ["we", "us", "our"], answer: 2, type: "所有格" },
+            { q: "She likes _____. (我)", options: ["I", "my", "me"], answer: 2, type: "受詞" },
+            { q: "I help _____. (他)", options: ["he", "his", "him"], answer: 2, type: "受詞" },
+            { q: "They know _____. (我們)", options: ["we", "our", "us"], answer: 2, type: "受詞" },
+            { q: "He _____ to school every day.", options: ["go", "goes"], answer: 1, type: "一般動詞" },
+            { q: "She _____ her homework.", options: ["do", "does"], answer: 1, type: "一般動詞" },
+            { q: "They _____ basketball.", options: ["play", "plays"], answer: 0, type: "一般動詞" },
+            { q: "My mom _____ breakfast.", options: ["make", "makes"], answer: 1, type: "一般動詞" },
+            { q: "We _____ English.", options: ["study", "studies"], answer: 0, type: "一般動詞" },
+            { q: "The dog _____ fast.", options: ["run", "runs"], answer: 1, type: "一般動詞" },
+            { q: "Tom _____ a book.", options: ["have", "has"], answer: 1, type: "一般動詞" },
+            { q: "I _____ TV every night.", options: ["watch", "watches"], answer: 0, type: "一般動詞" }
+        ];
+
+        let currentScore = 0;
+        let answeredCount = 0;
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabId === 'practice') {
+                initQuiz();
+            }
+        }
+
+        function initQuiz() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            currentScore = 0;
+            answeredCount = 0;
+            document.getElementById('score-area').style.display = 'none';
+
+            // 隨機選10題
+            const shuffled = [...questions].sort(() => Math.random() - 0.5).slice(0, 10);
+            
+            shuffled.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-text">
+                        <span style="color:#667eea; font-weight:bold;">${index + 1}.</span> 
+                        <span style="background:#e9ecef; padding:2px 8px; border-radius:10px; font-size:0.85rem; color:#666;">${q.type}</span>
+                        <br><br>${q.q}
+                    </div>
+                    <div class="options" id="options-${index}">
+                        ${q.options.map((opt, i) => `
+                            <button class="option-btn" onclick="checkAnswer(${index}, ${i}, ${q.answer})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="feedback-${index}"></div>
+                `;
+                container.appendChild(questionDiv);
+            });
+
+            document.getElementById('total').textContent = shuffled.length;
+        }
+
+        function checkAnswer(qIndex, selected, correct) {
+            const optionsDiv = document.getElementById(`options-${qIndex}`);
+            const buttons = optionsDiv.querySelectorAll('.option-btn');
+            const feedback = document.getElementById(`feedback-${qIndex}`);
+
+            buttons.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === correct) {
+                    btn.classList.add('correct');
+                } else if (i === selected && selected !== correct) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                feedback.textContent = '✅ 正確！太棒了！';
+                feedback.className = 'feedback correct';
+                currentScore++;
+            } else {
+                feedback.textContent = '❌ 再想想看！正確答案已標示。';
+                feedback.className = 'feedback wrong';
+            }
+
+            answeredCount++;
+            document.getElementById('score').textContent = currentScore;
+
+            if (answeredCount === 10) {
+                document.getElementById('score-area').style.display = 'block';
+                document.getElementById('score-area').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function resetQuiz() {
+            initQuiz();
+            document.querySelector('.practice-area').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 預先載入練習題
+        });
+    </script>
+</body>
+</html>

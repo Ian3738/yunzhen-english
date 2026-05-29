@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L02 單字練習｜My Mouth's in Airplane Mode!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #e8f4fd;
+    --cloud: #ffffff;
+    --blue-deep: #1a6faf;
+    --blue-mid: #2e9cca;
+    --blue-light: #7ecef4;
+    --accent: #f7941d;
+    --accent2: #e84393;
+    --green: #27ae60;
+    --red: #e74c3c;
+    --gold: #f1c40f;
+    --text: #1a2a3a;
+    --text-soft: #4a6080;
+    --shadow: 0 4px 20px rgba(26,111,175,0.12);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--sky);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated sky background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #b8dff7 0%, #ddeefa 40%, #e8f4fd 100%);
+    z-index: -2;
+  }
+
+  /* Floating clouds */
+  .cloud-bg {
+    position: fixed;
+    z-index: -1;
+    opacity: 0.55;
+    animation: drift linear infinite;
+  }
+  .cloud-bg svg { fill: white; filter: drop-shadow(0 4px 12px rgba(100,180,255,0.15)); }
+  .c1 { top: 8%; left: -120px; animation-duration: 60s; }
+  .c2 { top: 22%; right: -80px; animation-duration: 45s; animation-direction: reverse; }
+  .c3 { top: 55%; left: -60px; animation-duration: 75s; }
+  .c4 { top: 70%; right: -100px; animation-duration: 52s; animation-direction: reverse; }
+
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 200px)); }
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 100%);
+    color: white;
+    padding: 20px 24px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(26,111,175,0.3);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .plane-icon { font-size: 32px; animation: fly 3s ease-in-out infinite; }
+  @keyframes fly {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-6px) rotate(5deg); }
+  }
+
+  .header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+  .header h1 span { font-size: 13px; font-weight: 600; opacity: 0.85; display: block; }
+
+  /* Stage tabs */
+  .stage-tabs {
+    display: flex;
+    gap: 8px;
+  }
+
+  .stage-tab {
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 30px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .stage-tab.active {
+    background: white;
+    color: var(--blue-deep);
+    border-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+
+  /* Wrong list banner */
+  .wrong-banner {
+    display: none;
+    margin: 14px 20px 0;
+    background: linear-gradient(135deg, #fff0f0, #fff8f8);
+    border: 2px solid var(--red);
+    border-radius: 14px;
+    padding: 12px 16px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .wrong-banner.show { display: flex; }
+
+  .wrong-banner-text {
+    flex: 1;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #c0392b;
+    line-height: 1.4;
+  }
+
+  .wrong-banner-text strong { font-size: 20px; }
+
+  .retry-btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: none;
+    background: var(--red);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(231,76,60,0.35);
+    transition: all 0.2s;
+  }
+
+  .retry-btn:active { transform: scale(0.97); }
+
+  /* Wrong list preview chips */
+  .wrong-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 20px;
+    margin-top: 8px;
+    display: none;
+  }
+
+  .wrong-chips.show { display: flex; }
+
+  .wrong-chip {
+    background: #fdecea;
+    border: 1.5px solid #e74c3c;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #c0392b;
+  }
+
+  /* Retry mode header stripe */
+  .retry-stripe {
+    display: none;
+    background: linear-gradient(90deg, var(--red), #c0392b);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .retry-stripe.show { display: block; }
+
+  /* Wrong badge on card */
+  .retry-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--red);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  /* Mode selector */
+  .mode-selector {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px 0;
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 12px 8px;
+    border-radius: 14px;
+    border: 2px solid var(--blue-light);
+    background: white;
+    color: var(--blue-deep);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .mode-btn.active {
+    background: var(--blue-deep);
+    border-color: var(--blue-deep);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,111,175,0.3);
+  }
+
+  .mode-btn .mode-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+
+  /* Progress bar */
+  .progress-wrap {
+    padding: 14px 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 10px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, #f7c040 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    min-width: 0;
+  }
+
+  .progress-label {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--blue-deep);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* Score strip */
+  .score-strip {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 20px 0;
+  }
+
+  .score-item {
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .score-num {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-top: 2px;
+  }
+
+  .score-correct .score-num { color: var(--green); }
+  .score-wrong .score-num { color: var(--red); }
+  .score-remain .score-num { color: var(--blue-mid); }
+
+  /* Main content area */
+  .main {
+    padding: 16px 20px 100px;
+  }
+
+  /* Card */
+  .quiz-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    animation: slideUp 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quiz-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue-mid), var(--accent));
+    border-radius: 4px 4px 0 0;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .quiz-card.correct {
+    border-color: var(--green);
+    background: #f0faf4;
+  }
+
+  .quiz-card.wrong {
+    border-color: var(--red);
+    background: #fef5f5;
+  }
+
+  /* Word number badge */
+  .word-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-deep);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .stage-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  /* Question word */
+  .question-word {
+    font-family: 'Nunito', sans-serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .question-phonetic {
+    font-size: 15px;
+    color: var(--text-soft);
+    margin-bottom: 4px;
+    font-style: italic;
+  }
+
+  .question-pos {
+    font-size: 13px;
+    color: var(--blue-mid);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+
+  /* English to Chinese - MCQ */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .option-btn {
+    padding: 16px 12px;
+    border-radius: 14px;
+    border: 2.5px solid #d0e8f7;
+    background: #f5f9fd;
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+    line-height: 1.4;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option-btn:active { transform: scale(0.97); }
+
+  .option-btn.selected-correct {
+    background: #e8faf0;
+    border-color: var(--green);
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .option-btn.selected-wrong {
+    background: #fdecea;
+    border-color: var(--red);
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .option-btn.reveal-correct {
+    background: #e8faf0;
+    border-color: var(--green);
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .option-btn:disabled {
+    cursor: default;
+  }
+
+  /* Chinese to English - Fill in */
+  .ch-prompt {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .fill-wrap {
+    position: relative;
+    margin-bottom: 14px;
+  }
+
+  .fill-input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 2.5px solid var(--blue-light);
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    background: #f5f9fd;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  .fill-input:focus { border-color: var(--blue-mid); background: white; }
+  .fill-input.correct { border-color: var(--green); background: #e8faf0; color: var(--green); }
+  .fill-input.wrong { border-color: var(--red); background: #fdecea; color: var(--red); }
+
+  /* Hint button */
+  .hint-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .hint-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    border: 2px dashed var(--blue-light);
+    background: transparent;
+    color: var(--blue-mid);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .hint-btn:hover { background: #eaf6ff; }
+
+  .hint-text {
+    background: #fff8e1;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 18px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 10px;
+    display: none;
+  }
+
+  /* Submit btn */
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep));
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(26,111,175,0.35);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    display: none;
+    line-height: 1.5;
+  }
+
+  .feedback.correct {
+    background: #e8faf0;
+    color: #1a7a42;
+    border: 2px solid #6fcf97;
+    display: block;
+  }
+
+  .feedback.wrong {
+    background: #fdecea;
+    color: #c0392b;
+    border: 2px solid #e74c3c;
+    display: block;
+  }
+
+  /* Next button */
+  .next-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 16px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), #e07b10);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(247,148,29,0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  .next-btn.show { display: flex; }
+
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 4px 14px rgba(247,148,29,0.35); }
+    50% { box-shadow: 0 6px 24px rgba(247,148,29,0.55); }
+  }
+
+  /* Completion screen */
+  .completion {
+    text-align: center;
+    padding: 40px 20px;
+    display: none;
+  }
+
+  .completion.show { display: block; }
+
+  .completion-plane { font-size: 80px; animation: bigFly 2s ease-in-out infinite; }
+  @keyframes bigFly {
+    0%,100% { transform: translateY(0) rotate(-8deg); }
+    50% { transform: translateY(-15px) rotate(8deg); }
+  }
+
+  .completion h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--blue-deep);
+    margin: 16px 0 8px;
+  }
+
+  .completion-score {
+    font-size: 56px;
+    font-weight: 900;
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, var(--blue-mid), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 10px 0;
+  }
+
+  .completion p {
+    color: var(--text-soft);
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .restart-btn {
+    padding: 16px 32px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep));
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(26,111,175,0.35);
+    margin: 6px;
+  }
+
+  /* Bottom nav spacer */
+  .spacer { height: 20px; }
+
+  /* Responsive */
+  @media (min-width: 600px) {
+    .main { max-width: 580px; margin: 0 auto; }
+    .header { padding: 20px 32px 16px; }
+    .question-word { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cloud backgrounds -->
+<div class="cloud-bg c1">
+  <svg width="160" height="60" viewBox="0 0 160 60"><ellipse cx="80" cy="40" rx="70" ry="20"/><ellipse cx="55" cy="30" rx="35" ry="22"/><ellipse cx="105" cy="28" rx="30" ry="20"/></svg>
+</div>
+<div class="cloud-bg c2">
+  <svg width="120" height="50" viewBox="0 0 120 50"><ellipse cx="60" cy="35" rx="55" ry="15"/><ellipse cx="40" cy="25" rx="28" ry="18"/><ellipse cx="85" cy="22" rx="25" ry="17"/></svg>
+</div>
+<div class="cloud-bg c3">
+  <svg width="90" height="40" viewBox="0 0 90 40"><ellipse cx="45" cy="28" rx="40" ry="12"/><ellipse cx="30" cy="20" rx="20" ry="14"/><ellipse cx="62" cy="18" rx="18" ry="13"/></svg>
+</div>
+<div class="cloud-bg c4">
+  <svg width="140" height="55" viewBox="0 0 140 55"><ellipse cx="70" cy="38" rx="62" ry="17"/><ellipse cx="48" cy="28" rx="32" ry="20"/><ellipse cx="98" cy="25" rx="28" ry="18"/></svg>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-top">
+    <div class="plane-icon">✈️</div>
+    <div>
+      <h1>L02 單字練習<span>My Mouth's in Airplane Mode!</span></h1>
+    </div>
+  </div>
+  <div class="stage-tabs">
+    <button class="stage-tab active" id="tab-basic" onclick="setStage('basic')">
+      🌱 基礎單字
+    </button>
+    <button class="stage-tab" id="tab-advanced" onclick="setStage('advanced')">
+      🚀 進階單字
+    </button>
+  </div>
+</div>
+
+<!-- Retry mode stripe -->
+<div class="retry-stripe" id="retry-stripe">🔁 錯題複習模式</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Mode selector -->
+  <div class="mode-selector">
+    <button class="mode-btn active" id="mode-e2c" onclick="setMode('e2c')">
+      <span class="mode-icon">🔤</span>英翻中<br><small>看英文選中文</small>
+    </button>
+    <button class="mode-btn" id="mode-c2e" onclick="setMode('c2e')">
+      <span class="mode-icon">✏️</span>中翻英<br><small>看中文填英文</small>
+    </button>
+  </div>
+
+  <!-- Wrong list banner -->
+  <div class="wrong-banner" id="wrong-banner">
+    <div class="wrong-banner-text">
+      <strong id="wrong-count-num">0</strong> 個錯題<br>要複習一下嗎？
+    </div>
+    <button class="retry-btn" onclick="startRetry()">🔁 練錯題</button>
+  </div>
+  <div class="wrong-chips" id="wrong-chips"></div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progress-label">0 / 0</div>
+  </div>
+
+  <!-- Score -->
+  <div class="score-strip">
+    <div class="score-item score-correct">
+      <div class="score-num" id="score-correct">0</div>
+      <div class="score-label">✅ 答對</div>
+    </div>
+    <div class="score-item score-wrong">
+      <div class="score-num" id="score-wrong">0</div>
+      <div class="score-label">❌ 答錯</div>
+    </div>
+    <div class="score-item score-remain">
+      <div class="score-num" id="score-remain">0</div>
+      <div class="score-label">📋 剩餘</div>
+    </div>
+  </div>
+
+  <!-- Quiz area -->
+  <div id="quiz-area" style="margin-top:16px;"></div>
+
+  <!-- Completion -->
+  <div class="completion" id="completion-screen">
+    <div class="completion-plane">✈️</div>
+    <h2>順利降落！</h2>
+    <div class="completion-score" id="final-score"></div>
+    <p id="final-msg"></p>
+    <button class="restart-btn" onclick="restartSame()">🔄 再練一次</button>
+    <button class="restart-btn" id="retry-wrong-btn" onclick="startRetry()" style="background:linear-gradient(135deg,var(--red),#c0392b);display:none">🔁 練錯題</button>
+    <button class="restart-btn" onclick="switchStage()" id="switch-stage-btn" style="background:linear-gradient(135deg,var(--accent),#e07b10)">➡️ 換難度</button>
+  </div>
+
+</div>
+
+<script>
+// ===================== WORD DATA =====================
+const wordData = {
+  basic: [
+    { en: 'warn', zh: '警告；提醒', pos: 'v.', phonetic: '/wɔrn/' },
+    { en: 'announcement', zh: '公告；廣播通知', pos: 'n.', phonetic: '/əˈnaʊnsmənt/' },
+    { en: 'research', zh: '研究', pos: 'n./v.', phonetic: '/ˈrisɜrtʃ/' },
+    { en: 'flavor', zh: '味道', pos: 'n.', phonetic: '/ˈflevɚ/' },
+    { en: 'pressure', zh: '壓力', pos: 'n.', phonetic: '/ˈprɛʃɚ/' },
+    { en: 'normally', zh: '通常', pos: 'adv.', phonetic: '/ˈnɔrmlɪ/' },
+    { en: 'accurately', zh: '精確地；準確地', pos: 'adv.', phonetic: '/ˈækjərɪtlɪ/' },
+    { en: 'function', zh: '運作；起作用', pos: 'v./n.', phonetic: '/ˈfʌŋkʃən/' },
+    { en: 'blame', zh: '歸咎於；責怪', pos: 'v.', phonetic: '/blem/' },
+    { en: 'affect', zh: '影響', pos: 'v.', phonetic: '/əˈfɛkt/' },
+    { en: 'passenger', zh: '乘客', pos: 'n.', phonetic: '/ˈpæsṇdʒɚ/' },
+    { en: 'distract', zh: '使分心；使轉移注意力', pos: 'v.', phonetic: '/dɪˈstrækt/' },
+    { en: 'indicate', zh: '指出', pos: 'v.', phonetic: '/ˈɪndəˌket/' },
+    { en: 'solution', zh: '解決方法', pos: 'n.', phonetic: '/səˈluʃən/' },
+    { en: 'remain', zh: '保持', pos: 'v.', phonetic: '/rɪˈmen/' },
+    { en: 'provide', zh: '提供', pos: 'v.', phonetic: '/prəˈvaɪd/' },
+    { en: 'pleasant', zh: '令人愉快的', pos: 'adj.', phonetic: '/ˈplɛzṇt/' },
+  ],
+  advanced: [
+    { en: 'flavoring', zh: '調味料', pos: 'n.', phonetic: '/ˈflevərɪŋ/' },
+    { en: 'distinguish', zh: '分辨', pos: 'v.', phonetic: '/dɪˈstɪŋgwɪʃ/' },
+    { en: 'ingredient', zh: '（食物的）材料；成分', pos: 'n.', phonetic: '/ɪnˈgridɪənt/' },
+    { en: 'recipe', zh: '食譜', pos: 'n.', phonetic: '/ˈrɛsəpɪ/' },
+    { en: 'comparison', zh: '比較', pos: 'n.', phonetic: '/kəmˈpærəsṇ/' },
+    { en: 'conditions', zh: '情況；環境', pos: 'n. pl.', phonetic: '/kənˈdɪʃənz/' },
+    { en: 'indication', zh: '跡象', pos: 'n.', phonetic: '/ˌɪndəˈkeʃən/' },
+    { en: 'distraction', zh: '使人分心的事物', pos: 'n.', phonetic: '/dɪˈstrækʃən/' },
+    { en: 'altitude', zh: '高度；海拔', pos: 'n.', phonetic: '/ˈæltɪtjuːd/' },
+    { en: 'humidity', zh: '溼度', pos: 'n.', phonetic: '/hjuːˈmɪdɪti/' },
+    { en: 'sensitive', zh: '敏感的', pos: 'adj.', phonetic: '/ˈsɛnsɪtɪv/' },
+    { en: 'accurate', zh: '精確的；準確的', pos: 'adj.', phonetic: '/ˈækjərɪt/' },
+    { en: 'bland', zh: '平淡無味的', pos: 'adj.', phonetic: '/blænd/' },
+    { en: 'savory', zh: '鹹香可口的', pos: 'adj.', phonetic: '/ˈsevəri/' },
+    { en: 'regardless', zh: '不管；不論', pos: 'adv.', phonetic: '/rɪˈgɑrdlɪs/' },
+  ]
+};
+
+// ===================== STATE =====================
+let currentStage = 'basic';
+let currentMode = 'e2c';
+let queue = [];
+let currentIndex = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = false;
+let hintRevealed = false;
+let hintCount = 0;
+let wrongWords = [];      // accumulates across this session
+let isRetryMode = false;
+
+// ===================== INIT =====================
+function initQuiz() {
+  isRetryMode = false;
+  const words = [...wordData[currentStage]];
+  queue = words.sort(() => Math.random() - 0.5);
+  currentIndex = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  wrongWords = [];
+  updateScoreDisplay();
+  updateWrongBanner();
+  document.getElementById('completion-screen').classList.remove('show');
+  document.getElementById('quiz-area').style.display = '';
+  document.getElementById('retry-stripe').classList.remove('show');
+  renderQuestion();
+}
+
+function updateScoreDisplay() {
+  document.getElementById('score-correct').textContent = correctCount;
+  document.getElementById('score-wrong').textContent = wrongCount;
+  document.getElementById('score-remain').textContent = Math.max(0, queue.length - currentIndex);
+  const pct = queue.length > 0 ? (currentIndex / queue.length) * 100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = currentIndex + ' / ' + queue.length;
+}
+
+function updateWrongBanner() {
+  const banner = document.getElementById('wrong-banner');
+  const chips = document.getElementById('wrong-chips');
+  const countEl = document.getElementById('wrong-count-num');
+
+  if (wrongWords.length > 0 && !isRetryMode) {
+    banner.classList.add('show');
+    chips.classList.add('show');
+    countEl.textContent = wrongWords.length;
+    chips.innerHTML = wrongWords.map(w =>
+      `<span class="wrong-chip">${w.en}</span>`
+    ).join('');
+  } else {
+    banner.classList.remove('show');
+    chips.classList.remove('show');
+  }
+}
+
+// ===================== STAGE / MODE =====================
+function setStage(stage) {
+  currentStage = stage;
+  document.getElementById('tab-basic').classList.toggle('active', stage === 'basic');
+  document.getElementById('tab-advanced').classList.toggle('active', stage === 'advanced');
+  initQuiz();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-e2c').classList.toggle('active', mode === 'e2c');
+  document.getElementById('mode-c2e').classList.toggle('active', mode === 'c2e');
+  initQuiz();
+}
+
+// ===================== RETRY MODE =====================
+function startRetry() {
+  if (wrongWords.length === 0) return;
+  isRetryMode = true;
+  queue = [...wrongWords].sort(() => Math.random() - 0.5);
+  wrongWords = [];
+  currentIndex = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  updateScoreDisplay();
+  updateWrongBanner();
+  document.getElementById('completion-screen').classList.remove('show');
+  document.getElementById('quiz-area').style.display = '';
+  document.getElementById('retry-stripe').classList.add('show');
+  renderQuestion();
+}
+
+// ===================== RENDER =====================
+function renderQuestion() {
+  if (currentIndex >= queue.length) {
+    showCompletion();
+    return;
+  }
+
+  answered = false;
+  hintRevealed = false;
+  hintCount = 0;
+  updateScoreDisplay();
+
+  const word = queue[currentIndex];
+  const area = document.getElementById('quiz-area');
+
+  if (currentMode === 'e2c') {
+    renderE2C(word, area);
+  } else {
+    renderC2E(word, area);
+  }
+}
+
+// --- English → Chinese (MCQ) ---
+function renderE2C(word, area) {
+  const pool = wordData[currentStage];
+  const others = pool.filter(w => w.en !== word.en);
+  const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
+  const options = [...shuffled, word].sort(() => Math.random() - 0.5);
+
+  const stageLabel = currentStage === 'basic' ? '基礎' : '進階';
+  const stageColor = currentStage === 'basic' ? '#27ae60' : '#e84393';
+  const retryBadge = isRetryMode ? `<span class="retry-badge">🔁 錯題</span>` : '';
+
+  area.innerHTML = `
+    <div class="quiz-card" id="current-card">
+      <div>
+        <span class="word-badge">第 ${currentIndex + 1} 題</span>
+        <span class="stage-badge" style="background:${stageColor}">${stageLabel}</span>
+        ${retryBadge}
+      </div>
+      <div class="question-word">${word.en}</div>
+      <div class="question-phonetic">${word.phonetic}</div>
+      <div class="question-pos">${word.pos}</div>
+      <div class="options-grid" id="options-grid">
+        ${options.map((opt, i) => `
+          <button class="option-btn" id="opt-${i}"
+            data-en="${opt.en}"
+            data-zh="${escapeAttr(opt.zh)}"
+            onclick="checkE2C(${i}, '${escapeStr(opt.en)}', '${escapeStr(word.en)}', '${escapeStr(opt.zh)}', '${escapeStr(word.zh)}')">
+            ${opt.zh}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一題 ➡️</button>
+    </div>
+  `;
+}
+
+function checkE2C(idx, chosenEn, correctEn, chosenZh, correctZh) {
+  if (answered) return;
+  answered = true;
+
+  const isCorrect = (chosenEn === correctEn);
+  const fb = document.getElementById('feedback');
+  const allBtns = document.querySelectorAll('.option-btn');
+
+  allBtns.forEach(btn => btn.disabled = true);
+
+  if (isCorrect) {
+    document.getElementById(`opt-${idx}`).classList.add('selected-correct');
+    fb.className = 'feedback correct';
+    fb.textContent = '✅ 答對了！' + correctZh;
+    correctCount++;
+  } else {
+    document.getElementById(`opt-${idx}`).classList.add('selected-wrong');
+    allBtns.forEach(btn => {
+      if (btn.dataset.en === correctEn) btn.classList.add('reveal-correct');
+    });
+    fb.className = 'feedback wrong';
+    fb.textContent = `❌ 答錯了！正確答案是：${correctZh}`;
+    wrongCount++;
+    addToWrong(queue[currentIndex]);
+  }
+
+  document.getElementById('next-btn').classList.add('show');
+  updateScoreDisplay();
+  updateWrongBanner();
+}
+
+// --- Chinese → English (Fill in) ---
+function renderC2E(word, area) {
+  const stageLabel = currentStage === 'basic' ? '基礎' : '進階';
+  const stageColor = currentStage === 'basic' ? '#27ae60' : '#e84393';
+  const retryBadge = isRetryMode ? `<span class="retry-badge">🔁 錯題</span>` : '';
+
+  area.innerHTML = `
+    <div class="quiz-card" id="current-card">
+      <div>
+        <span class="word-badge">第 ${currentIndex + 1} 題</span>
+        <span class="stage-badge" style="background:${stageColor}">${stageLabel}</span>
+        ${retryBadge}
+      </div>
+      <div class="question-pos" style="margin-bottom:4px">${word.pos}</div>
+      <div class="ch-prompt">${word.zh}</div>
+      <div class="hint-text" id="hint-text"></div>
+      <div class="fill-wrap">
+        <input class="fill-input" id="fill-input" type="text" placeholder="請輸入英文單字…"
+          autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+          onkeydown="if(event.key==='Enter')checkC2E('${escapeStr(word.en)}','${escapeStr(word.zh)}')" />
+      </div>
+      <div class="hint-row">
+        <button class="hint-btn" onclick="showHint('${escapeStr(word.en)}')">💡 提示字母</button>
+      </div>
+      <button class="submit-btn" onclick="checkC2E('${escapeStr(word.en)}','${escapeStr(word.zh)}')">確認答案 ✈️</button>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一題 ➡️</button>
+    </div>
+  `;
+
+  setTimeout(() => {
+    const inp = document.getElementById('fill-input');
+    if (inp) inp.focus();
+  }, 100);
+}
+
+function buildHint(word, reveal) {
+  return word.split('').map((ch, i) => {
+    if (i < reveal) return `<span style="color:var(--blue-deep);font-weight:900">${ch}</span>`;
+    return '＿';
+  }).join(' ');
+}
+
+function showHint(word) {
+  if (answered) return;
+  hintCount++;
+  const maxReveal = Math.min(hintCount, Math.ceil(word.length / 2));
+  const hintEl = document.getElementById('hint-text');
+  hintEl.style.display = 'block';
+  hintEl.innerHTML = buildHint(word, maxReveal) + `&nbsp;<span style="font-size:12px;color:var(--text-soft)">(共${word.length}個字母)</span>`;
+}
+
+function checkC2E(correctEn, correctZh) {
+  if (answered) return;
+  const input = document.getElementById('fill-input');
+  const val = input.value.trim().toLowerCase();
+  const correct = correctEn.toLowerCase();
+
+  if (!val) return;
+
+  answered = true;
+  const fb = document.getElementById('feedback');
+  input.disabled = true;
+
+  if (val === correct) {
+    input.classList.add('correct');
+    fb.className = 'feedback correct';
+    fb.textContent = `✅ 答對了！${correctEn} = ${correctZh}`;
+    correctCount++;
+  } else {
+    input.classList.add('wrong');
+    fb.className = 'feedback wrong';
+    fb.innerHTML = `❌ 答錯了！你填：<strong>${val}</strong><br>正確答案：<strong>${correctEn}</strong>（${correctZh}）`;
+    wrongCount++;
+    addToWrong(queue[currentIndex]);
+  }
+
+  document.getElementById('next-btn').classList.add('show');
+  updateScoreDisplay();
+  updateWrongBanner();
+}
+
+// ===================== WRONG WORDS =====================
+function addToWrong(word) {
+  if (!wrongWords.find(w => w.en === word.en)) {
+    wrongWords.push(word);
+  }
+}
+
+// ===================== NEXT / COMPLETION =====================
+function nextQuestion() {
+  currentIndex++;
+  renderQuestion();
+}
+
+function showCompletion() {
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('retry-stripe').classList.remove('show');
+  const total = queue.length;
+  const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+  document.getElementById('final-score').textContent = `${correctCount} / ${total}`;
+
+  let msg = '';
+  if (isRetryMode) {
+    if (wrongWords.length === 0) msg = '🎊 錯題全部征服了！';
+    else msg = `💪 還有 ${wrongWords.length} 個要加油，再練一次！`;
+  } else {
+    if (pct >= 90) msg = '🎉 太厲害了！準備好挑戰進階單字了嗎？';
+    else if (pct >= 70) msg = '👍 不錯！多練習幾次就能全對！';
+    else if (pct >= 50) msg = '💪 繼續加油，再練一次吧！';
+    else msg = '📚 沒關係，多看幾次講義再來挑戰！';
+  }
+
+  document.getElementById('final-msg').textContent = msg;
+
+  // Show retry-wrong button if there are wrong words
+  const retryWrongBtn = document.getElementById('retry-wrong-btn');
+  if (wrongWords.length > 0) {
+    retryWrongBtn.style.display = '';
+    retryWrongBtn.textContent = `🔁 練錯題（${wrongWords.length} 個）`;
+  } else {
+    retryWrongBtn.style.display = 'none';
+  }
+
+  const switchBtn = document.getElementById('switch-stage-btn');
+  switchBtn.textContent = currentStage === 'basic' ? '🚀 去挑戰進階' : '🌱 回到基礎';
+
+  document.getElementById('completion-screen').classList.add('show');
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-label').textContent = total + ' / ' + total;
+}
+
+function restartSame() {
+  initQuiz();
+}
+
+function switchStage() {
+  setStage(currentStage === 'basic' ? 'advanced' : 'basic');
+}
+
+function escapeStr(str) {
+  return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+function escapeAttr(str) {
+  return String(str).replace(/"/g, '&quot;');
+}
+
+// ===================== START =====================
+initQuiz();
+</script>
+</body>
+</html>

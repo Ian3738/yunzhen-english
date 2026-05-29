@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文單字選擇題練習</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .question-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .audio-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        .audio-btn:active {
+            transform: scale(0.95);
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .translation {
+            color: #666;
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .word-blank {
+            color: #e74c3c;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option span {
+            flex-grow: 1;
+        }
+
+        .option-audio-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-audio-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.1);
+        }
+
+        .option-audio-btn:active {
+            transform: scale(0.9);
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f7f8ff;
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            animation: correct 0.5s;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            animation: shake 0.5s;
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .option.disabled .option-audio-btn {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        @keyframes correct {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .mode-selector {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 25px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .complete-message {
+            text-align: center;
+            padding: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        .complete-message h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .score-summary {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .wrong-list {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .wrong-list h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .wrong-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 英文單字選擇題練習</h1>
+        </div>
+
+        <div class="mode-selector" id="modeSelector">
+            <button class="mode-btn active" onclick="setMode('all')">全部題目</button>
+            <button class="mode-btn" onclick="setMode('wrong')">錯題練習</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">目前題號</div>
+                <div class="stat-value" id="currentQuestion">1</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">總題數</div>
+                <div class="stat-value" id="totalQuestions">12</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">答對題數</div>
+                <div class="stat-value" id="correctCount">0</div>
+            </div>
+        </div>
+
+        <div id="quizContent">
+            <!-- Quiz content will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                sentence: "This is a big project. It will take more than one month to ______ it.",
+                translation: "這是一個大型專案。完成它將需要超過一個月的時間。",
+                answer: "accomplish",
+                options: ["accomplish", "reward", "disease", "predict"],
+                hint: "完成、達成"
+            },
+            {
+                id: 2,
+                sentence: "Patrick did very well on the exam, so his father bought him a new computer as a ______.",
+                translation: "派翠克考試考得很好，所以他父親買了一台新電腦作為獎勵給他。",
+                answer: "reward",
+                options: ["behavior", "reward", "specific", "detect"],
+                hint: "獎勵、報酬"
+            },
+            {
+                id: 3,
+                sentence: "The doctors looked for the causes of the ______, but it was difficult to pin down.",
+                translation: "醫生們尋找這個疾病的原因，但很難明確說明。",
+                answer: "disease",
+                options: ["disease", "sensitive", "infection", "location"],
+                hint: "疾病"
+            },
+            {
+                id: 4,
+                sentence: "Jason really enjoys watching football games, and he can usually ______ which team will win.",
+                translation: "傑森真的很喜歡看足球比賽，而且他通常能預測哪一隊會贏。",
+                answer: "predict",
+                options: ["detect", "predict", "accomplish", "reward"],
+                hint: "預測、預言"
+            },
+            {
+                id: 5,
+                sentence: "Mary was disgusted with her boyfriend's ______ at the party, and she broke up with him the next day.",
+                translation: "瑪麗對她男朋友在派對上的行為感到厭惡，隔天就和他分手了。",
+                answer: "behavior",
+                options: ["behavior", "disease", "specific", "sensitive"],
+                hint: "行為、舉止"
+            },
+            {
+                id: 6,
+                sentence: "The doctors so far haven't found any ______ reason for Mr. Goodman's illness, and this really worries his wife.",
+                translation: "到目前為止，醫生們還沒有找到古德曼先生生病的任何具體原因，這真的讓他的妻子很擔心。",
+                answer: "specific",
+                options: ["sensitive", "specific", "detect", "predict"],
+                hint: "具體的、特定的"
+            },
+            {
+                id: 7,
+                sentence: "This machine is designed to ______ the presence of smoke in a room. If something is burning, the alarm will go off right away.",
+                translation: "這台機器是設計來偵測房間內是否有煙霧。如果有東西在燃燒，警報器會立即響起。",
+                answer: "detect",
+                options: ["detect", "predict", "accomplish", "behavior"],
+                hint: "偵測、發現"
+            },
+            {
+                id: 8,
+                sentence: "Mothers are very ______ to their babies' needs. They often know what their babies want just by the way they cry.",
+                translation: "母親對嬰兒的需求非常敏感。她們經常只憑嬰兒的哭聲就知道他們想要什麼。",
+                answer: "sensitive",
+                options: ["specific", "sensitive", "disease", "reward"],
+                hint: "敏感的、靈敏的"
+            },
+            {
+                id: 9,
+                sentence: "If you are injured, clean and treat the wound carefully to avoid __________.",
+                translation: "如果你受傷了，要仔細清潔和處理傷口以避免感染。",
+                answer: "infection",
+                options: ["infection", "location", "exposure", "management"],
+                hint: "感染 (名詞形式)"
+            },
+            {
+                id: 10,
+                sentence: "It is a good time to buy this apartment. The price is low, and the __________ is great.",
+                translation: "現在是購買這間公寓的好時機。價格低，而且位置很好。",
+                answer: "location",
+                options: ["management", "location", "infection", "exposure"],
+                hint: "位置、地點 (名詞形式)"
+            },
+            {
+                id: 11,
+                sentence: "Be sure to apply sunscreen before going out. Too much __________ to direct sunlight may cause skin cancer.",
+                translation: "出門前一定要塗防曬乳。過度暴露在直射陽光下可能會導致皮膚癌。",
+                answer: "exposure",
+                options: ["exposure", "management", "location", "infection"],
+                hint: "暴露、曝曬 (名詞形式)"
+            },
+            {
+                id: 12,
+                sentence: "To help me finish my job before the deadline, my coworker gave me some tips on time __________.",
+                translation: "為了幫助我在截止日期前完成工作，我的同事給了我一些時間管理的技巧。",
+                answer: "management",
+                options: ["infection", "exposure", "management", "location"],
+                hint: "管理 (名詞形式)"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = [];
+        let currentMode = 'all';
+        let currentQuestions = [...questions];
+        let answered = false;
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (mode === 'wrong') {
+                if (wrongAnswers.length === 0) {
+                    alert('還沒有錯題！請先完成一輪練習。');
+                    setMode('all');
+                    return;
+                }
+                currentQuestions = questions.filter(q => wrongAnswers.includes(q.id));
+            } else {
+                currentQuestions = [...questions];
+            }
+
+            resetQuiz();
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            answered = false;
+            updateStats();
+            loadQuestion();
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('您的瀏覽器不支援語音功能');
+            }
+        }
+
+        function speakWord(word, event) {
+            // Prevent the option click event from firing
+            event.stopPropagation();
+            
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;  // Slower rate for individual words
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('您的瀏覽器不支援語音功能');
+            }
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                showComplete();
+                return;
+            }
+
+            answered = false;
+            const question = currentQuestions[currentQuestionIndex];
+            const shuffledOptions = shuffleArray(question.options);
+
+            const quizContent = document.getElementById('quizContent');
+            quizContent.innerHTML = `
+                <div class="question-container">
+                    <div class="question-header">
+                        <span class="question-number">題目 ${currentQuestionIndex + 1} / ${currentQuestions.length}</span>
+                        <button class="audio-btn" onclick="speakQuestion()">🔊 播放題目</button>
+                    </div>
+                    <div class="question-text">
+                        ${question.sentence.replace(/__________/, '<span class="word-blank">__________</span>')}
+                    </div>
+                    <div class="translation">
+                        💡 ${question.translation}
+                    </div>
+                    <div class="options">
+                        ${shuffledOptions.map(option => `
+                            <div class="option" onclick="checkAnswer('${option}')">
+                                <span>${option}</span>
+                                <button class="option-audio-btn" onclick="speakWord('${option}', event)">🔊</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div id="feedback"></div>
+                </div>
+                <div class="button-group">
+                    <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">
+                        下一題 →
+                    </button>
+                </div>
+            `;
+
+            updateStats();
+        }
+
+        function speakQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            // Remove the blank notation for speech
+            const textToSpeak = question.sentence.replace(/__________/, 'blank');
+            speakText(textToSpeak);
+        }
+
+        function checkAnswer(selected) {
+            if (answered) return;
+            answered = true;
+
+            const question = currentQuestions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option');
+            const feedbackDiv = document.getElementById('feedback');
+            
+            options.forEach(option => {
+                option.classList.add('disabled');
+                const optionText = option.querySelector('span').textContent.trim();
+                if (optionText === question.answer) {
+                    option.classList.add('correct');
+                }
+                if (optionText === selected && selected !== question.answer) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            if (selected === question.answer) {
+                correctAnswers++;
+                // Remove from wrong answers if it was there
+                wrongAnswers = wrongAnswers.filter(id => id !== question.id);
+                
+                feedbackDiv.innerHTML = `
+                    <div class="feedback correct">
+                        ✅ 答對了！${question.answer} 的意思是「${question.hint}」
+                    </div>
+                `;
+                
+                // Play success sound effect
+                speakText("Correct! Well done!");
+            } else {
+                if (!wrongAnswers.includes(question.id)) {
+                    wrongAnswers.push(question.id);
+                }
+                
+                feedbackDiv.innerHTML = `
+                    <div class="feedback incorrect">
+                        ❌ 答錯了！正確答案是 ${question.answer}（${question.hint}）
+                    </div>
+                `;
+                
+                // Play error sound effect
+                speakText(`The correct answer is ${question.answer}`);
+            }
+
+            updateStats();
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function updateStats() {
+            document.getElementById('currentQuestion').textContent = 
+                currentQuestionIndex < currentQuestions.length ? currentQuestionIndex + 1 : currentQuestions.length;
+            document.getElementById('totalQuestions').textContent = currentQuestions.length;
+            document.getElementById('correctCount').textContent = correctAnswers;
+        }
+
+        function showComplete() {
+            const quizContent = document.getElementById('quizContent');
+            const accuracy = Math.round((correctAnswers / currentQuestions.length) * 100);
+            
+            let wrongListHTML = '';
+            if (wrongAnswers.length > 0) {
+                const wrongQuestions = questions.filter(q => wrongAnswers.includes(q.id));
+                wrongListHTML = `
+                    <div class="wrong-list">
+                        <h3>需要加強的單字：</h3>
+                        ${wrongQuestions.map(q => `
+                            <div class="wrong-item">
+                                <strong>${q.answer}</strong> - ${q.hint}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            quizContent.innerHTML = `
+                <div class="complete-message">
+                    <h2>🎉 練習完成！</h2>
+                    <div class="score-summary">
+                        <p>答對題數：${correctAnswers} / ${currentQuestions.length}</p>
+                        <p>正確率：${accuracy}%</p>
+                    </div>
+                    ${wrongListHTML}
+                    <div class="button-group">
+                        <button class="btn" onclick="resetQuiz()">重新開始</button>
+                        ${wrongAnswers.length > 0 ? `
+                            <button class="btn btn-secondary" onclick="setMode('wrong')">練習錯題</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Play completion message
+            if (accuracy === 100) {
+                speakText("Perfect! You got all answers correct!");
+            } else if (accuracy >= 80) {
+                speakText("Great job! Keep up the good work!");
+            } else {
+                speakText("Good effort! Practice makes perfect!");
+            }
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>

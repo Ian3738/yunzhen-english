@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WH疑問詞文法練習系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #5a67d8;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #4c51bf;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #5a67d8;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .home-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .menu-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .menu-card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .menu-card-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .menu-card-desc {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+        
+        .learning-content {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .wh-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .wh-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .wh-card:hover {
+            border-color: #5a67d8;
+            box-shadow: 0 5px 15px rgba(90, 103, 216, 0.2);
+        }
+        
+        .wh-word {
+            font-size: 1.8em;
+            color: #5a67d8;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .wh-meaning {
+            color: #e53e3e;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .wh-usage {
+            color: #4a5568;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .wh-example {
+            background: #edf2f7;
+            padding: 10px;
+            border-radius: 5px;
+            color: #2d3748;
+            font-style: italic;
+        }
+        
+        .strategy-section {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        
+        .strategy-title {
+            color: #c53030;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .strategy-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .strategy-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #feb2b2;
+            color: #4a5568;
+        }
+        
+        .strategy-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .question-container {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            min-height: 300px;
+        }
+        
+        .question-type {
+            display: inline-block;
+            background: #805ad5;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .question {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+        
+        .option:hover {
+            border-color: #5a67d8;
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #5a67d8;
+            color: white;
+            border-color: #5a67d8;
+        }
+        
+        .option.correct {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+            animation: correctPulse 0.5s;
+        }
+        
+        .option.incorrect {
+            background: #f56565;
+            color: white;
+            border-color: #f56565;
+            animation: incorrectShake 0.5s;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .input-answer {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-answer:focus {
+            outline: none;
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+        }
+        
+        .sortable-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 60px;
+            padding: 15px;
+            background: white;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .word-card {
+            padding: 10px 15px;
+            background: #5a67d8;
+            color: white;
+            border-radius: 8px;
+            cursor: move;
+            user-select: none;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        
+        .word-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.4);
+        }
+        
+        .word-card.dragging {
+            opacity: 0.5;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: #5a67d8;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4c51bf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-speak {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .btn-speak:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
+        }
+        
+        .btn-info {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        }
+        
+        .explanation {
+            background: #edf2ae;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #48bb78;
+        }
+        
+        .explanation h3 {
+            color: #2f855a;
+            margin-bottom: 10px;
+        }
+        
+        .explanation p {
+            color: #2d3748;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .explanation .english {
+            color: #5a67d8;
+            font-weight: bold;
+        }
+        
+        .explanation .chinese {
+            color: #e53e3e;
+            font-size: 0.9em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e2e8f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .back-btn {
+            background: #718096;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #4a5568;
+            transform: translateX(-5px);
+        }
+        
+        .hide {
+            display: none !important;
+        }
+        
+        .speaking-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #fed7d7;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .speaking-indicator.active {
+            display: flex;
+        }
+        
+        .speaking-dot {
+            width: 8px;
+            height: 8px;
+            background: #f56565;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .speaking-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .speaking-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes pulse {
+            0%, 60%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            30% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .home-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .wh-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 WH疑問詞文法練習系統</h1>
+        
+        <div class="stats hide" id="statsPanel">
+            <div class="stat-item">
+                <div class="stat-number" id="totalQuestions">0</div>
+                <div class="stat-label">總題數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="correctCount">0</div>
+                <div class="stat-label">答對題數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="errorCount">0</div>
+                <div class="stat-label">錯誤題數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="accuracy">0%</div>
+                <div class="stat-label">正確率</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar hide" id="progressBar">
+            <div class="progress-fill" id="progressFill">0%</div>
+        </div>
+        
+        <div id="mainContent">
+            <!-- 內容會動態插入這裡 -->
+        </div>
+    </div>
+    
+    <script>
+        // WH疑問詞題庫
+        const questionBank = {
+            choice: [
+                {
+                    type: 'choice',
+                    question: '_____ is your name?',
+                    options: ['What', 'Where', 'When', 'Who'],
+                    answer: 0,
+                    explanation: {
+                        english: 'We use "What" to ask about things or information.',
+                        chinese: '我們使用 "What" 來詢問事物或資訊。',
+                        example: 'What is your name? (你的名字是什麼？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ do you live?',
+                    options: ['When', 'Where', 'What', 'Why'],
+                    answer: 1,
+                    explanation: {
+                        english: 'We use "Where" to ask about places or locations.',
+                        chinese: '我們使用 "Where" 來詢問地點或位置。',
+                        example: 'Where do you live? (你住在哪裡？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ is your birthday?',
+                    options: ['Where', 'Who', 'When', 'Which'],
+                    answer: 2,
+                    explanation: {
+                        english: 'We use "When" to ask about time.',
+                        chinese: '我們使用 "When" 來詢問時間。',
+                        example: 'When is your birthday? (你的生日是什麼時候？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ is that man over there?',
+                    options: ['What', 'Who', 'Where', 'When'],
+                    answer: 1,
+                    explanation: {
+                        english: 'We use "Who" to ask about people.',
+                        chinese: '我們使用 "Who" 來詢問人。',
+                        example: 'Who is that man? (那個男人是誰？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ are you crying?',
+                    options: ['What', 'Where', 'Why', 'When'],
+                    answer: 2,
+                    explanation: {
+                        english: 'We use "Why" to ask about reasons.',
+                        chinese: '我們使用 "Why" 來詢問原因。',
+                        example: 'Why are you crying? (你為什麼在哭？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ book is yours?',
+                    options: ['What', 'Which', 'Where', 'Who'],
+                    answer: 1,
+                    explanation: {
+                        english: 'We use "Which" to ask about a choice from specific options.',
+                        chinese: '我們使用 "Which" 來詢問特定選項中的選擇。',
+                        example: 'Which book is yours? (哪一本書是你的？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ do you go to school?',
+                    options: ['How', 'What', 'Who', 'Which'],
+                    answer: 0,
+                    explanation: {
+                        english: 'We use "How" to ask about the way or manner.',
+                        chinese: '我們使用 "How" 來詢問方式或方法。',
+                        example: 'How do you go to school? (你怎麼去學校？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ bag is this?',
+                    options: ['Who', 'Whose', 'Which', 'What'],
+                    answer: 1,
+                    explanation: {
+                        english: 'We use "Whose" to ask about possession or ownership.',
+                        chinese: '我們使用 "Whose" 來詢問所有權或擁有者。',
+                        example: 'Whose bag is this? (這是誰的包？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ often do you exercise?',
+                    options: ['What', 'How', 'Where', 'Which'],
+                    answer: 1,
+                    explanation: {
+                        english: 'We use "How often" to ask about frequency.',
+                        chinese: '我們使用 "How often" 來詢問頻率。',
+                        example: 'How often do you exercise? (你多常運動？)'
+                    }
+                },
+                {
+                    type: 'choice',
+                    question: '_____ is the weather today?',
+                    options: ['How', 'What', 'Which', 'Who'],
+                    answer: 0,
+                    explanation: {
+                        english: 'We use "How" to ask about conditions or states.',
+                        chinese: '我們使用 "How" 來詢問狀況或狀態。',
+                        example: 'How is the weather? (天氣如何？)'
+                    }
+                }
+            ],
+            fill: [
+                {
+                    type: 'fill',
+                    question: '_____ time does the movie start?',
+                    answer: 'What',
+                    explanation: {
+                        english: 'We use "What time" to ask about specific times.',
+                        chinese: '我們使用 "What time" 來詢問具體時間。',
+                        example: 'What time does the movie start? (電影什麼時候開始？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ old are you?',
+                    answer: 'How',
+                    explanation: {
+                        english: 'We use "How old" to ask about age.',
+                        chinese: '我們使用 "How old" 來詢問年齡。',
+                        example: 'How old are you? (你幾歲？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ color do you like best?',
+                    answer: 'What',
+                    explanation: {
+                        english: 'We use "What" with nouns to ask about specific things.',
+                        chinese: '我們使用 "What" 加名詞來詢問特定事物。',
+                        example: 'What color do you like? (你喜歡什麼顏色？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ did you go yesterday?',
+                    answer: 'Where',
+                    explanation: {
+                        english: 'We use "Where" to ask about places in the past.',
+                        chinese: '我們使用 "Where" 來詢問過去的地點。',
+                        example: 'Where did you go yesterday? (你昨天去哪裡了？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ much does it cost?',
+                    answer: 'How',
+                    explanation: {
+                        english: 'We use "How much" to ask about price or amount (uncountable).',
+                        chinese: '我們使用 "How much" 來詢問價格或數量（不可數）。',
+                        example: 'How much does it cost? (這要多少錢？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ many students are there?',
+                    answer: 'How',
+                    explanation: {
+                        english: 'We use "How many" to ask about quantity (countable).',
+                        chinese: '我們使用 "How many" 來詢問數量（可數）。',
+                        example: 'How many students are there? (有多少學生？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ long does it take?',
+                    answer: 'How',
+                    explanation: {
+                        english: 'We use "How long" to ask about duration.',
+                        chinese: '我們使用 "How long" 來詢問持續時間。',
+                        example: 'How long does it take? (要花多久時間？)'
+                    }
+                },
+                {
+                    type: 'fill',
+                    question: '_____ is your favorite teacher?',
+                    answer: 'Who',
+                    explanation: {
+                        english: 'We use "Who" to ask about specific people.',
+                        chinese: '我們使用 "Who" 來詢問特定的人。',
+                        example: 'Who is your favorite teacher? (誰是你最喜歡的老師？)'
+                    }
+                }
+            ],
+            sort: [
+                {
+                    type: 'sort',
+                    words: ['is', 'What', 'favorite', 'your', 'subject'],
+                    answer: 'What is your favorite subject',
+                    explanation: {
+                        english: 'WH-question word comes first, followed by the verb.',
+                        chinese: 'WH疑問詞放在最前面，後面接動詞。',
+                        example: 'What is your favorite subject? (你最喜歡的科目是什麼？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['you', 'Where', 'from', 'are'],
+                    answer: 'Where are you from',
+                    explanation: {
+                        english: 'The structure is: Where + be verb + subject + complement.',
+                        chinese: '結構是：Where + be動詞 + 主詞 + 補語。',
+                        example: 'Where are you from? (你從哪裡來？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['does', 'work', 'she', 'When'],
+                    answer: 'When does she work',
+                    explanation: {
+                        english: 'For present simple questions: WH-word + does/do + subject + verb.',
+                        chinese: '現在簡單式疑問句：WH疑問詞 + does/do + 主詞 + 動詞。',
+                        example: 'When does she work? (她什麼時候工作？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['happened', 'What', 'yesterday'],
+                    answer: 'What happened yesterday',
+                    explanation: {
+                        english: 'For past simple questions with "happen": WH-word + happened + time.',
+                        chinese: '使用happen的過去式疑問句：WH疑問詞 + happened + 時間。',
+                        example: 'What happened yesterday? (昨天發生了什麼？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['far', 'How', 'is', 'school', 'the'],
+                    answer: 'How far is the school',
+                    explanation: {
+                        english: 'We use "How far" to ask about distance.',
+                        chinese: '我們使用 "How far" 來詢問距離。',
+                        example: 'How far is the school? (學校有多遠？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['pen', 'is', 'Whose', 'this'],
+                    answer: 'Whose pen is this',
+                    explanation: {
+                        english: 'Whose + noun + be verb + this/that for asking about ownership.',
+                        chinese: 'Whose + 名詞 + be動詞 + this/that 用來詢問所有權。',
+                        example: 'Whose pen is this? (這是誰的筆？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['did', 'you', 'Why', 'that', 'do'],
+                    answer: 'Why did you do that',
+                    explanation: {
+                        english: 'For past simple why questions: Why + did + subject + verb.',
+                        chinese: '過去簡單式why疑問句：Why + did + 主詞 + 動詞。',
+                        example: 'Why did you do that? (你為什麼那樣做？)'
+                    }
+                },
+                {
+                    type: 'sort',
+                    words: ['much', 'How', 'it', 'is'],
+                    answer: 'How much is it',
+                    explanation: {
+                        english: 'How much + be verb + subject for asking about price.',
+                        chinese: 'How much + be動詞 + 主詞 用來詢問價格。',
+                        example: 'How much is it? (這個多少錢？)'
+                    }
+                }
+            ]
+        };
+        
+        // 全域變數
+        let currentMode = 'home';
+        let currentPracticeType = '';
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let errorQuestions = [];
+        let stats = {
+            total: 0,
+            correct: 0,
+            errors: 0
+        };
+        let sessionStats = {
+            correct: 0,
+            total: 0,
+            errors: 0
+        };
+        
+        // 初始化
+        function init() {
+            loadStats();
+            loadErrorQuestions();
+            showHomePage();
+        }
+        // 重置所有資料
+function resetAllData() {
+    if (confirm('確定要清除所有練習記錄和錯題嗎？')) {
+        stats = {
+            total: 0,
+            correct: 0,
+            errors: 0
+        };
+        errorQuestions = [];
+        sessionStats = {
+            correct: 0,
+            total: 0,
+            errors: 0
+        };
+        saveStats();
+        saveErrorQuestions();
+        alert('所有記錄已清除！');
+        showHomePage();
+    }
+}
+        // 顯示首頁
+        function showHomePage() {
+            currentMode = 'home';
+            document.getElementById('statsPanel').classList.add('hide');
+            document.getElementById('progressBar').classList.add('hide');
+            
+            const html = `
+                <div class="home-menu">
+                    <div class="menu-card" onclick="showLearningPage()">
+                        <div class="menu-card-icon">📚</div>
+                        <div class="menu-card-title">學習策略</div>
+                        <div class="menu-card-desc">了解WH疑問詞的用法和技巧</div>
+                    </div>
+                    <div class="menu-card" onclick="startPractice('choice')">
+                        <div class="menu-card-icon">✅</div>
+                        <div class="menu-card-title">選擇題練習</div>
+                        <div class="menu-card-desc">從選項中選出正確的WH疑問詞</div>
+                    </div>
+                    <div class="menu-card" onclick="startPractice('fill')">
+                        <div class="menu-card-icon">✏️</div>
+                        <div class="menu-card-title">填空題練習</div>
+                        <div class="menu-card-desc">填入正確的WH疑問詞</div>
+                    </div>
+                    <div class="menu-card" onclick="startPractice('sort')">
+                        <div class="menu-card-icon">🔄</div>
+                        <div class="menu-card-title">排序題練習</div>
+                        <div class="menu-card-desc">將單字排列成正確句子</div>
+                    </div>
+                    <div class="menu-card" onclick="startPractice('random')">
+                        <div class="menu-card-icon">🎲</div>
+                        <div class="menu-card-title">隨機練習</div>
+                        <div class="menu-card-desc">混合所有題型練習</div>
+                    </div>
+                    <div class="menu-card" onclick="startPractice('error')">
+                    <div class="menu-card-icon">📝</div>
+                    <div class="menu-card-title">錯題重練</div>
+                    <div class="menu-card-desc">練習之前答錯的題目 (${errorQuestions.length}題)</div>
+                </div>
+                <div class="menu-card" onclick="resetAllData()" style="background: linear-gradient(135deg, #f56565 0%, #c53030 100%);">
+                    <div class="menu-card-icon">🔄</div>
+                    <div class="menu-card-title">重新開始</div>
+                    <div class="menu-card-desc">清除所有記錄和錯題</div>
+                </div>
+            </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        // 顯示學習頁面
+        function showLearningPage() {
+            currentMode = 'learning';
+            document.getElementById('statsPanel').classList.add('hide');
+            document.getElementById('progressBar').classList.add('hide');
+            
+            const html = `
+                <button class="back-btn" onclick="showHomePage()">← 返回首頁</button>
+                
+                <div class="learning-content">
+                    <h2>📖 WH疑問詞學習指南</h2>
+                    
+                    <div class="wh-grid">
+                        <div class="wh-card">
+                            <div class="wh-word">What</div>
+                            <div class="wh-meaning">什麼</div>
+                            <div class="wh-usage">詢問事物、名稱、資訊</div>
+                            <div class="wh-example">What is your hobby?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">Where</div>
+                            <div class="wh-meaning">哪裡</div>
+                            <div class="wh-usage">詢問地點、位置</div>
+                            <div class="wh-example">Where is the library?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">When</div>
+                            <div class="wh-meaning">什麼時候</div>
+                            <div class="wh-usage">詢問時間、日期</div>
+                            <div class="wh-example">When does the class start?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">Who</div>
+                            <div class="wh-meaning">誰</div>
+                            <div class="wh-usage">詢問人物身份</div>
+                            <div class="wh-example">Who is your teacher?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">Why</div>
+                            <div class="wh-meaning">為什麼</div>
+                            <div class="wh-usage">詢問原因、理由</div>
+                            <div class="wh-example">Why are you late?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">Which</div>
+                            <div class="wh-meaning">哪一個</div>
+                            <div class="wh-usage">詢問特定選擇</div>
+                            <div class="wh-example">Which one do you prefer?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">How</div>
+                            <div class="wh-meaning">如何、怎樣</div>
+                            <div class="wh-usage">詢問方式、程度、狀態</div>
+                            <div class="wh-example">How do you feel today?</div>
+                        </div>
+                        
+                        <div class="wh-card">
+                            <div class="wh-word">Whose</div>
+                            <div class="wh-meaning">誰的</div>
+                            <div class="wh-usage">詢問所有權、歸屬</div>
+                            <div class="wh-example">Whose book is this?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="strategy-section">
+                        <div class="strategy-title">🎯 學習策略 (Learning Strategies)</div>
+                        <ul class="strategy-list">
+                            <li><strong>記憶技巧：</strong>將WH疑問詞與中文意思配對記憶，如 What=什麼、Where=哪裡</li>
+                            <li><strong>情境練習：</strong>想像日常對話場景，練習使用不同的疑問詞</li>
+                            <li><strong>句型結構：</strong>記住基本句型 WH + 助動詞 + 主詞 + 動詞</li>
+                            <li><strong>分類記憶：</strong>將疑問詞按功能分類，如時間類(When)、地點類(Where)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="strategy-section">
+                        <div class="strategy-title">💡 答題技巧 (Test-taking Tips)</div>
+                        <ul class="strategy-list">
+                            <li><strong>看關鍵詞：</strong>注意句子中的關鍵詞，如時間詞用When，地點詞用Where</li>
+                            <li><strong>理解語境：</strong>先理解整個句子的意思，再選擇適合的疑問詞</li>
+                            <li><strong>檢查搭配：</strong>某些疑問詞有固定搭配，如 How old、How much、What time</li>
+                            <li><strong>消去法：</strong>不確定時，先排除明顯錯誤的選項</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="strategy-section">
+                        <div class="strategy-title">📝 常見錯誤 (Common Mistakes)</div>
+                        <ul class="strategy-list">
+                            <li><strong>What vs Which：</strong>What用於開放性問題，Which用於有限選項</li>
+                            <li><strong>Who vs Whose：</strong>Who問人是誰，Whose問東西是誰的</li>
+                            <li><strong>How much vs How many：</strong>How much用於不可數，How many用於可數</li>
+                            <li><strong>語序錯誤：</strong>記住疑問詞永遠放在句首</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="startPractice('random')">
+                        開始隨機練習
+                    </button>
+                    <button class="btn btn-info" onclick="showHomePage()">
+                        返回主選單
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        // 開始練習
+        function startPractice(type) {
+            currentPracticeType = type;
+            currentQuestionIndex = 0;
+            sessionStats = { correct: 0, total: 0, errors: 0 };
+            
+            // 重置本次練習的顯示統計
+            document.getElementById('totalQuestions').textContent = '0';
+            document.getElementById('correctCount').textContent = '0';
+            document.getElementById('errorCount').textContent = '0';
+            document.getElementById('accuracy').textContent = '0%';
+            
+            // 顯示統計面板
+            document.getElementById('statsPanel').classList.remove('hide');
+            document.getElementById('progressBar').classList.remove('hide');
+            
+            // 準備題目
+            if (type === 'choice') {
+                questions = [...questionBank.choice];
+            } else if (type === 'fill') {
+                questions = [...questionBank.fill];
+            } else if (type === 'sort') {
+                questions = [...questionBank.sort];
+            } else if (type === 'random') {
+                questions = [
+                    ...questionBank.choice,
+                    ...questionBank.fill,
+                    ...questionBank.sort
+                ];
+            } else if (type === 'error') {
+                if (errorQuestions.length === 0) {
+                    showNoErrors();
+                    return;
+                }
+                questions = [...errorQuestions];
+            }
+            
+            shuffleArray(questions);
+            showQuestion();
+        }
+        
+        // 載入統計資料
+        function loadStats() {
+            const saved = localStorage.getItem('whGrammarStats');
+            if (saved) {
+                stats = JSON.parse(saved);
+            }
+        }
+        
+        // 載入錯題
+        function loadErrorQuestions() {
+            const saved = localStorage.getItem('whGrammarErrors');
+            if (saved) {
+                errorQuestions = JSON.parse(saved);
+            }
+        }
+        
+        // 儲存統計資料
+        function saveStats() {
+            localStorage.setItem('whGrammarStats', JSON.stringify(stats));
+        }
+        
+        // 儲存錯題
+        function saveErrorQuestions() {
+            localStorage.setItem('whGrammarErrors', JSON.stringify(errorQuestions));
+        }
+        
+        // 更新統計顯示
+        function updateStatsDisplay() {
+            // 使用本次練習的統計資料
+            document.getElementById('totalQuestions').textContent = sessionStats.total;
+            document.getElementById('correctCount').textContent = sessionStats.correct;
+            document.getElementById('errorCount').textContent = sessionStats.errors;
+            const accuracy = sessionStats.total > 0 ? Math.round((sessionStats.correct / sessionStats.total) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            
+            // 更新進度條
+            const progress = questions.length > 0 ? Math.round(((currentQuestionIndex + 1) / questions.length) * 100) : 0;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressFill').textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
+        }
+        
+        // 隨機打亂陣列
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // 顯示題目
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showComplete();
+                return;
+            }
+            
+            const question = questions[currentQuestionIndex];
+            let html = `
+                <button class="back-btn" onclick="confirmExit()">← 返回首頁</button>
+                <div class="question-container">
+            `;
+            
+            if (question.type === 'choice') {
+                html += showChoiceQuestion(question);
+            } else if (question.type === 'fill') {
+                html += showFillQuestion(question);
+            } else if (question.type === 'sort') {
+                html += showSortQuestion(question);
+            }
+            
+            html += `</div>`;
+            
+            html += `
+                <div class="controls">
+                    <button class="btn btn-speak" onclick="speakQuestion()">
+                        🔊 朗讀題目
+                    </button>
+                    <button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">
+                        確認答案
+                    </button>
+                    <button class="btn btn-secondary" id="nextBtn" style="display:none;" onclick="nextQuestion()">
+                        下一題
+                    </button>
+                </div>
+                <div class="speaking-indicator" id="speakingIndicator">
+                    <div class="speaking-dot"></div>
+                    <div class="speaking-dot"></div>
+                    <div class="speaking-dot"></div>
+                    <span>正在朗讀...</span>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+            updateStatsDisplay();
+            
+            // 設置拖放事件
+            if (question.type === 'sort') {
+                setupDragAndDrop();
+            }
+        }
+        
+        // 確認退出
+        function confirmExit() {
+            if (confirm('確定要離開練習嗎？進度將不會儲存。')) {
+                showHomePage();
+            }
+        }
+        
+        // 顯示選擇題
+        function showChoiceQuestion(question) {
+            let html = `
+                <div class="question-type">選擇題 Multiple Choice</div>
+                <div class="question">${question.question}</div>
+                <div class="options">
+            `;
+            
+            question.options.forEach((option, index) => {
+                html += `
+                    <div class="option" onclick="selectOption(${index})" data-index="${index}">
+                        ${option}
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+            return html;
+        }
+        
+        // 顯示填空題
+        function showFillQuestion(question) {
+            const parts = question.question.split('_____');
+            return `
+                <div class="question-type">填空題 Fill in the Blank</div>
+                <div class="question">
+                    ${parts[0]}<input type="text" class="input-answer" id="fillAnswer" placeholder="請輸入答案" autocomplete="off">${parts[1] || ''}
+                </div>
+            `;
+        }
+        
+        // 顯示排序題
+        function showSortQuestion(question) {
+            let html = `
+                <div class="question-type">排序題 Word Order</div>
+                <div class="question">請將單字排列成正確的句子：</div>
+                <div class="sortable-container" id="wordContainer">
+            `;
+            
+            const shuffled = [...question.words];
+            shuffleArray(shuffled);
+            
+            shuffled.forEach((word, index) => {
+                html += `
+                    <div class="word-card" draggable="true" data-word="${word}" data-index="${index}">
+                        ${word}
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+            return html;
+        }
+        
+        // 選擇選項
+        function selectOption(index) {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`.option[data-index="${index}"]`).classList.add('selected');
+        }
+        
+        // 檢查答案
+        function checkAnswer() {
+            const question = questions[currentQuestionIndex];
+            let isCorrect = false;
+            let userAnswer = '';
+            
+            if (question.type === 'choice') {
+                const selected = document.querySelector('.option.selected');
+                if (!selected) {
+                    alert('請選擇一個答案！');
+                    return;
+                }
+                const selectedIndex = parseInt(selected.dataset.index);
+                userAnswer = question.options[selectedIndex];
+                isCorrect = selectedIndex === question.answer;
+                
+                // 顯示結果
+                document.querySelectorAll('.option').forEach((opt, idx) => {
+                    opt.style.pointerEvents = 'none';
+                    if (idx === question.answer) {
+                        opt.classList.add('correct');
+                    } else if (idx === selectedIndex && !isCorrect) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+            } else if (question.type === 'fill') {
+                userAnswer = document.getElementById('fillAnswer').value.trim();
+                isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+                
+                const input = document.getElementById('fillAnswer');
+                input.disabled = true;
+                input.style.borderColor = isCorrect ? '#48bb78' : '#f56565';
+                input.style.backgroundColor = isCorrect ? '#f0fff4' : '#fff5f5';
+                
+            } else if (question.type === 'sort') {
+                const cards = document.querySelectorAll('.word-card');
+                userAnswer = Array.from(cards).map(card => card.dataset.word).join(' ');
+                isCorrect = userAnswer === question.answer;
+                
+                cards.forEach(card => card.style.pointerEvents = 'none');
+                document.getElementById('wordContainer').style.borderColor = isCorrect ? '#48bb78' : '#f56565';
+                document.getElementById('wordContainer').style.backgroundColor = isCorrect ? '#f0fff4' : '#fff5f5';
+            }
+            
+            // 更新統計
+            sessionStats.total++;
+            stats.total++;
+            if (isCorrect) {
+                sessionStats.correct++;
+                stats.correct++;
+            } else {
+                sessionStats.errors++;
+                stats.errors++;
+                // 加入錯題（避免重複）
+                const existingError = errorQuestions.findIndex(q => 
+                    q.question === question.question && q.type === question.type
+                );
+                if (existingError >= 0) {
+                    errorQuestions[existingError] = {
+                        ...question,
+                        userAnswer: userAnswer,
+                        timestamp: new Date().toISOString()
+                    };
+                } else {
+                    errorQuestions.push({
+                        ...question,
+                        userAnswer: userAnswer,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+                saveErrorQuestions();
+            }
+            saveStats();
+            updateStatsDisplay();
+            
+            // 顯示解釋
+            showExplanation(question, isCorrect);
+            
+            // 切換按鈕
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+        
+        // 顯示解釋
+        function showExplanation(question, isCorrect) {
+            const result = isCorrect ? '✅ 答對了！Great job!' : '❌ 答錯了！Try again!';
+            let correctAnswer = '';
+            
+            if (question.type === 'choice') {
+                correctAnswer = question.options[question.answer];
+            } else {
+                correctAnswer = question.answer;
+            }
+            
+            const html = `
+                <div class="explanation">
+                    <h3>${result}</h3>
+                    <p><strong>正確答案 (Correct Answer)：</strong> <span class="english">${correctAnswer}</span></p>
+                    <p><strong>解釋 (Explanation)：</strong> ${question.explanation.english}</p>
+                    <p class="chinese">${question.explanation.chinese}</p>
+                    <p><strong>例句 (Example)：</strong> <span class="english">${question.explanation.example}</span></p>
+                </div>
+            `;
+            
+            document.querySelector('.question-container').insertAdjacentHTML('beforeend', html);
+        }
+        
+        // 下一題
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+        
+        // 朗讀題目
+        function speakQuestion() {
+            if ('speechSynthesis' in window) {
+                const question = questions[currentQuestionIndex];
+                let text = '';
+                
+                if (question.type === 'sort') {
+                    text = question.answer + '?';
+                } else {
+                    text = question.question.replace('_____', question.type === 'choice' ? 
+                        question.options[question.answer] : question.answer);
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                
+                // 顯示朗讀指示器
+                document.getElementById('speakingIndicator').classList.add('active');
+                
+                utterance.onend = () => {
+                    document.getElementById('speakingIndicator').classList.remove('active');
+                };
+                
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('您的瀏覽器不支援語音朗讀功能');
+            }
+        }
+        
+        // 顯示沒有錯題
+        function showNoErrors() {
+            document.getElementById('statsPanel').classList.add('hide');
+            document.getElementById('progressBar').classList.add('hide');
+            
+            document.getElementById('mainContent').innerHTML = `
+                <button class="back-btn" onclick="showHomePage()">← 返回首頁</button>
+                <div class="question-container">
+                    <h2>🎉 太棒了！Excellent!</h2>
+                    <p style="font-size: 1.2em; margin-top: 20px;">目前沒有錯題需要練習！</p>
+                    <p style="margin-top: 10px;">You have no mistakes to review!</p>
+                    <button class="btn btn-primary" style="margin-top: 30px;" onclick="showHomePage()">
+                        返回主選單
+                    </button>
+                </div>
+            `;
+        }
+        
+        // 顯示完成
+        function showComplete() {
+            const accuracy = sessionStats.total > 0 ? 
+                Math.round((sessionStats.correct / sessionStats.total) * 100) : 0;
+            
+            document.getElementById('mainContent').innerHTML = `
+                <div class="question-container">
+                    <h2>🏆 練習完成！Practice Complete!</h2>
+                    <div style="font-size: 1.2em; margin-top: 20px;">
+                        <p><strong>本次練習結果 (Session Results)：</strong></p>
+                        <p style="margin-top: 10px;">總題數 (Total)：${sessionStats.total}</p>
+                        <p>答對 (Correct)：${sessionStats.correct}</p>
+                        <p>答錯 (Wrong)：${sessionStats.errors}</p>
+                        <p>正確率 (Accuracy)：${accuracy}%</p>
+                    </div>
+                    <div class="controls" style="margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="showHomePage()">
+                            返回主選單
+                        </button>
+                        ${errorQuestions.length > 0 ? `
+                            <button class="btn btn-secondary" onclick="startPractice('error')">
+                                練習錯題 (${errorQuestions.length})
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 設置拖放功能
+        function setupDragAndDrop() {
+            let draggedElement = null;
+            
+            document.querySelectorAll('.word-card').forEach(card => {
+                card.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                
+                card.addEventListener('dragend', function(e) {
+                    this.classList.remove('dragging');
+                });
+                
+                card.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    if (this !== draggedElement) {
+                        const container = document.getElementById('wordContainer');
+                        const afterElement = getDragAfterElement(container, e.clientX);
+                        if (afterElement == null) {
+                            container.appendChild(draggedElement);
+                        } else {
+                            container.insertBefore(draggedElement, afterElement);
+                        }
+                    }
+                });
+            });
+        }
+        
+        function getDragAfterElement(container, x) {
+            const draggableElements = [...container.querySelectorAll('.word-card:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        // 當DOM載入完成後初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+    </script>
+
+  </body>
+</html>

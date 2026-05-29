@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L4 文法練習 Malala: Stronger Than Violence</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdf0f0;
+  --card: #ffffff;
+  --primary: #c0392b;
+  --primary-dark: #7b241c;
+  --accent: #f5a623;
+  --success: #2faa6a;
+  --danger: #e05050;
+  --text: #222;
+  --muted: #7a7a8c;
+  --border: #f5c6c6;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', 'Noto Sans TC', sans-serif; background: var(--bg); background-image: radial-gradient(circle at 10% 10%, #fad7d7 0%, transparent 45%), radial-gradient(circle at 90% 90%, #fdf0dc 0%, transparent 45%); min-height: 100vh; color: var(--text); }
+
+.home-wrap { display:flex; flex-direction:column; align-items:center; padding:36px 20px 60px; min-height:100vh; }
+.home-logo { font-size:3em; animation:float 3s ease-in-out infinite; margin-bottom:8px; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.home-title { font-size:1.75em; font-weight:900; color:var(--primary-dark); margin-bottom:4px; }
+.home-sub { font-size:0.9em; color:var(--muted); margin-bottom:28px; }
+
+.pattern-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:640px; margin-bottom:30px; }
+@media(max-width:480px){ .pattern-grid { grid-template-columns:1fr; } }
+.pattern-card { background:var(--card); border-radius:18px; padding:24px 20px; box-shadow:var(--shadow); cursor:pointer; border:2.5px solid transparent; transition:all 0.22s; position:relative; overflow:hidden; text-align:center; }
+.pattern-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; border-radius:18px 18px 0 0; }
+.pattern-card:nth-child(1)::before { background:var(--primary); }
+.pattern-card:nth-child(2)::before { background:#e67e22; }
+.pattern-card:hover { border-color:var(--primary); transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,0.13); }
+.pc-icon { font-size:2em; margin-bottom:10px; }
+.pc-name { font-size:1em; font-weight:900; color:var(--primary-dark); margin-bottom:6px; }
+.pc-formula { font-size:0.78em; background:#fde8e8; color:var(--primary); border-radius:8px; padding:4px 10px; font-weight:700; margin-bottom:8px; display:inline-block; }
+.pc-desc { font-size:0.82em; color:var(--muted); line-height:1.5; }
+
+.quiz-page { display:none; flex-direction:column; min-height:100vh; }
+.quiz-page.active { display:flex; }
+.qp-bar { background:var(--primary-dark); color:#fff; padding:14px 18px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.qp-back { background:rgba(255,255,255,0.15); border:none; border-radius:10px; color:#fff; padding:7px 14px; font-size:0.88em; font-weight:800; cursor:pointer; font-family:inherit; }
+.qp-back:hover { background:rgba(255,255,255,0.25); }
+.qp-info { flex:1; }
+.qp-label { font-size:0.75em; opacity:0.7; letter-spacing:1px; text-transform:uppercase; }
+.qp-name { font-size:0.95em; font-weight:800; }
+.pbar-bg { height:5px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:5px; }
+.pbar-fill { height:5px; background:var(--accent); border-radius:3px; transition:width 0.4s; }
+.qp-counter { font-size:0.88em; opacity:0.8; }
+
+.qp-body { flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:22px 16px; gap:14px; }
+.q-card { background:var(--card); border-radius:var(--radius); padding:24px 22px; width:100%; max-width:660px; box-shadow:var(--shadow); }
+.q-tag { font-size:0.72em; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.q-num { font-size:0.82em; color:var(--muted); font-weight:700; margin-bottom:6px; }
+.q-prompt { font-size:1.05em; font-weight:700; color:var(--primary-dark); margin-bottom:6px; line-height:1.6; }
+.q-zh { font-size:0.88em; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+.hint-box { background:#fffde7; border:1.5px solid #ffe082; border-radius:10px; padding:10px 14px; font-size:0.85em; color:#7a5d00; margin-bottom:12px; line-height:1.6; }
+
+.mc-opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media(max-width:480px){ .mc-opts { grid-template-columns:1fr; } }
+.mc-opt { padding:13px 12px; background:#fff5f5; border:2px solid var(--border); border-radius:12px; font-size:0.97em; font-weight:700; color:var(--text); cursor:pointer; font-family:inherit; text-align:center; transition:all 0.18s; }
+.mc-opt:hover:not(:disabled) { border-color:var(--primary); background:#fde8e8; transform:translateY(-2px); }
+.mc-opt.correct { background:#d4f0e4; border-color:var(--success); color:#155a35; }
+.mc-opt.wrong   { background:#fde8e8; border-color:var(--danger); color:#8a2020; }
+.mc-opt:disabled { cursor:default; }
+
+.fill-in { border:none; border-bottom:2.5px solid var(--primary); background:transparent; font-size:1.05em; font-weight:700; color:var(--primary-dark); font-family:inherit; padding:2px 6px; min-width:140px; text-align:center; outline:none; }
+.fill-in:focus { border-color:var(--accent); }
+.fill-in.correct { border-color:var(--success); color:var(--success); }
+.fill-in.wrong { border-color:var(--danger); color:var(--danger); }
+.fill-submit { padding:10px 22px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-size:0.95em; font-weight:800; cursor:pointer; font-family:inherit; }
+.fill-submit:hover:not(:disabled) { background:var(--primary-dark); }
+.fill-submit:disabled { opacity:0.4; cursor:default; }
+
+.word-bank { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; min-height:44px; }
+.answer-slots { display:flex; flex-wrap:wrap; gap:8px; border:2px dashed var(--border); border-radius:12px; padding:10px 12px; min-height:50px; margin-bottom:12px; align-items:center; }
+.word-chip { background:#fde8e8; border:2px solid var(--primary); border-radius:8px; padding:6px 13px; font-size:0.92em; font-weight:800; color:var(--primary-dark); cursor:pointer; transition:all 0.15s; user-select:none; }
+.word-chip:hover { background:#fad7d7; transform:scale(1.05); }
+.word-chip.placed { background:var(--primary); color:#fff; }
+.rearrange-submit { padding:10px 22px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-size:0.95em; font-weight:800; cursor:pointer; font-family:inherit; margin-right:8px; }
+.rearrange-submit:disabled { opacity:0.4; cursor:default; }
+.reset-btn { padding:10px 18px; background:#f0f4f8; color:var(--muted); border:none; border-radius:10px; font-size:0.95em; font-weight:800; cursor:pointer; font-family:inherit; }
+
+.fb-row { width:100%; max-width:660px; min-height:36px; display:flex; align-items:center; justify-content:center; font-size:1em; font-weight:800; }
+.fb-row.good { color:var(--success); }
+.fb-row.bad  { color:var(--danger); }
+.next-btn { width:100%; max-width:660px; padding:15px; border:none; border-radius:var(--radius); background:var(--primary); color:#fff; font-size:1em; font-weight:800; cursor:pointer; font-family:inherit; display:none; }
+.next-btn:hover { background:var(--primary-dark); }
+
+.result-page { display:none; flex-direction:column; align-items:center; justify-content:center; padding:36px 16px; min-height:100vh; }
+.result-page.active { display:flex; }
+.result-wrap { background:var(--card); border-radius:22px; padding:36px 26px; width:100%; max-width:540px; box-shadow:0 8px 40px rgba(0,0,0,0.1); text-align:center; }
+.score-ring { width:120px; height:120px; border-radius:50%; background:conic-gradient(var(--primary) calc(var(--pct)*1%), #fad7d7 0%); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+.score-inner { width:88px; height:88px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-big { font-size:1.9em; font-weight:900; color:var(--primary-dark); line-height:1; }
+.score-of  { font-size:0.72em; color:var(--muted); font-weight:700; }
+.res-emoji { font-size:2.4em; margin-bottom:8px; }
+.res-msg { font-size:1.2em; font-weight:900; color:var(--primary-dark); margin-bottom:4px; }
+.res-sub { font-size:0.88em; color:var(--muted); margin-bottom:22px; }
+.wrong-review { text-align:left; margin-bottom:20px; }
+.wr-ttl { font-weight:800; color:var(--danger); font-size:0.9em; margin-bottom:10px; }
+.wr-item { background:#fff8f8; border-left:4px solid #f5b8b8; border-radius:0 9px 9px 0; padding:10px 14px; margin-bottom:8px; font-size:0.86em; line-height:1.6; }
+.wr-q { color:var(--muted); font-size:0.9em; margin-bottom:3px; }
+.wr-a { color:var(--success); font-weight:800; }
+.res-btns { display:flex; flex-direction:column; gap:10px; }
+.rbtn { padding:13px; border-radius:13px; border:none; font-size:1em; font-weight:800; cursor:pointer; font-family:inherit; }
+.rbtn-retry { background:var(--primary); color:#fff; }
+.rbtn-home { background:#f0f4f8; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="home-wrap" id="homePage">
+  <div class="home-logo">✊</div>
+  <div class="home-title">L4 文法練習</div>
+  <div class="home-sub">Malala: Stronger Than Violence</div>
+  <div class="pattern-grid">
+    <div class="pattern-card" onclick="startPattern(0)">
+      <div class="pc-icon">📝</div>
+      <div class="pc-name">句型一</div>
+      <div class="pc-formula">N(,) + V-ing / p.p.</div>
+      <div class="pc-desc">分詞片語修飾名詞<br>主動用 V-ing，被動用 p.p.</div>
+    </div>
+    <div class="pattern-card" onclick="startPattern(1)">
+      <div class="pc-icon">😓</div>
+      <div class="pc-name">句型二</div>
+      <div class="pc-formula">have difficulty / trouble + V-ing</div>
+      <div class="pc-desc">表示「做……有困難」<br>後面接動名詞（V-ing）</div>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-page" id="quizPage">
+  <div class="qp-bar">
+    <button class="qp-back" onclick="goHome()">← 返回</button>
+    <div class="qp-info">
+      <div class="qp-label">文法練習</div>
+      <div class="qp-name" id="qpName"></div>
+      <div class="pbar-bg"><div class="pbar-fill" id="pbarFill" style="width:0%"></div></div>
+    </div>
+    <div class="qp-counter" id="qpCounter"></div>
+  </div>
+  <div class="qp-body" id="qpBody"></div>
+</div>
+
+<div class="result-page" id="resultPage">
+  <div class="result-wrap">
+    <div class="res-emoji" id="resEmoji"></div>
+    <div class="score-ring" id="scoreRing">
+      <div class="score-inner">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-of" id="scoreOf"></div>
+      </div>
+    </div>
+    <div class="res-msg" id="resMsg"></div>
+    <div class="res-sub" id="resSub"></div>
+    <div class="wrong-review" id="wrongReview"></div>
+    <div class="res-btns">
+      <button class="rbtn rbtn-retry" onclick="retryPattern()">🔄 再練一次</button>
+      <button class="rbtn rbtn-home" onclick="goHome()">🏠 回首頁</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PATTERNS = [
+  {
+    name: "N(,) + V-ing / p.p. 分詞片語",
+    questions: [
+      { type:"mc", tag:"選擇題",
+        prompt: "The girl ________ (stand) on the stage is my sister.",
+        zh: "站在舞台上的那個女孩是我妹妹。",
+        opts: ["stood","stands","standing","to stand"],
+        ans: "standing",
+        hint: "女孩「主動站著」→ 現在分詞 standing。原句：The girl who is standing on the stage..." },
+      { type:"mc", tag:"選擇題",
+        prompt: "The letter ________ (write) in English is very difficult to read.",
+        zh: "那封用英文寫的信很難閱讀。",
+        opts: ["writing","written","wrote","writes"],
+        ans: "written",
+        hint: "信「被用英文寫」→ 被動，用過去分詞 written。原句：The letter which was written in English..." },
+      { type:"mc", tag:"選擇題",
+        prompt: "Two men ________ (wear) masks hopped onto the truck.",
+        zh: "兩個戴著面具的男子跳上了卡車。",
+        opts: ["worn","wearing","wore","wears"],
+        ans: "wearing",
+        hint: "男子「主動戴著」→ 現在分詞 wearing。原句：Two men who were wearing masks..." },
+      { type:"mc", tag:"選擇題",
+        prompt: "The students ________ (select) for the program will receive a scholarship.",
+        zh: "被選入這個計畫的學生將會獲得獎學金。",
+        opts: ["selecting","select","selected","to select"],
+        ans: "selected",
+        hint: "學生「被選入」→ 被動，用過去分詞 selected。原句：The students who were selected..." },
+      { type:"fill", tag:"填空題",
+        prompt: "The boy ________ (sit) next to me is my best friend.",
+        zh: "坐在我旁邊的那個男孩是我最好的朋友。",
+        ans: "sitting",
+        hint: "男孩「主動坐著」→ 現在分詞。" },
+      { type:"fill", tag:"填空題",
+        prompt: "The books ________ (borrow) from the library must be returned in two weeks.",
+        zh: "從圖書館借的書必須在兩週內歸還。",
+        ans: "borrowed",
+        hint: "書「被借走」→ 被動，用過去分詞。" },
+      { type:"fill", tag:"句子改寫",
+        prompt: "The police found the car which was stolen last night.\n→ The police found the car ________ last night.",
+        zh: "警察找到了昨晚被偷的那輛車。",
+        ans: "stolen",
+        hint: "車「被偷」→ 被動，刪去 which was，留下過去分詞。" },
+      { type:"fill", tag:"句子改寫",
+        prompt: "She is the teacher who teaches English at our school.\n→ She is the teacher ________ English at our school.",
+        zh: "她是在我們學校教英文的老師。",
+        ans: "teaching",
+        hint: "老師「主動教」→ 刪去 who，動詞改現在分詞。" },
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "那個戴紅帽子的男孩是我的弟弟。",
+        words: ["The","boy","wearing","a","red","hat","is","my","brother"],
+        ans: "The boy wearing a red hat is my brother",
+        hint: "wearing a red hat 是現在分詞片語，放在 boy 後面修飾它。" },
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "搜救隊救出了所有困在洞穴裡的學生。",
+        words: ["The","rescue","team","saved","all","the","students","trapped","in","the","cave"],
+        ans: "The rescue team saved all the students trapped in the cave",
+        hint: "trapped in the cave 是過去分詞片語（被動），放在 students 後面修飾它。" },
+    ]
+  },
+  {
+    name: "have difficulty / trouble + V-ing",
+    questions: [
+      { type:"mc", tag:"選擇題",
+        prompt: "Many students have difficulty ________ English words.",
+        zh: "很多學生在記英文單字方面有困難。",
+        opts: ["remember","remembered","to remember","remembering"],
+        ans: "remembering",
+        hint: "have difficulty + V-ing，後面接動名詞。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "She had trouble ________ the math problem.",
+        zh: "她在解這道數學題時遇到了困難。",
+        opts: ["solve","solved","solving","to solve"],
+        ans: "solving",
+        hint: "have trouble + V-ing，後面接動名詞。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "At first, Malala had trouble ________ after her surgery.",
+        zh: "一開始，馬拉拉在手術後說話有困難。",
+        opts: ["speak","spoke","to speak","speaking"],
+        ans: "speaking",
+        hint: "have trouble + V-ing，後面接動名詞。" },
+      { type:"mc", tag:"選擇題",
+        prompt: "He has great difficulty ________ up early every morning.",
+        zh: "他每天早上早起有很大的困難。",
+        opts: ["get","getting","to get","got"],
+        ans: "getting",
+        hint: "have great difficulty + V-ing，後面接動名詞。注意 get → getting（雙字尾）。" },
+      { type:"fill", tag:"填空題",
+        prompt: "I have trouble ________ (remember) people's names.",
+        zh: "我在記人名方面有困難。",
+        ans: "remembering",
+        hint: "have trouble + V-ing。" },
+      { type:"fill", tag:"填空題",
+        prompt: "The foreigner had great difficulty ________ (understand) the local language.",
+        zh: "那個外國人在理解當地語言方面有很大的困難。",
+        ans: "understanding",
+        hint: "have great difficulty + V-ing。" },
+      { type:"fill", tag:"句子改寫",
+        prompt: "It was difficult for her to make friends in the new school.\n→ She had difficulty ________ friends in the new school.",
+        zh: "她在新學校交朋友有困難。",
+        ans: "making",
+        hint: "It was difficult for sb. to VR → sb. had difficulty + V-ing。" },
+      { type:"fill", tag:"句子改寫",
+        prompt: "It was hard for Nick to persuade the principal.\n→ Nick had a hard time ________ the principal.",
+        zh: "Nick 在說服校長時遇到了很大的困難。",
+        ans: "persuading",
+        hint: "have a hard time + V-ing，後面接動名詞。" },
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "因為氣候變遷，一些動物在野外生存有困難。",
+        words: ["Some","animals","have","difficulty","surviving","in","the","wild","because","of","climate","change"],
+        ans: "Some animals have difficulty surviving in the wild because of climate change",
+        hint: "have difficulty + V-ing（surviving）。" },
+      { type:"rearrange", tag:"句子排列",
+        prompt: "請把以下單字排成正確的句子：",
+        zh: "害羞的人在人群面前說話常常有問題。",
+        words: ["Shy","people","often","have","problems","speaking","in","front","of","a","crowd"],
+        ans: "Shy people often have problems speaking in front of a crowd",
+        hint: "have problems + V-ing（speaking）。" },
+    ]
+  }
+];
+
+let curPatternIdx=0, curQuestions=[], qIdx=0, score=0, wrongItems=[];
+
+function goHome(){ document.getElementById('homePage').style.display='flex'; document.getElementById('quizPage').classList.remove('active'); document.getElementById('resultPage').classList.remove('active'); }
+function startPattern(idx){ curPatternIdx=idx; curQuestions=PATTERNS[idx].questions; qIdx=0; score=0; wrongItems=[];
+  document.getElementById('qpName').textContent=PATTERNS[idx].name;
+  document.getElementById('homePage').style.display='none';
+  document.getElementById('quizPage').classList.add('active');
+  document.getElementById('resultPage').classList.remove('active');
+  renderQuestion(); }
+function retryPattern(){ startPattern(curPatternIdx); }
+
+function updateBar(){ const total=curQuestions.length; document.getElementById('pbarFill').style.width=(qIdx/total*100)+'%'; document.getElementById('qpCounter').textContent=`${qIdx+1} / ${total}`; }
+
+function renderQuestion(){
+  updateBar();
+  const body=document.getElementById('qpBody'); body.innerHTML='';
+  const q=curQuestions[qIdx];
+  const card=document.createElement('div'); card.className='q-card';
+  const hint=`<div class="hint-box">💡 提示：${q.hint}</div>`;
+  const promptLines=q.prompt.split('\n').map(l=>`<div>${l}</div>`).join('');
+
+  if(q.type==='mc'){
+    card.innerHTML=`<div class="q-tag">${q.tag}</div><div class="q-num">第 ${qIdx+1} 題 / 共 ${curQuestions.length} 題</div><div class="q-prompt">${promptLines}</div><div class="q-zh">${q.zh}</div>${hint}<div class="mc-opts" id="mcOpts"></div>`;
+    body.appendChild(card);
+    q.opts.forEach(o=>{ const btn=document.createElement('button'); btn.className='mc-opt'; btn.textContent=o; btn.onclick=()=>handleMC(o,q.ans,q,btn); document.getElementById('mcOpts').appendChild(btn); });
+  } else if(q.type==='fill'){
+    card.innerHTML=`<div class="q-tag">${q.tag}</div><div class="q-num">第 ${qIdx+1} 題 / 共 ${curQuestions.length} 題</div><div class="q-prompt">${promptLines}</div><div class="q-zh">${q.zh}</div>${hint}<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;"><input class="fill-in" id="fillInput" type="text" placeholder="請輸入答案..."><button class="fill-submit" id="fillBtn" onclick="handleFill()">確認</button></div>`;
+    body.appendChild(card);
+    document.getElementById('fillInput').addEventListener('keydown',e=>{ if(e.key==='Enter')handleFill(); });
+    window._fillAns=q.ans; window._fillPrompt=q.prompt;
+  } else if(q.type==='rearrange'){
+    const shuffled=[...q.words].sort(()=>Math.random()-0.5);
+    let placed=[];
+    card.innerHTML=`<div class="q-tag">${q.tag}</div><div class="q-num">第 ${qIdx+1} 題 / 共 ${curQuestions.length} 題</div><div class="q-prompt">${q.prompt}</div><div class="q-zh">${q.zh}</div>${hint}<div style="font-size:0.82em;color:var(--muted);margin-bottom:6px;">點擊單字依序排列：</div><div class="word-bank" id="wordBank"></div><div style="font-size:0.82em;color:var(--muted);margin-bottom:6px;">你的答案：</div><div class="answer-slots" id="answerSlots"></div><div><button class="rearrange-submit" id="raBtn" onclick="handleRearrange('${q.ans}')">確認答案</button><button class="reset-btn" onclick="resetRA()">重設</button></div>`;
+    body.appendChild(card);
+    function renderBank(){ const bank=document.getElementById('wordBank'); bank.innerHTML=''; shuffled.forEach((w,i)=>{ if(placed.includes(i))return; const chip=document.createElement('div'); chip.className='word-chip'; chip.textContent=w; chip.onclick=()=>{ placed.push(i); renderBank(); renderSlots(); }; bank.appendChild(chip); }); }
+    function renderSlots(){ const slots=document.getElementById('answerSlots'); slots.innerHTML=''; if(!placed.length){ slots.innerHTML='<span style="color:var(--muted);font-size:0.88em;">點擊上方單字加入...</span>'; return; } placed.forEach((idx,pos)=>{ const chip=document.createElement('div'); chip.className='word-chip placed'; chip.textContent=shuffled[idx]; chip.onclick=()=>{ placed.splice(pos,1); renderBank(); renderSlots(); }; slots.appendChild(chip); }); }
+    window.resetRA=()=>{ placed=[]; renderBank(); renderSlots(); };
+    renderBank(); renderSlots();
+  }
+
+  const fb=document.createElement('div'); fb.className='fb-row'; fb.id='fbRow'; body.appendChild(fb);
+  const nb=document.createElement('button'); nb.className='next-btn'; nb.id='nextBtn'; nb.textContent=qIdx+1>=curQuestions.length?'查看結果 →':'下一題 →'; nb.onclick=nextQ; body.appendChild(nb);
+  body.scrollTop=0;
+}
+
+function handleMC(chosen,correct,q,btn){
+  document.querySelectorAll('.mc-opt').forEach(b=>{ b.disabled=true; if(b.textContent===correct)b.classList.add('correct'); else if(b.textContent===chosen&&chosen!==correct)b.classList.add('wrong'); });
+  if(chosen===correct){ score++; showFB('✅ 答對了！',true); }
+  else { showFB(`❌ 正確答案是：${correct}`,false); wrongItems.push({prompt:q.prompt,ans:correct}); }
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function handleFill(){
+  const inp=document.getElementById('fillInput'), btn=document.getElementById('fillBtn');
+  const val=inp.value.trim().toLowerCase();
+  const alts=window._fillAns.toLowerCase().split('/').map(s=>s.trim());
+  const ok=alts.some(a=>val===a);
+  inp.disabled=true; btn.disabled=true;
+  if(ok){ score++; inp.classList.add('correct'); showFB('✅ 答對了！',true); }
+  else { inp.classList.add('wrong'); showFB(`❌ 參考答案：${window._fillAns}`,false); wrongItems.push({prompt:window._fillPrompt,ans:window._fillAns}); }
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function handleRearrange(correct){
+  document.getElementById('raBtn').disabled=true;
+  const chips=document.getElementById('answerSlots').querySelectorAll('.word-chip');
+  const val=Array.from(chips).map(c=>c.textContent).join(' ');
+  document.querySelectorAll('.word-chip').forEach(c=>c.onclick=null);
+  if(val.trim()===correct.trim()){ score++; showFB('✅ 答對了！',true); }
+  else { showFB(`❌ 正確句子：${correct}`,false); wrongItems.push({prompt:curQuestions[qIdx].prompt,ans:correct}); }
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function showFB(msg,ok){ const fb=document.getElementById('fbRow'); fb.textContent=msg; fb.className='fb-row '+(ok?'good':'bad'); }
+function nextQ(){ qIdx++; if(qIdx>=curQuestions.length)showResult(); else renderQuestion(); }
+
+function showResult(){
+  document.getElementById('quizPage').classList.remove('active');
+  document.getElementById('resultPage').classList.add('active');
+  const total=curQuestions.length, pct=Math.round(score/total*100);
+  document.getElementById('scoreRing').style.setProperty('--pct',pct);
+  document.getElementById('scoreBig').textContent=score;
+  document.getElementById('scoreOf').textContent=`/ ${total}`;
+  const[emoji,msg,sub]=pct>=90?['🏆','太棒了！','文法掌握得很好！']:pct>=70?['👍','做得不錯！','再複習一下錯題就更好了！']:pct>=50?['💪','加油！','多練幾次，你一定可以的！']:['📖','再看一次提示吧！','回去看例句，再試一次！'];
+  document.getElementById('resEmoji').textContent=emoji; document.getElementById('resMsg').textContent=msg; document.getElementById('resSub').textContent=sub;
+  const wr=document.getElementById('wrongReview'); wr.innerHTML='';
+  if(wrongItems.length){ wr.innerHTML=`<div class="wr-ttl">❌ 這次答錯的題目：</div>`; wrongItems.forEach(w=>{ const d=document.createElement('div'); d.className='wr-item'; d.innerHTML=`<div class="wr-q">${w.prompt.split('\n').map(l=>`<div>${l}</div>`).join('')}</div><div class="wr-a">✅ ${w.ans}</div>`; wr.appendChild(d); }); }
+  else { wr.innerHTML=`<div style="color:var(--success);font-weight:800;text-align:center;padding:10px 0;">🎉 全部答對！太厲害了！</div>`; }
+}
+</script>
+</body>
+</html>

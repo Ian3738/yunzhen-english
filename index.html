@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>昀蓁老師的學習網 · 英文 × 國文互動練習</title>
+<meta name="description" content="杜昀蓁老師製作的高中英文與國文互動練習，共 70 個練習，涵蓋單字、文法、片語、課文與古文。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#272343; --muted:#6b6a86; --line:#e7e3d8;
+  --bg:#f7f5ef; --card:#ffffff;
+  --en:#3d4f9e; --en-soft:#e9ecfb;
+  --cn:#b4452f; --cn-soft:#f7e9e3;
+  --shadow:0 1px 3px rgba(39,35,67,.06),0 6px 24px rgba(39,35,67,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+header.hero{background:linear-gradient(135deg,#2f3b78 0%,#3d4f9e 48%,#7d4a8f 100%);color:#fff;padding:54px 0 46px;position:relative;overflow:hidden}
+header.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(255,255,255,.14),transparent 40%);pointer-events:none}
+.hero .wrap{position:relative}
+.hero .eyebrow{font-size:14px;letter-spacing:.28em;opacity:.8;font-weight:500;margin-bottom:12px}
+.hero h1{font-family:"Noto Serif TC",serif;font-size:38px;font-weight:900;line-height:1.25;margin-bottom:14px}
+.hero p{font-size:16px;opacity:.9;max-width:620px}
+.hero .stats{margin-top:22px;display:flex;gap:26px;flex-wrap:wrap}
+.hero .stat b{font-size:26px;font-weight:900;font-family:"Noto Serif TC",serif}
+.hero .stat span{display:block;font-size:12.5px;opacity:.8;letter-spacing:.05em}
+
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(247,245,239,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 0}
+.toolbar .wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.filters{display:flex;gap:8px}
+.filter{border:1.5px solid var(--line);background:#fff;color:var(--muted);padding:7px 16px;border-radius:99px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+.filter:hover{border-color:var(--en)}
+.filter.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search{flex:1;min-width:180px;position:relative}
+.search input{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:9px 16px 9px 40px;font-family:inherit;font-size:14px;color:var(--ink)}
+.search input:focus{outline:none;border-color:var(--en)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.45}
+
+main{padding:30px 0 60px}
+.subject{margin-bottom:34px}
+.subject-head{display:flex;align-items:baseline;gap:12px;margin:10px 0 6px;padding-bottom:10px;border-bottom:2px solid var(--line)}
+.subject-head h2{font-family:"Noto Serif TC",serif;font-size:25px;font-weight:900;position:relative;padding-left:16px}
+.subject-head h2::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:6px;height:24px;border-radius:3px}
+.subj-en .subject-head h2::before{background:var(--en)}
+.subj-cn .subject-head h2::before{background:var(--cn)}
+.subject-count{font-size:13px;color:var(--muted);font-weight:700}
+
+.group{margin:18px 0 8px}
+.group-title{font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.group-count{font-size:11px;font-weight:800;background:var(--line);color:var(--muted);border-radius:99px;padding:1px 9px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 13px;box-shadow:var(--shadow);transition:transform .16s,box-shadow .16s,border-color .16s;display:flex;flex-direction:column;justify-content:space-between;min-height:104px;border-left:4px solid var(--en)}
+.subj-cn .card{border-left-color:var(--cn)}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(39,35,67,.13);border-color:var(--en)}
+.subj-cn .card:hover{border-color:var(--cn)}
+.card-body{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-title{font-size:16px;font-weight:800;color:var(--ink);line-height:1.4}
+.badge{flex:0 0 auto;font-size:11px;font-weight:800;padding:2px 9px;border-radius:99px;background:var(--en-soft);color:var(--en)}
+.subj-cn .badge{background:var(--cn-soft);color:var(--cn)}
+.card-go{margin-top:12px;font-size:12.5px;font-weight:800;color:var(--en);opacity:0;transform:translateX(-4px);transition:.16s}
+.subj-cn .card-go{color:var(--cn)}
+.card:hover .card-go{opacity:1;transform:translateX(0)}
+
+.empty{display:none;text-align:center;color:var(--muted);padding:60px 0;font-size:15px}
+footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--muted);font-size:13px}
+footer b{color:var(--ink)}
+@media(max-width:640px){.hero h1{font-size:29px}.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">DU YUN-ZHEN · 高中英文 &amp; 國文</div>
+    <h1>昀蓁老師的學習網</h1>
+    <p>把課堂上的單字、文法、片語、課文與古文，變成一個個可以動手練習的小遊戲。挑一個主題，開始今天的練習吧！</p>
+    <div class="stats">
+      <div class="stat"><b>70</b><span>互動練習</span></div>
+      <div class="stat"><b>55</b><span>英文</span></div>
+      <div class="stat"><b>15</b><span>國文</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="filters">
+      <button class="filter active" data-f="all">全部</button>
+      <button class="filter" data-f="en">英文</button>
+      <button class="filter" data-f="cn">國文</button>
+    </div>
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="搜尋練習名稱…（例如：單字、時態、燭之武）" autocomplete="off">
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <section class="subject subj-en" data-subject="en"><div class="subject-head"><h2>英文</h2><span class="subject-count">55 個練習</span></div><div class="group"><h3 class="group-title">課本單字與課文<span class="group-count">10</span></h3><div class="grid"><a class="card" href="apps/myOOOZx/" data-title="高二第五冊L7單字"><div class="card-body"><div class="card-title">高二第五冊L7單字</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/QwGNeaB/" data-title="高一英文第二冊L7練習"><div class="card-body"><div class="card-title">高一英文第二冊L7練習</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/bNBpXav/" data-title="高一英文第二冊L7全"><div class="card-body"><div class="card-title">高一英文第二冊L7全</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/gbwBgWQ/" data-title="高二L5單字"><div class="card-body"><div class="card-title">高二L5單字</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/PwGRoBJ/" data-title="高二英文L4單字"><div class="card-body"><div class="card-title">高二英文L4單字</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/wBzmvXy/" data-title="高一英文L4"><div class="card-body"><div class="card-title">高一英文L4</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/PwGmQYa/" data-title="高一英文L2單字"><div class="card-body"><div class="card-title">高一英文L2單字</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/emJGPGQ/" data-title="高三英文課本單字"><div class="card-body"><div class="card-title">高三英文課本單字</div><span class="badge">高三</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/WbrZLGv/" data-title="高一英文習作"><div class="card-body"><div class="card-title">高一英文習作</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/qEbPJvO/" data-title="高二英文習作"><div class="card-body"><div class="card-title">高二英文習作</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">單字・常見字<span class="group-count">18</span></h3><div class="grid"><a class="card" href="apps/wBzJZvr/" data-title="高二L3基礎單"><div class="card-body"><div class="card-title">高二L3基礎單</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/gbwraQy/" data-title="高一L2基礎單"><div class="card-body"><div class="card-title">高一L2基礎單</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/xbEVwPL/" data-title="高二L2基礎單"><div class="card-body"><div class="card-title">高二L2基礎單</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/PwGZKpN/" data-title="高一單字基礎版"><div class="card-body"><div class="card-title">高一單字基礎版</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/wBzKVKz/" data-title="高二單字基礎版"><div class="card-body"><div class="card-title">高二單字基礎版</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/wBWGyza/" data-title="學測高頻字練習"><div class="card-body"><div class="card-title">學測高頻字練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/wBMmOgz/" data-title="學測高頻字練習2"><div class="card-body"><div class="card-title">學測高頻字練習2</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/gbrVYEY/" data-title="進階常見字無圖版"><div class="card-body"><div class="card-title">進階常見字無圖版</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/dPMxbaw/" data-title="基礎100單無圖版"><div class="card-body"><div class="card-title">基礎100單無圖版</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/gbrJemg/" data-title="常見字第二階段學習單"><div class="card-body"><div class="card-title">常見字第二階段學習單</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/ogxRqLN/" data-title="常見字第二階段翻牌"><div class="card-body"><div class="card-title">常見字第二階段翻牌</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/VYaOXaL/" data-title="常見字第二階段"><div class="card-body"><div class="card-title">常見字第二階段</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/PwNyKvQ/" data-title="單字翻牌系統"><div class="card-body"><div class="card-title">單字翻牌系統</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/XJdqExJ/" data-title="常見一百字練習"><div class="card-body"><div class="card-title">常見一百字練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/GgZReoE/" data-title="高一英文單字-英翻中"><div class="card-body"><div class="card-title">高一英文單字-英翻中</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/VYawRZa/" data-title="高二單字英翻中"><div class="card-body"><div class="card-title">高二單字英翻中</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/XJXEPvK/" data-title="高二英文單字中翻英"><div class="card-body"><div class="card-title">高二英文單字中翻英</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/xbZYzLj/" data-title="高一英文單字中翻英"><div class="card-body"><div class="card-title">高一英文單字中翻英</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">片語<span class="group-count">2</span></h3><div class="grid"><a class="card" href="apps/PwNYZmo/" data-title="高二片語練習"><div class="card-body"><div class="card-title">高二片語練習</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/yyOBYWJ/" data-title="高一片語練習"><div class="card-body"><div class="card-title">高一片語練習</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">文法・時態與動詞<span class="group-count">6</span></h3><div class="grid"><a class="card" href="apps/azZZqQK/" data-title="時態判斷"><div class="card-body"><div class="card-title">時態判斷</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/raegKNm/" data-title="現在式VS現在進行式"><div class="card-body"><div class="card-title">現在式VS現在進行式</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/jEqoxjb/" data-title="過去式練習"><div class="card-body"><div class="card-title">過去式練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/pvyZOZM/" data-title="一般動詞現在式練習"><div class="card-body"><div class="card-title">一般動詞現在式練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/XJdpxQQ/" data-title="現在簡單式練習"><div class="card-body"><div class="card-title">現在簡單式練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/zxrQwJN/" data-title="現在式練習"><div class="card-body"><div class="card-title">現在式練習</div></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">文法・be 動詞 (BeV)<span class="group-count">6</span></h3><div class="grid"><a class="card" href="apps/azdrWaW/" data-title="BeV問句"><div class="card-body"><div class="card-title">BeV問句</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/EaPOrGJ/" data-title="BeV are 練習"><div class="card-body"><div class="card-title">BeV are 練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/XJXyoMM/" data-title="BeV練習all"><div class="card-body"><div class="card-title">BeV練習all</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/myVGOxM/" data-title="BeV is am 練習"><div class="card-body"><div class="card-title">BeV is am 練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/azdjNPp/" data-title="BeV is練習"><div class="card-body"><div class="card-title">BeV is練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/JoGZLqw/" data-title="BeV句子重組"><div class="card-body"><div class="card-title">BeV句子重組</div></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">文法・句型與其他<span class="group-count">5</span></h3><div class="grid"><a class="card" href="apps/vEXPYPZ/" data-title="關係代名詞練習"><div class="card-body"><div class="card-title">關係代名詞練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/VYjeGKQ/" data-title="否定 疑問句"><div class="card-body"><div class="card-title">否定 疑問句</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/RNaKMNp/" data-title="Wh問句練習"><div class="card-body"><div class="card-title">Wh問句練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/yyOXrPW/" data-title="Be seen/heard句型練習"><div class="card-body"><div class="card-title">Be seen/heard句型練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/XJXZJEj/" data-title="不定詞練習"><div class="card-body"><div class="card-title">不定詞練習</div></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">文法・課程與總複習<span class="group-count">6</span></h3><div class="grid"><a class="card" href="apps/qEaJRmP/" data-title="高二L5文法"><div class="card-body"><div class="card-title">高二L5文法</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/QwKmWBB/" data-title="高二L4文法"><div class="card-body"><div class="card-title">高二L4文法</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/xbEWxJb/" data-title="高一L4文法"><div class="card-body"><div class="card-title">高一L4文法</div><span class="badge">高一</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/PwzNQZM/" data-title="文法總複習發音版"><div class="card-body"><div class="card-title">文法總複習發音版</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/wBWGGwv/" data-title="高三文法總複習"><div class="card-body"><div class="card-title">高三文法總複習</div><span class="badge">高三</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/xbOGWgR/" data-title="第一階段文法總複習"><div class="card-body"><div class="card-title">第一階段文法總複習</div></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">考試準備<span class="group-count">2</span></h3><div class="grid"><a class="card" href="apps/zxqjpeE/" data-title="高三第二次段考補考練習"><div class="card-body"><div class="card-title">高三第二次段考補考練習</div><span class="badge">高三</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/raxJNWo/" data-title="高三考古題練習"><div class="card-body"><div class="card-title">高三考古題練習</div><span class="badge">高三</span></div><div class="card-go">開始練習 →</div></a></div></div></section><section class="subject subj-cn" data-subject="cn"><div class="subject-head"><h2>國文</h2><span class="subject-count">15 個練習</span></div><div class="group"><h3 class="group-title">課文<span class="group-count">7</span></h3><div class="grid"><a class="card" href="apps/wBzmvjy/" data-title="高二國文L5"><div class="card-body"><div class="card-title">高二國文L5</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/pvEemOb/" data-title="高二國文L4"><div class="card-body"><div class="card-title">高二國文L4</div><span class="badge">高二</span></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/zxKrpRM/" data-title="L2第九味"><div class="card-body"><div class="card-title">L2第九味</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/bNwbrEO/" data-title="L1大同與小康"><div class="card-body"><div class="card-title">L1大同與小康</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/QwEEOaa/" data-title="燭之武練習"><div class="card-body"><div class="card-title">燭之武練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/QwNYNYJ/" data-title="燭之武退秦師"><div class="card-body"><div class="card-title">燭之武退秦師</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/bNpmqKv/" data-title="新詩選-自學"><div class="card-body"><div class="card-title">新詩選-自學</div></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">諸子・古文<span class="group-count">4</span></h3><div class="grid"><a class="card" href="apps/bNedKQM/" data-title="諸子百家"><div class="card-body"><div class="card-title">諸子百家</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/KwMKdyN/" data-title="墨法比較"><div class="card-body"><div class="card-title">墨法比較</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/Byzaomy/" data-title="韓非子 猛狗社鼠"><div class="card-body"><div class="card-title">韓非子 猛狗社鼠</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/ZYOEbXy/" data-title="墨子 公輸"><div class="card-body"><div class="card-title">墨子 公輸</div></div><div class="card-go">開始練習 →</div></a></div></div><div class="group"><h3 class="group-title">詞選・新詩・選文<span class="group-count">4</span></h3><div class="grid"><a class="card" href="apps/jEqZzwj/" data-title="詞選重點整理"><div class="card-body"><div class="card-title">詞選重點整理</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/MYyMyeb/" data-title="L11真愛心智圖"><div class="card-body"><div class="card-title">L11真愛心智圖</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/NPNVBwy/" data-title="真愛練習"><div class="card-body"><div class="card-title">真愛練習</div></div><div class="card-go">開始練習 →</div></a>
+<a class="card" href="apps/raeJdea/" data-title="真愛重點整理"><div class="card-body"><div class="card-title">真愛重點整理</div></div><div class="card-go">開始練習 →</div></a></div></div></section>
+    <div class="empty" id="empty">找不到符合的練習，換個關鍵字試試。</div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">由 <b>杜昀蓁老師</b> 製作 · 共 70 個互動練習 · 部署於 GitHub Pages</div>
+</footer>
+<script>
+const filters=document.querySelectorAll('.filter');
+const search=document.getElementById('q');
+const subjects=document.querySelectorAll('.subject');
+const empty=document.getElementById('empty');
+let cur='all';
+function apply(){
+  const q=search.value.trim().toLowerCase();
+  let visible=0;
+  subjects.forEach(sec=>{
+    const subjOk = cur==='all' || sec.dataset.subject===cur;
+    let secVisible=0;
+    sec.querySelectorAll('.group').forEach(g=>{
+      let gv=0;
+      g.querySelectorAll('.card').forEach(c=>{
+        const match = subjOk && (q==='' || c.dataset.title.toLowerCase().includes(q));
+        c.style.display = match?'':'none';
+        if(match){gv++;secVisible++;visible++;}
+      });
+      g.style.display = gv?'':'none';
+    });
+    sec.style.display = secVisible?'':'none';
+  });
+  empty.style.display = visible?'none':'block';
+}
+filters.forEach(f=>f.addEventListener('click',()=>{
+  filters.forEach(x=>x.classList.remove('active'));
+  f.classList.add('active');
+  cur=f.dataset.f; apply();
+}));
+search.addEventListener('input',apply);
+</script>
+</body>
+</html>

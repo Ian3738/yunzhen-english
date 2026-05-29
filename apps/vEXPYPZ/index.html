@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>關係代名詞選擇練習</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap');
+  :root {
+    --bg: #f0ede8; --card: #ffffff; --teal: #2a7c6f; --teal-light: #e8f4f2;
+    --teal-mid: #5aada0; --ink: #1e2a28; --muted: #6b7c79; --border: #d4e0de;
+    --correct: #2a7c6f; --wrong: #c0392b; --correct-bg: #e8f4f2; --wrong-bg: #fdecea;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; padding: 32px 16px 64px; }
+  .header { max-width: 680px; margin: 0 auto 36px; }
+  .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-mid); font-weight: 600; margin-bottom: 8px; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--ink); line-height: 1.2; margin-bottom: 12px; }
+  .subtitle { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+  .ref-box { max-width: 680px; margin: 0 auto 28px; background: var(--teal-light); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+  .ref-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 10px; }
+  .ref-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ref-item { background: white; border-radius: 8px; padding: 10px 14px; text-align: center; }
+  .ref-word { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--teal); }
+  .ref-desc { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .questions { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  .q-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 22px; transition: border-color 0.2s, background 0.2s; }
+  .q-card.correct { border-color: var(--correct); background: var(--correct-bg); }
+  .q-card.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .q-number { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-mid); font-weight: 600; margin-bottom: 10px; }
+  .q-sentence { font-size: 1.05rem; line-height: 2; color: var(--ink); }
+  .blank { display: inline-block; min-width: 72px; border-bottom: 2px solid var(--teal-mid); text-align: center; font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--teal); padding: 0 6px; vertical-align: bottom; }
+  .choices { display: flex; gap: 8px; margin-top: 14px; }
+  .choice-btn { font-family: 'DM Serif Display', serif; font-size: 1rem; padding: 6px 24px; border-radius: 8px; border: 1.5px solid var(--border); background: white; color: var(--ink); cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .choice-btn:hover { border-color: var(--teal-mid); background: var(--teal-light); }
+  .choice-btn.selected { border-color: var(--teal); background: var(--teal-light); color: var(--teal); }
+  .q-card.correct .choice-btn, .q-card.wrong .choice-btn { pointer-events: none; }
+  .q-card.correct .choice-btn.selected { border-color: var(--correct); background: #c2e5df; color: var(--correct); }
+  .q-card.wrong .choice-btn.selected { border-color: var(--wrong); background: #f5c6c2; color: var(--wrong); }
+  .feedback { font-size: 0.82rem; margin-top: 10px; font-weight: 500; display: none; }
+  .q-card.correct .feedback { display: block; color: var(--correct); }
+  .q-card.wrong .feedback { display: block; color: var(--wrong); }
+  .answer-reveal { font-family: 'DM Serif Display', serif; font-size: 0.95rem; }
+  .hint { font-size: 0.75rem; color: var(--muted); margin-top: 6px; font-style: italic; display: none; }
+  .q-card.wrong .hint, .q-card.correct .hint { display: block; }
+  .actions { max-width: 680px; margin: 28px auto 0; display: flex; gap: 12px; }
+  .btn-check, .btn-reset { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; padding: 12px 24px; border-radius: 10px; cursor: pointer; transition: transform 0.1s; }
+  .btn-check:active, .btn-reset:active { transform: scale(0.97); }
+  .btn-check { background: var(--teal); color: white; border: none; flex: 1; }
+  .btn-reset { background: white; color: var(--teal); border: 1.5px solid var(--border); }
+  .score-bar { max-width: 680px; margin: 20px auto 0; background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 22px; display: none; align-items: center; gap: 16px; }
+  .score-bar.show { display: flex; }
+  .score-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--teal); }
+  .score-text { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+  .score-emoji { font-size: 1.8rem; margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="label">Grade 10 · Grammar Practice</div>
+  <h1>關係代名詞選擇練習</h1>
+  <p class="subtitle">每題點選正確的關係代名詞，完成後按「批改」。</p>
+</div>
+<div class="ref-box">
+  <div class="ref-title">📌 參考提示</div>
+  <div class="ref-grid">
+    <div class="ref-item">
+      <div class="ref-word">who</div>
+      <div class="ref-desc">先行詞是「人」</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-word">which</div>
+      <div class="ref-desc">先行詞是「事物」</div>
+    </div>
+  </div>
+</div>
+<div class="questions" id="questions"></div>
+<div class="actions">
+  <button class="btn-check" onclick="checkAll()">✓ 批改</button>
+  <button class="btn-reset" onclick="resetAll()">↺ 重新作答</button>
+</div>
+<div class="score-bar" id="scoreBar">
+  <div>
+    <div class="score-num" id="scoreNum"></div>
+    <div class="score-text" id="scoreText"></div>
+  </div>
+  <div class="score-emoji" id="scoreEmoji"></div>
+</div>
+<script>
+const OPTIONS = ["who", "which"];
+const questions = [
+  { before: "The girl", after: "sits next to me is very kind.", answer: "who", hint: "先行詞 girl 是人。" },
+  { before: "This is the book", after: "I read last week.", answer: "which", hint: "先行詞 book 是事物。" },
+  { before: "The dog", after: "barked all night kept us awake.", answer: "which", hint: "先行詞 dog 是動物，視為事物。" },
+  { before: "She is the teacher", after: "helped me the most.", answer: "who", hint: "先行詞 teacher 是人。" },
+  { before: "The movie", after: "we watched was very funny.", answer: "which", hint: "先行詞 movie 是事物。" },
+  { before: "The students", after: "passed the test got a prize.", answer: "who", hint: "先行詞 students 是人。" },
+  { before: "I lost the key", after: "you gave me.", answer: "which", hint: "先行詞 key 是事物。" },
+  { before: "He is the man", after: "won the competition.", answer: "who", hint: "先行詞 man 是人。" },
+  { before: "The cake", after: "she made was delicious.", answer: "which", hint: "先行詞 cake 是事物。" },
+  { before: "There is a bus", after: "goes to the night market.", answer: "which", hint: "先行詞 bus 是事物。" },
+];
+const selected = new Array(questions.length).fill(null);
+function buildQuestions() {
+  const container = document.getElementById('questions');
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'q-card'; card.id = `card-${i}`;
+    const num = document.createElement('div');
+    num.className = 'q-number'; num.textContent = `題目 ${i + 1}`;
+    const sentence = document.createElement('div');
+    sentence.className = 'q-sentence';
+    const blankSpan = document.createElement('span');
+    blankSpan.className = 'blank'; blankSpan.id = `blank-${i}`; blankSpan.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    sentence.appendChild(document.createTextNode(q.before + ' '));
+    sentence.appendChild(blankSpan);
+    sentence.appendChild(document.createTextNode(' ' + q.after));
+    const choices = document.createElement('div');
+    choices.className = 'choices';
+    OPTIONS.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn'; btn.textContent = opt; btn.id = `btn-${i}-${opt}`;
+      btn.onclick = () => selectChoice(i, opt);
+      choices.appendChild(btn);
+    });
+    const hint = document.createElement('div');
+    hint.className = 'hint'; hint.textContent = `💡 ${q.hint}`;
+    const feedback = document.createElement('div');
+    feedback.className = 'feedback'; feedback.id = `fb-${i}`;
+    card.appendChild(num); card.appendChild(sentence); card.appendChild(choices);
+    card.appendChild(hint); card.appendChild(feedback);
+    container.appendChild(card);
+  });
+}
+function selectChoice(qi, opt) {
+  OPTIONS.forEach(o => document.getElementById(`btn-${qi}-${o}`).classList.remove('selected'));
+  selected[qi] = opt;
+  document.getElementById(`btn-${qi}-${opt}`).classList.add('selected');
+  document.getElementById(`blank-${qi}`).textContent = opt;
+}
+function checkAll() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const card = document.getElementById(`card-${i}`);
+    const fb = document.getElementById(`fb-${i}`);
+    card.classList.remove('correct', 'wrong');
+    if (!selected[i]) {
+      card.classList.add('wrong');
+      fb.innerHTML = `✗ 尚未作答，正確答案是：<span class="answer-reveal">${q.answer}</span>`;
+      return;
+    }
+    if (selected[i] === q.answer) {
+      card.classList.add('correct'); fb.textContent = '✓ 答對了！'; correct++;
+    } else {
+      card.classList.add('wrong');
+      fb.innerHTML = `✗ 正確答案是：<span class="answer-reveal">${q.answer}</span>`;
+    }
+  });
+  document.getElementById('scoreBar').classList.add('show');
+  document.getElementById('scoreNum').textContent = `${correct} / ${questions.length}`;
+  if (correct === questions.length) { document.getElementById('scoreText').textContent = '全部答對！非常棒！'; document.getElementById('scoreEmoji').textContent = '🎉'; }
+  else if (correct >= 7) { document.getElementById('scoreText').textContent = '答得不錯，再檢查紅色題目。'; document.getElementById('scoreEmoji').textContent = '👍'; }
+  else { document.getElementById('scoreText').textContent = '還有進步空間，對照提示再試試。'; document.getElementById('scoreEmoji').textContent = '💪'; }
+}
+function resetAll() {
+  questions.forEach((q, i) => {
+    document.getElementById(`card-${i}`).classList.remove('correct', 'wrong');
+    document.getElementById(`fb-${i}`).textContent = '';
+    document.getElementById(`blank-${i}`).innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    selected[i] = null;
+    OPTIONS.forEach(o => document.getElementById(`btn-${i}-${o}`).classList.remove('selected'));
+  });
+  document.getElementById('scoreBar').classList.remove('show');
+}
+buildQuestions();
+</script>
+</body>
+</html>

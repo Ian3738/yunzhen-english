@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>燭之武退秦師</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+        }
+        
+        /* 時間軸樣式 */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .timeline-item {
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 52%;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 52%;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(102,126,234,0.5);
+            z-index: 10;
+        }
+        
+        .timeline-content {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 3px solid #ff6b6b;
+        }
+        
+        .timeline-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #c94b4b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .timeline-text {
+            font-size: 1.1em;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .key-point {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .key-point-title {
+            font-weight: bold;
+            color: #c94b4b;
+            margin-bottom: 8px;
+        }
+        
+        /* 人物關係圖 */
+        .character-map {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 3px solid #2196f3;
+        }
+        
+        .character-map-title {
+            text-align: center;
+            font-size: 2em;
+            color: #1565c0;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .characters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .character-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+        }
+        
+        .character-card.hero {
+            border-color: #4caf50;
+        }
+        
+        .character-card.king {
+            border-color: #ff9800;
+        }
+        
+        .character-card.enemy {
+            border-color: #f44336;
+        }
+        
+        .character-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .character-role {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .character-info {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .character-info strong {
+            color: #333;
+        }
+        
+        /* 關鍵重點區 */
+        .key-section {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe5b4 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 3px solid #ffc107;
+        }
+        
+        .key-section-title {
+            font-size: 2em;
+            color: #f57c00;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .key-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+        }
+        
+        .key-item h3 {
+            color: #e65100;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        /* 互動問答區 */
+        .qa-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 3px solid #9c27b0;
+        }
+        
+        .qa-title {
+            font-size: 2em;
+            color: #7b1fa2;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .question-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #9c27b0;
+        }
+        
+        .question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 10px;
+        }
+        
+        .answer-hint {
+            color: #666;
+            font-style: italic;
+            margin-left: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 80px;
+                margin-right: 0;
+            }
+            
+            .timeline-marker {
+                left: 30px;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📜 燭之武退秦師</h1>
+            <div class="subtitle">故事線心智圖 - 超清楚版</div>
+        </div>
+        
+        <!-- 人物關係圖 -->
+        <div class="character-map">
+            <div class="character-map-title">👥 登場人物介紹</div>
+            <div class="characters">
+                <div class="character-card hero">
+                    <div class="character-name" style="color: #4caf50;">🎖️ 燭之武</div>
+                    <div class="character-role">鄭國大臣 - 本故事主角</div>
+                    <div class="character-info">
+                        <strong>身分:</strong> 鄭國的老臣(已經老了)
+                    </div>
+                    <div class="character-info">
+                        <strong>特點:</strong> 很會講話、聰明、有勇氣
+                    </div>
+                    <div class="character-info">
+                        <strong>做了什麼:</strong> 去說服秦國國君,成功解救鄭國
+                    </div>
+                </div>
+                
+                <div class="character-card king">
+                    <div class="character-name" style="color: #ff9800;">👑 鄭文公</div>
+                    <div class="character-role">鄭國國君</div>
+                    <div class="character-info">
+                        <strong>狀況:</strong> 國家被圍攻,很緊張
+                    </div>
+                    <div class="character-info">
+                        <strong>做了什麼:</strong> 請燭之武去當說客
+                    </div>
+                    <div class="character-info">
+                        <strong>心情:</strong> 擔心→希望→得救
+                    </div>
+                </div>
+                
+                <div class="character-card enemy">
+                    <div class="character-name" style="color: #f44336;">⚔️ 秦穆公</div>
+                    <div class="character-role">秦國國君</div>
+                    <div class="character-info">
+                        <strong>原本:</strong> 和晉國一起攻打鄭國
+                    </div>
+                    <div class="character-info">
+                        <strong>後來:</strong> 被燭之武說服,不打了
+                    </div>
+                    <div class="character-info">
+                        <strong>理由:</strong> 打鄭國對秦國沒好處
+                    </div>
+                </div>
+                
+                <div class="character-card king">
+                    <div class="character-name" style="color: #ff9800;">👑 晉文公</div>
+                    <div class="character-role">晉國國君</div>
+                    <div class="character-info">
+                        <strong>原本:</strong> 要攻打鄭國報仇
+                    </div>
+                    <div class="character-info">
+                        <strong>後來:</strong> 秦國不打了,只好撤軍
+                    </div>
+                    <div class="character-info">
+                        <strong>態度:</strong> 不爽但也沒辦法
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 故事時間軸 -->
+        <div style="text-align: center; font-size: 2em; color: #667eea; font-weight: bold; margin: 40px 0;">
+            📖 故事發展時間軸
+        </div>
+        
+        <div class="timeline">
+            <!-- 第一幕 -->
+            <div class="timeline-item">
+                <div class="timeline-marker">1</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">🚨 危機:鄭國被圍攻</div>
+                    <div class="timeline-text">
+                        <strong>發生什麼事?</strong><br>
+                        秦國和晉國聯合起來,一起攻打鄭國,把鄭國的城市包圍了。
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">💡 為什麼打鄭國?</div>
+                        • 晉國生氣:因為鄭國對晉國不禮貌,而且還跟楚國來往(背叛晉國)<br>
+                        • 秦國:跟著晉國一起來幫忙
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">📍 軍隊駐紮地點</div>
+                        • 晉軍:駐紮在「函陵」<br>
+                        • 秦軍:駐紮在「氾」南邊
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第二幕 -->
+            <div class="timeline-item">
+                <div class="timeline-marker">2</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">🤔 鄭國內部討論</div>
+                    <div class="timeline-text">
+                        <strong>鄭文公很緊張,問大臣們怎麼辦?</strong><br>
+                        大臣佚之狐說:「燭之武可以去當說客!」
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">😤 燭之武先抱怨</div>
+                        「我年輕時你不用我,現在老了才想到我,太晚了吧!」
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">🙏 鄭文公道歉</div>
+                        「對不起,是我的錯。但現在國家有危險,還是請你幫忙!」
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">✅ 燭之武答應</div>
+                        雖然抱怨,但還是答應去救國家
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第三幕 -->
+            <div class="timeline-item">
+                <div class="timeline-marker">3</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">🗣️ 燭之武遊說秦穆公</div>
+                    <div class="timeline-text">
+                        <strong>燭之武晚上偷偷爬出城,去見秦穆公</strong>
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">💬 燭之武的說服技巧(超重要!)</div>
+                        <strong>第一招:先自謙</strong><br>
+                        「鄭國要滅亡了,你知道吧」(先承認自己很弱)<br><br>
+                        
+                        <strong>第二招:分析利害</strong><br>
+                        「打贏鄭國,對秦國有什麼好處?」<br>
+                        • 晉國土地已經夠大了,再得到鄭國也只是讓晉國更強<br>
+                        • 秦國離鄭國很遠,打下來也拿不到<br>
+                        • 晉國強大=對秦國不利<br><br>
+                        
+                        <strong>第三招:提供好處</strong><br>
+                        「如果不打鄭國,反而留著鄭國當秦國的盟友」<br>
+                        • 秦國使者經過鄭國,鄭國可以招待<br>
+                        • 對秦國有利無害<br><br>
+                        
+                        <strong>第四招:挑撥離間</strong><br>
+                        「晉國以前答應給秦國土地,結果沒給」<br>
+                        • 晉國說話不算話<br>
+                        • 今天佔領鄭國,明天就會擴張到秦國東邊<br>
+                        • 與其幫晉國壯大,不如交好鄭國
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第四幕 -->
+            <div class="timeline-item">
+                <div class="timeline-marker">4</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">✅ 秦穆公被說服</div>
+                    <div class="timeline-text">
+                        <strong>秦穆公聽完覺得很有道理</strong>
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">🤝 秦穆公的決定</div>
+                        • 和鄭國簽訂盟約(變朋友)<br>
+                        • 留下三位大臣幫鄭國守城<br>
+                        • 秦軍撤退,不打了!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第五幕 -->
+            <div class="timeline-item">
+                <div class="timeline-marker">5</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">😤 晉文公很不爽</div>
+                    <div class="timeline-text">
+                        <strong>子犯(晉國大臣)建議:「攻打秦軍!」</strong>
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">🤔 晉文公的考量</div>
+                        <strong>不攻打秦軍的理由:</strong><br>
+                        • 失去道義:秦國幫過我們,現在打他不對<br>
+                        • 沒有把握:秦軍沒有亂,不一定打得贏<br>
+                        • 得罪秦國:以後就變敵人了
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">🚶 晉文公決定</div>
+                        算了,撤軍回國!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 結局 -->
+            <div class="timeline-item">
+                <div class="timeline-marker">🎉</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">🎊 結局:鄭國得救!</div>
+                    <div class="timeline-text">
+                        <strong>燭之武成功用嘴巴救了整個國家!</strong>
+                    </div>
+                    <div class="key-point">
+                        <div class="key-point-title">✨ 成功關鍵</div>
+                        • 燭之武很會分析利害關係<br>
+                        • 抓住秦國的心理(不想讓晉國太強)<br>
+                        • 說服技巧高明<br>
+                        • 勇敢(敢一個人去敵營)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 關鍵重點整理 -->
+        <div class="key-section">
+            <div class="key-section-title">🎯 必考重點整理</div>
+            <div class="key-grid">
+                <div class="key-item">
+                    <h3>1. 故事大意</h3>
+                    秦、晉兩國聯合攻打鄭國<br>
+                    → 燭之武去說服秦穆公<br>
+                    → 秦國撤軍<br>
+                    → 晉國也撤軍<br>
+                    → 鄭國得救
+                </div>
+                
+                <div class="key-item">
+                    <h3>2. 燭之武說服技巧</h3>
+                    • 分析利害(對秦國沒好處)<br>
+                    • 提供好處(當盟友有利)<br>
+                    • 挑撥離間(晉國不可信)<br>
+                    • 站在對方角度思考
+                </div>
+                
+                <div class="key-item">
+                    <h3>3. 人物性格</h3>
+                    <strong>燭之武:</strong> 聰明、有勇氣、會說話、愛國<br>
+                    <strong>秦穆公:</strong> 務實、看重利益、能聽勸<br>
+                    <strong>晉文公:</strong> 理智、顧全大局
+                </div>
+                
+                <div class="key-item">
+                    <h3>4. 春秋時代特色</h3>
+                    • 國與國之間看「利益」<br>
+                    • 今天是朋友,明天可能是敵人<br>
+                    • 外交很重要<br>
+                    • 會說話的人很有價值
+                </div>
+                
+                <div class="key-item">
+                    <h3>5. 文章主旨</h3>
+                    說明「外交辭令」的重要性:<br>
+                    • 一個人用嘴巴就能救國家<br>
+                    • 不一定要打仗才能解決問題<br>
+                    • 智慧比武力更重要
+                </div>
+                
+                <div class="key-item">
+                    <h3>6. 本課出處</h3>
+                    選自《左傳・僖公三十年》<br>
+                    • 《左傳》記載春秋時代歷史<br>
+                    • 詳細記錄當時的事件<br>
+                    • 文字優美,對話生動
+                </div>
+            </div>
+        </div>
+        
+        <!-- 理解檢測 -->
+        <div class="qa-section">
+            <div class="qa-title">💡 理解檢測 - 問自己</div>
+            
+            <div class="question-box">
+                <div class="question-text">Q1: 秦國和晉國為什麼要打鄭國?</div>
+                <div class="answer-hint">
+                    提示:鄭國對晉國不禮貌,還跟楚國好(背叛晉國)
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <div class="question-text">Q2: 燭之武用什麼方法說服秦穆公?</div>
+                <div class="answer-hint">
+                    提示:分析利害、提供好處、挑撥離間(說晉國壞話)
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <div class="question-text">Q3: 為什麼秦穆公會被說服?</div>
+                <div class="answer-hint">
+                    提示:燭之武說得有道理 - 打鄭國對秦國沒好處,反而讓晉國更強
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <div class="question-text">Q4: 晉文公為什麼不攻打秦軍?</div>
+                <div class="answer-hint">
+                    提示:沒道義(秦國幫過我)、沒把握(不一定打得贏)、會得罪秦國
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <div class="question-text">Q5: 這個故事告訴我們什麼道理?</div>
+                <div class="answer-hint">
+                    提示:外交很重要、智慧比武力強、會說話可以救國家
+                </div>
+            </div>
+        </div>
+        
+      
+               

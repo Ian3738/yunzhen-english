@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一般動詞現在式 練習 (加強版)</title>
+    <style>
+        /* --- 頁面基本樣式 (源自版本1) --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            line-height: 1.7;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 3px solid #1abc9c;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #16a085;
+            border-left: 5px solid #16a085;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .explanation {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .explanation ul {
+            padding-left: 20px;
+        }
+        .explanation li {
+            margin-bottom: 10px;
+        }
+        .example {
+            font-style: italic;
+            color: #555;
+            margin-left: 15px;
+            border-left: 3px solid #bdc3c7;
+            padding-left: 10px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 40px 0;
+        }
+
+        /* --- 互動練習區樣式 (源自版本2) --- */
+        .hidden {
+            display: none;
+        }
+        #practice-menu {
+            text-align: center;
+        }
+        .menu-btn {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .menu-btn:hover {
+            background-color: #2980b9;
+        }
+        #show-wrong-btn {
+            background-color: #e74c3c;
+        }
+        #show-wrong-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .quiz-section {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .question p {
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            border: 1px solid #ddd;
+        }
+        .options label:hover {
+            background-color: #f1f1f1;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        
+        /* --- 立即回饋 --- */
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .feedback-correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback-incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* --- 按鈕 --- */
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>一般動詞現在式 (Simple Present Tense)</h1>
+        <p>一般動詞現在式用來表示「事實」、「習慣」或「真理」。我們將分為三個部分來學習：直述句、否定句和問句。</p>
+
+        <section id="affirmative-explanation">
+            <h2>1. 直述句 (Affirmative)</h2>
+            <div class="explanation">
+                <p><strong>規則：</strong></p>
+                <ul>
+                    <li>當主詞是 <strong>I, You, We, They</strong> 或<strong>複數名詞</strong>（例如: students）時，動詞使用<strong>原形</strong>。</li>
+                    <li>當主詞是 <strong>He, She, It</strong> 或<strong>第三人稱單數</strong>（例如: Tom）時，動詞字尾要 <strong>+s</strong> 或 <strong>+es</strong>。</li>
+                </ul>
+                <p><strong>範例：</strong></p>
+                <div class="example">
+                    <p>I <strong>like</strong> coffee. (我喜歡咖啡。)</p>
+                    <p>He <strong>likes</strong> coffee. (他喜歡咖啡。)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="negative-explanation">
+            <h2>2. 否定句 (Negative)</h2>
+            <div class="explanation">
+                <p><strong>規則：</strong> 需使用助動詞 <strong>do</strong> 或 <strong>does</strong>，後面一律接<strong>原形動詞</strong>。</p>
+                <ul>
+                    <li><strong>I, You, We, They</strong> 或<strong>複數名詞</strong>： <strong>do not (don't) + 原形動詞</strong>。</li>
+                    <li><strong>He, She, It</strong> 或<strong>第三人稱單數</strong>： <strong>does not (doesn't) + 原形動詞</strong>。</li>
+                </ul>
+                <p><strong>範例：</strong></p>
+                <div class="example">
+                    <p>I <strong>don't like</strong> tea. (我不喜歡茶。)</p>
+                    <p>He <strong>doesn't like</strong> tea. (他-不-喜歡-茶。)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="interrogative-explanation">
+            <h2>3. 問句 (Yes/No Questions)</h2>
+            <div class="explanation">
+                <p><strong>規則：</strong> 將助動詞 <strong>Do</strong> 或 <strong>Does</strong> 移到句首，句子中間的動詞一律使用<strong>原形</strong>。</p>
+                <ul>
+                    <li><strong>Do</strong> + (I, You, We, They / 複數) + <strong>原形動詞</strong>...?</li>
+                    <li><strong>Does</strong> + (He, She, It / 單數) + <strong>原形動詞</strong>...?</li>
+                </ul>
+                <p><strong>範例：</strong></p>
+                <div class="example">
+                    <p><strong>Do</strong> you <strong>like</strong> music? (你喜歡音樂嗎?)</p>
+                    <p><strong>Does</strong> he <strong>speak</strong> English? (他說英語嗎?)</p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <section id="interactive-practice">
+            <h2>互動練習</h2>
+
+            <div id="practice-menu">
+                <p>請選擇要練習的項目：</p>
+                <button class="menu-btn" onclick="showQuiz('affirmative')">1. 直述句 練習 </button>
+                <button class="menu-btn" onclick="showQuiz('negative')">2. 否定句 練習 </button>
+                <button class="menu-btn" onclick="showQuiz('interrogative')">3. 問句 練習 </button>
+                <button id="show-wrong-btn" class="menu-btn hidden" onclick="loadWrongAnswerPractice()">
+                    錯題練習
+                </button>
+            </div>
+
+            <section id="affirmative-quiz" class="quiz-section hidden">
+                <h3>直述句 練習</h3>
+                <div class="quiz-content">
+                    </div>
+                <button class="back-btn" onclick="showPracticeMenu('affirmative')">返回練習選單</button>
+            </section>
+
+            <section id="negative-quiz" class="quiz-section hidden">
+                <h3>否定句 練習</h3>
+                <div class="quiz-content">
+                    </div>
+                <button class="back-btn" onclick="showPracticeMenu('negative')">返回練習選單</button>
+            </section>
+
+            <section id="interrogative-quiz" class="quiz-section hidden">
+                <h3>問句 練習</h3>
+                <div class="quiz-content">
+                    </div>
+                <button class="back-btn" onclick="showPracticeMenu('interrogative')">返回練習選單</button>
+            </section>
+
+            <section id="wrong-answers-practice" class="quiz-section hidden">
+                <h3>錯題練習</h3>
+                <div id="wrong-answers-content">
+                    </div>
+                <button class="back-btn" onclick="showPracticeMenu()">返回練習選單</button>
+            </section>
+
+        </section>
+    </div>
+
+    <script>
+        // --- 題目資料庫 (擴充版) ---
+        const allQuestions = {
+            affirmative: [
+                {
+                    id: 'aff1',
+                    q: "1. My sister ____ (play) the piano very well.",
+                    options: ["play", "plays"],
+                    answer: "plays"
+                },
+                {
+                    id: 'aff2',
+                    q: "2. We ____ (go) to the park on Sundays.",
+                    options: ["go", "goes"],
+                    answer: "go"
+                },
+                {
+                    id: 'aff3',
+                    q: "3. The cat ____ (sleep) on the sofa.",
+                    options: ["sleep", "sleeps"],
+                    answer: "sleeps"
+                },
+                {
+                    id: 'aff4',
+                    q: "4. They ____ (study) English every day.",
+                    options: ["study", "studies"],
+                    answer: "study"
+                },
+                {
+                    id: 'aff5',
+                    q: "5. He ____ (watch) TV at night.",
+                    options: ["watch", "watches"],
+                    answer: "watches"
+                },
+                {
+                    id: 'aff6',
+                    q: "6. I ____ (like) bananas.",
+                    options: ["like", "likes"],
+                    answer: "like"
+                },
+                {
+                    id: 'aff7',
+                    q: "7. The school bus ____ (arrive) at 7 AM.",
+                    options: ["arrive", "arrives"],
+                    answer: "arrives"
+                },
+                {
+                    id: 'aff8',
+                    q: "8. My parents ____ (work) in Taipei.",
+                    options: ["work", "works"],
+                    answer: "work"
+                },
+                {
+                    id: 'aff9',
+                    q: "9. She ____ (brush) her teeth twice a day.",
+                    options: ["brush", "brushes"],
+                    answer: "brushes"
+                },
+                {
+                    id: 'aff10',
+                    q: "10. You ____ (look) happy today.",
+                    options: ["look", "looks"],
+                    answer: "look"
+                }
+            ],
+            negative: [
+                {
+                    id: 'neg1',
+                    q: "1. I ____ (not, like) spicy food.",
+                    options: ["don't like", "doesn't like"],
+                    answer: "don't like"
+                },
+                {
+                    id: 'neg2',
+                    q: "2. He ____ (not, speak) French.",
+                    options: ["don't speak", "doesn't speak"],
+                    answer: "doesn't speak"
+                },
+                {
+                    id: 'neg3',
+                    q: "3. They ____ (not, live) in this city.",
+                    options: ["don't live", "doesn't live"],
+                    answer: "don't live"
+                },
+                {
+                    id: 'neg4',
+                    q: "4. She ____ (not, eat) meat.",
+                    options: ["don't eat", "doesn't eat"],
+                    answer: "doesn't eat"
+                },
+                {
+                    id: 'neg5',
+                    q: "5. We ____ (not, have) a car.",
+                    options: ["don't have", "doesn't have"],
+                    answer: "don't have"
+                },
+                {
+                    id: 'neg6',
+                    q: "6. Tom ____ (not, know) the answer.",
+                    options: ["don't know", "doesn't know"],
+                    answer: "doesn't know"
+                },
+                {
+                    id: 'neg7',
+                    q: "7. You ____ (not, need) to hurry.",
+                    options: ["don't need", "doesn't need"],
+                    answer: "don't need"
+                },
+                {
+                    id: 'neg8',
+                    q: "8. The dog ____ (not, bark) much.",
+                    options: ["don't bark", "doesn't bark"],
+                    answer: "doesn't bark"
+                },
+                {
+                    id: 'neg9',
+                    q: "9. My friends ____ (not, play) video games.",
+                    options: ["don't play", "doesn't play"],
+                    answer: "don't play"
+                },
+                {
+                    id: 'neg10',
+                    q: "10. It ____ (not, rain) in the desert.",
+                    options: ["don't rain", "doesn't rain"],
+                    answer: "doesn't rain"
+                }
+            ],
+            interrogative: [
+                {
+                    id: 'int1',
+                    q: "1. ____ you (like) coffee?",
+                    options: ["Do ... like", "Does ... like"],
+                    answer: "Do ... like"
+                },
+                {
+                    id: 'int2',
+                    q: "2. ____ your father (work) in a bank?",
+                    options: ["Do ... work", "Does ... work"],
+                    answer: "Does ... work"
+                },
+                {
+                    id: 'int3',
+                    q: "3. ____ the students (have) homework today?",
+                    options: ["Do ... have", "Does ... have"],
+                    answer: "Do ... have"
+                },
+                {
+                    id: 'int4',
+                    q: "4. ____ she (live) in Taipei?",
+                    options: ["Do ... live", "Does ... live"],
+                    answer: "Does ... live"
+                },
+                {
+                    id: 'int5',
+                    q: "5. ____ they (speak) English?",
+                    options: ["Do ... speak", "Does ... speak"],
+                    answer: "Do ... speak"
+                },
+                {
+                    id: 'int6',
+                    q: "6. ____ he (get up) early?",
+                    options: ["Do ... get up", "Does ... get up"],
+                    answer: "Does ... get up"
+                },
+                {
+                    id: 'int7',
+                    q: "7. ____ we (need) to buy milk?",
+                    options: ["Do ... need", "Does ... need"],
+                    answer: "Do ... need"
+                },
+                {
+                    id: 'int8',
+                    q: "8. ____ it (snow) in your country?",
+                    options: ["Do ... snow", "Does ... snow"],
+                    answer: "Does ... snow"
+                },
+                {
+                    id: 'int9',
+                    q: "9. ____ your friends (like) K-pop?",
+                    options: ["Do ... like", "Does ... like"],
+                    answer: "Do ... like"
+                },
+                {
+                    id: 'int10',
+                    q: "10. ____ this bus (go) to the station?",
+                    options: ["Do ... go", "Does ... go"],
+                    answer: "Does ... go"
+                }
+            ]
+        };
+
+        // --- 狀態管理 ---
+        const wrongAnswerIds = new Set();
+        const completedSections = new Set();
+        // 追蹤題目是否已經載入，避免重複載入
+        const loadedSections = new Set();
+
+        // --- 核心功能 ---
+
+        // 顯示指定的練習區塊 (例如 'affirmative')
+        function showQuiz(quizType) {
+            document.getElementById('practice-menu').classList.add('hidden');
+            
+            // 隱藏所有練習區
+            document.querySelectorAll('#interactive-practice .quiz-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 顯示指定的練習區
+            const targetSection = document.getElementById(quizType + '-quiz');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                // 僅在第一次點擊時載入題目
+                if (!loadedSections.has(quizType)) {
+                    loadQuestions(quizType);
+                    loadedSections.add(quizType);
+                }
+            }
+        }
+
+        // 顯示練習主選單
+        function showPracticeMenu(originSection = null) {
+            if (originSection) {
+                completedSections.add(originSection);
+            }
+            
+            // 隱藏所有練習區
+            document.querySelectorAll('#interactive-practice .quiz-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 顯示練習主選單
+            document.getElementById('practice-menu').classList.remove('hidden');
+
+            // 檢查是否所有區塊都完成了
+            // **注意：這裡我們假設使用者必須 "點進" 三個區塊才算完成
+            if (completedSections.size === 3) {
+                const wrongBtn = document.getElementById('show-wrong-btn');
+                if (wrongAnswerIds.size > 0) {
+                    wrongBtn.classList.remove('hidden');
+                    wrongBtn.innerText = `錯題練習 (${wrongAnswerIds.size} 題)`;
+                } else {
+                    wrongBtn.classList.add('hidden'); // 如果沒有錯題，就不用顯示
+                }
+            }
+        }
+
+        // 載入題目到指定的練習區
+        function loadQuestions(quizType) {
+            const questions = allQuestions[quizType];
+            const container = document.querySelector(`#${quizType}-quiz .quiz-content`);
+            
+            container.innerHTML = ''; // 清空 (雖然理論上只載入一次)
+
+            questions.forEach(q => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                let optionsHtml = '';
+                q.options.forEach(option => {
+                    optionsHtml += `
+                        <label>
+                            <input type="radio" name="${q.id}" value="${option}" onclick="checkImmediate(this, '${q.answer.replace(/'/g, "\\'")}', '${q.id}')">
+                            ${option}
+                        </label>
+                    `;
+                });
+
+                questionElement.innerHTML = `
+                    <p>${q.q}</p>
+                    <div class="options">${optionsHtml}</div>
+                    <div class="feedback hidden"></div>
+                `;
+                container.appendChild(questionElement);
+            });
+        }
+
+        // 立即檢查答案
+        function checkImmediate(radioElement, correctAnswer, questionId) {
+            const parentQuestion = radioElement.closest('.question');
+            const feedbackEl = parentQuestion.querySelector('.feedback');
+            const selectedValue = radioElement.value;
+
+            if (selectedValue === correctAnswer) {
+                feedbackEl.innerHTML = '<strong>正確！</strong>';
+                feedbackEl.className = 'feedback feedback-correct';
+                wrongAnswerIds.delete(questionId); // 答對了，從錯題中移除
+            } else {
+                feedbackEl.innerHTML = `<strong>答錯了。</strong> 正確答案是：<strong>${correctAnswer}</strong>`;
+                feedbackEl.className = 'feedback feedback-incorrect';
+                wrongAnswerIds.add(questionId); // 答錯了，加入錯題
+            }
+            
+            feedbackEl.classList.remove('hidden');
+
+            // 禁用這個問題的所有選項
+            const allOptions = parentQuestion.querySelectorAll(`input[name="${questionId}"]`);
+            allOptions.forEach(input => {
+                input.disabled = true;
+            });
+        }
+
+        // 載入錯題練習
+        function loadWrongAnswerPractice() {
+            document.getElementById('practice-menu').classList.add('hidden');
+            const practiceSection = document.getElementById('wrong-answers-practice');
+            const container = document.getElementById('wrong-answers-content');
+            
+            practiceSection.classList.remove('hidden');
+            container.innerHTML = ''; // 每次點擊都重新載入，以反映最新錯題
+
+            if (wrongAnswerIds.size === 0) {
+                container.innerHTML = '<p style="text-align: center; font-weight: bold; color: green;">恭喜！你目前沒有錯題。</p>';
+                return;
+            }
+
+            const wrongQuestions = [];
+            // .flat() 將 [ [q1, q2], [q3, q4] ] 轉為 [ q1, q2, q3, q4 ]
+            Object.values(allQuestions).flat().forEach(q => {
+                if (wrongAnswerIds.has(q.id)) {
+                    wrongQuestions.push(q);
+                }
+            });
+
+            // 建立錯題的 HTML
+            wrongQuestions.forEach(q => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                let optionsHtml = '';
+                q.options.forEach(option => {
+                    optionsHtml += `
+                        <label>
+                            <input type="radio" name="${q.id}-wrong" value="${option}" onclick="checkImmediate(this, '${q.answer.replace(/'/g, "\\'")}', '${q.id}')">
+                            ${option}
+                        </label>
+                    `;
+                });
+
+                questionElement.innerHTML = `
+                    <p>${q.q}</p>
+                    <div class="options">${optionsHtml}</div>
+                    <div class="feedback hidden"></div>
+                `;
+                container.appendChild(questionElement);
+            });
+        }
+    </script>
+
+</body>
+</html>

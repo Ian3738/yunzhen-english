@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>高中龍騰版英文第五冊第五課</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            touch-action: pan-y;
+        }
+        
+        .main-container {
+            background-color: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 2rem 2rem 0 0;
+            text-align: center;
+        }
+        
+        .option-btn {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #166534;
+            transition: all 0.3s ease;
+            border: 4px solid transparent;
+            min-height: 80px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .option-btn:hover {
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2);
+        }
+        
+        .option-btn.selected {
+            border-color: #22C55E;
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+        }
+        
+        .option-btn.selected::before {
+            content: '✓';
+            position: absolute;
+            left: 20px;
+            font-size: 2rem;
+            color: #166534;
+            font-weight: bold;
+        }
+        
+        .option-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .correct {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+            color: white !important;
+            border-color: #15803d !important;
+            animation: correctPulse 0.5s ease;
+        }
+        
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .correct::after {
+            content: '✓';
+            position: absolute;
+            right: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .incorrect-reveal {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: white !important;
+            border-color: #b91c1c !important;
+        }
+        
+        .speaker-btn {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #16a34a;
+            border-radius: 50%;
+            min-width: 70px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid #16a34a;
+        }
+        
+        .speaker-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .speaker-btn:hover {
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 9999px;
+            overflow: hidden;
+            height: 1.5rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+            border-radius: 9999px;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .word-preview-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #e5e7eb;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .word-preview-item:active {
+            transform: scale(0.95);
+        }
+        
+        .word-preview-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-color: #16a34a;
+        }
+        
+        .word-illustration {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+        }
+        
+        .question-illustration {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+        
+        .big-button {
+            min-height: 70px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 1.5rem 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .big-button:active {
+            transform: scale(0.95);
+        }
+        
+        .big-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .big-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .big-button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .score-display {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        .question-text-area {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: inset 0 2px 8px rgba(16, 185, 129, 0.1);
+            border: 3px solid #6ee7b7;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.6; transform: scale(1.2) rotate(10deg); }
+        }
+        
+        .star-icon {
+            display: inline-block;
+            font-size: 4rem;
+            animation: twinkle 1.5s ease-in-out infinite;
+            margin: 0 0.5rem;
+        }
+        
+        .star-icon:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .star-icon:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @media (max-width: 768px) {
+            .option-btn {
+                font-size: 1.25rem;
+                min-height: 70px;
+            }
+            
+            .big-button {
+                font-size: 1.25rem;
+                min-height: 60px;
+            }
+            
+            .word-illustration {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .question-illustration {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="main-container">
+        <!-- 預覽頁面 -->
+        <div id="preview-container">
+            <div class="header-section">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">📚 高中龍騰版英文</h1>
+                <h2 class="text-xl md:text-2xl font-semibold">第五冊第五課 單字測驗</h2>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <h3 class="text-2xl md:text-3xl font-bold text-center text-green-700 mb-6">📖 單字預覽</h3>
+                <div id="word-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="start-quiz-btn" class="big-button bg-gradient-to-r from-green-500 to-green-700 text-white">
+                        🎯 開始測驗
+                    </button>
+                    <button id="download-btn" class="big-button bg-gradient-to-r from-purple-500 to-purple-700 text-white">
+                        📥 下載測驗卷
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 測驗頁面 -->
+        <div id="quiz-container" class="hidden">
+            <div class="header-section">
+                <div class="flex justify-between items-center mb-4">
+                    <div id="question-counter" class="text-xl md:text-2xl font-bold"></div>
+                    <div id="score-counter" class="score-display"></div>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <div id="question-illustration-container" class="flex justify-center mb-4"></div>
+                
+                <div class="question-text-area mb-6">
+                    <div class="flex items-center justify-center gap-4">
+                        <h3 id="question-text" class="text-3xl md:text-4xl font-bold text-center text-gray-800 flex-1"></h3>
+                        <button id="speak-question-btn" class="speaker-btn flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                </div>
+                
+                <div id="control-buttons" class="text-center">
+                    <button id="check-answer-btn" class="big-button bg-gradient-to-r from-blue-500 to-blue-700 text-white w-full md:w-auto">
+                        🔍 檢查答案
+                    </button>
+                    <button id="next-question-btn" class="hidden big-button bg-gradient-to-r from-green-500 to-green-700 text-white w-full md:w-auto">
+                        ➡️ 下一題
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果頁面 -->
+        <div id="result-container" class="hidden">
+            <div class="header-section">
+                <div class="mb-4">
+                    <span class="star-icon">⭐</span>
+                    <span class="star-icon">⭐</span>
+                    <span class="star-icon">⭐</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">🎊 測驗完成！</h2>
+            </div>
+            
+            <div class="p-8 text-center">
+                <p class="text-2xl md:text-3xl text-gray-600 mb-2">你的最終分數</p>
+                <p id="final-score" class="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-8"></p>
+                <div id="result-buttons" class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center p-4 text-white mt-8">
+        <div class="flex items-center justify-center gap-3">
+            <span class="font-semibold text-lg">💻 @spedmix2025 📚</span>
+        </div>
+    </footer>
+
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md">
+            <div class="text-6xl mb-4">📄</div>
+            <p id="export-status" class="text-xl font-semibold text-gray-800">正在產生 PDF...</p>
+            <div class="mt-4 w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full animate-pulse" style="width: 60%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="export-render-container" style="position: absolute; left: -9999px; top: -9999px;"></div>
+
+    <script>
+        const wordIllustrations = {
+            'prominent': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 50 15 L 40 45 L 10 45 L 35 62 L 25 92 L 50 75 L 75 92 L 65 62 L 90 45 L 60 45 Z" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+                <circle cx="50" cy="50" r="8" fill="#FF6347"/>
+                <path d="M 50 10 L 52 18 L 50 13 Z" fill="#FFD700"/>
+            </svg>`,
+            'commerce': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="25" y="35" width="50" height="50" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+                <rect x="35" y="45" width="12" height="15" fill="#87CEEB"/>
+                <rect x="53" y="45" width="12" height="15" fill="#87CEEB"/>
+                <rect x="42" y="68" width="16" height="17" fill="#654321"/>
+                <path d="M 20 35 L 50 15 L 80 35" stroke="#654321" stroke-width="3" fill="none"/>
+                <circle cx="65" cy="55" r="8" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+                <text x="65" y="59" font-size="10" fill="#8B4513" text-anchor="middle" font-weight="bold">$</text>
+            </svg>`,
+            'tranquil': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="70" rx="40" ry="8" fill="#4169E1" opacity="0.3"/>
+                <path d="M 20 70 Q 50 65 80 70" stroke="#4169E1" stroke-width="2" fill="none"/>
+                <circle cx="30" cy="25" r="12" fill="#FFD700" opacity="0.7"/>
+                <path d="M 15 75 Q 20 72 25 75" stroke="#228B22" stroke-width="2" fill="none"/>
+                <path d="M 75 75 Q 80 72 85 75" stroke="#228B22" stroke-width="2" fill="none"/>
+                <path d="M 40 80 Q 50 78 60 80" stroke="#4169E1" stroke-width="1" fill="none" opacity="0.5"/>
+            </svg>`,
+            'vast': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="50" width="80" height="35" fill="#87CEEB"/>
+                <circle cx="20" cy="30" r="8" fill="#FFD700"/>
+                <path d="M 10 50 L 90 50" stroke="#4169E1" stroke-width="2"/>
+                <path d="M 15 50 L 25 40 L 35 50" fill="#228B22"/>
+                <path d="M 45 50 L 55 35 L 65 50" fill="#228B22"/>
+                <path d="M 75 50 L 80 45 L 85 50" fill="#228B22"/>
+            </svg>`,
+            'literally': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="25" y="25" width="50" height="60" fill="#F5DEB3" stroke="#8B4513" stroke-width="2"/>
+                <line x1="35" y1="40" x2="65" y2="40" stroke="#333" stroke-width="2"/>
+                <line x1="35" y1="50" x2="65" y2="50" stroke="#333" stroke-width="2"/>
+                <line x1="35" y1="60" x2="60" y2="60" stroke="#333" stroke-width="2"/>
+                <line x1="35" y1="70" x2="65" y2="70" stroke="#333" stroke-width="2"/>
+                <path d="M 70 35 L 75 30 L 78 37" stroke="#FF6347" stroke-width="2" fill="none"/>
+                <circle cx="73" cy="33" r="2" fill="#FF6347"/>
+            </svg>`,
+            'tide': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 10 60 Q 30 50 50 60 T 90 60" stroke="#4169E1" stroke-width="3" fill="none"/>
+                <path d="M 10 70 Q 30 65 50 70 T 90 70" stroke="#4169E1" stroke-width="3" fill="none"/>
+                <path d="M 10 80 Q 30 75 50 80 T 90 80" stroke="#87CEEB" stroke-width="2" fill="none" opacity="0.6"/>
+                <circle cx="80" cy="25" r="10" fill="#FFD700"/>
+                <path d="M 20 45 L 25 50 L 20 55" stroke="#4169E1" stroke-width="2" fill="none"/>
+                <path d="M 80 45 L 75 50 L 80 55" stroke="#4169E1" stroke-width="2" fill="none"/>
+            </svg>`,
+            'volume': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="40" width="40" height="45" fill="#87CEEB" opacity="0.5" stroke="#4169E1" stroke-width="2"/>
+                <path d="M 30 40 L 45 25 L 85 25 L 70 40 Z" fill="#B0C4DE" stroke="#4169E1" stroke-width="2"/>
+                <path d="M 70 40 L 85 25 L 85 70 L 70 85 Z" fill="#ADD8E6" stroke="#4169E1" stroke-width="2"/>
+                <text x="50" y="65" font-size="14" fill="#4169E1" text-anchor="middle" font-weight="bold">V</text>
+            </svg>`,
+            'surge': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 10 70 Q 25 50 40 70 T 70 70 T 90 70" stroke="#4169E1" stroke-width="4" fill="none"/>
+                <path d="M 15 75 Q 30 60 45 75" stroke="#87CEEB" stroke-width="3" fill="none"/>
+                <path d="M 55 75 Q 70 60 85 75" stroke="#87CEEB" stroke-width="3" fill="none"/>
+                <path d="M 40 45 L 50 25 L 60 45" stroke="#FF6347" stroke-width="3" fill="none"/>
+                <path d="M 50 25 L 52 35 L 50 30 Z" fill="#FF6347"/>
+            </svg>`,
+            'likelihood': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="30" cy="40" r="15" fill="#FFD700" opacity="0.3" stroke="#FFA500" stroke-width="2"/>
+                <circle cx="70" cy="40" r="15" fill="#FFD700" opacity="0.3" stroke="#FFA500" stroke-width="2"/>
+                <circle cx="50" cy="70" r="15" fill="#FFD700" opacity="0.6" stroke="#FFA500" stroke-width="2"/>
+                <text x="50" y="75" font-size="12" fill="#8B4513" text-anchor="middle" font-weight="bold">?</text>
+                <path d="M 30 55 L 50 70" stroke="#999" stroke-width="2" stroke-dasharray="3,3"/>
+                <path d="M 70 55 L 50 70" stroke="#999" stroke-width="2" stroke-dasharray="3,3"/>
+            </svg>`,
+            'solid': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="25" y="35" width="50" height="50" fill="#A9A9A9" stroke="#696969" stroke-width="3"/>
+                <path d="M 25 35 L 40 20 L 90 20 L 75 35 Z" fill="#C0C0C0" stroke="#696969" stroke-width="3"/>
+                <path d="M 75 35 L 90 20 L 90 70 L 75 85 Z" fill="#808080" stroke="#696969" stroke-width="3"/>
+                <circle cx="45" cy="55" r="3" fill="#FFD700"/>
+                <circle cx="60" cy="55" r="3" fill="#FFD700"/>
+            </svg>`,
+            'shift': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="15" y="40" width="30" height="25" fill="#87CEEB" stroke="#4169E1" stroke-width="2"/>
+                <rect x="55" y="40" width="30" height="25" fill="#98FB98" stroke="#228B22" stroke-width="2"/>
+                <path d="M 45 52 L 55 52" stroke="#FF6347" stroke-width="3"/>
+                <path d="M 50 47 L 55 52 L 50 57" stroke="#FF6347" stroke-width="3" fill="none"/>
+                <path d="M 20 30 Q 25 25 30 30" stroke="#FFD700" stroke-width="2" fill="none"/>
+            </svg>`,
+            'elevation': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 10 85 L 30 60 L 50 40 L 70 55 L 90 85 Z" fill="#8B7355" stroke="#654321" stroke-width="2"/>
+                <path d="M 50 40 L 45 30 L 50 20 L 55 30 Z" fill="#FFFFFF" stroke="#B0C4DE" stroke-width="2"/>
+                <line x1="50" y1="85" x2="50" y2="40" stroke="#333" stroke-width="2" stroke-dasharray="3,3"/>
+                <text x="55" y="65" font-size="10" fill="#333" font-weight="bold">H</text>
+                <path d="M 48 85 L 50 80 L 52 85" fill="#333"/>
+            </svg>`,
+            'sustain': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="70" rx="30" ry="15" fill="#228B22" opacity="0.6"/>
+                <path d="M 50 30 L 45 50 L 50 45 L 55 50 Z" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+                <circle cx="50" cy="30" r="18" fill="#32CD32" stroke="#228B22" stroke-width="2"/>
+                <circle cx="45" cy="25" r="5" fill="#228B22" opacity="0.7"/>
+                <circle cx="55" cy="28" r="6" fill="#228B22" opacity="0.7"/>
+                <circle cx="50" cy="35" r="4" fill="#228B22" opacity="0.7"/>
+            </svg>`,
+            'accelerate': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="65" rx="30" ry="8" fill="#333" opacity="0.2"/>
+                <rect x="35" y="50" width="30" height="15" rx="2" fill="#DC143C" stroke="#8B0000" stroke-width="2"/>
+                <circle cx="40" cy="65" r="5" fill="#333"/>
+                <circle cx="60" cy="65" r="5" fill="#333"/>
+                <path d="M 25 55 L 15 55 L 20 60 Z" fill="#FF6347"/>
+                <path d="M 20 50 L 10 50 L 15 55 Z" fill="#FF6347"/>
+                <path d="M 15 45 L 5 45 L 10 50 Z" fill="#FF6347"/>
+            </svg>`,
+            'contend': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="35" cy="40" r="12" fill="#FFE4B5"/>
+                <circle cx="65" cy="40" r="12" fill="#FFE4B5"/>
+                <circle cx="32" cy="38" r="2" fill="#333"/>
+                <circle cx="68" cy="38" r="2" fill="#333"/>
+                <ellipse cx="35" cy="60" rx="10" ry="15" fill="#4169E1"/>
+                <ellipse cx="65" cy="60" rx="10" ry="15" fill="#DC143C"/>
+                <path d="M 45 60 L 55 60" stroke="#FFD700" stroke-width="3"/>
+                <circle cx="50" cy="60" r="8" fill="#FFD700" opacity="0.5"/>
+            </svg>`,
+            'fuel': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="35" y="40" width="20" height="35" fill="#DC143C" stroke="#8B0000" stroke-width="2"/>
+                <rect x="38" y="50" width="14" height="20" fill="#FFD700" opacity="0.6"/>
+                <circle cx="45" cy="30" r="5" fill="#8B0000"/>
+                <rect x="55" y="50" width="8" height="15" fill="#696969" stroke="#333" stroke-width="2"/>
+                <path d="M 59 50 L 59 40 L 67 40 L 67 48" stroke="#333" stroke-width="2" fill="none"/>
+                <circle cx="67" cy="48" r="3" fill="#32CD32"/>
+            </svg>`,
+            'excessive': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="50" width="15" height="30" fill="#87CEEB" stroke="#4169E1" stroke-width="2"/>
+                <rect x="42" y="40" width="15" height="40" fill="#87CEEB" stroke="#4169E1" stroke-width="2"/>
+                <rect x="64" y="25" width="15" height="55" fill="#FF6347" stroke="#DC143C" stroke-width="2"/>
+                <path d="M 71 15 L 75 22 L 71 20 Z" fill="#FFD700"/>
+                <text x="71" y="20" font-size="16" fill="#FFD700" text-anchor="middle" font-weight="bold">!</text>
+            </svg>`,
+            'melt': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 40 30 L 30 40 L 40 50 L 35 55 L 40 60 L 50 50 L 60 60 L 65 55 L 60 50 L 70 40 L 60 30 Z" fill="#B0E0E6" stroke="#4169E1" stroke-width="2"/>
+                <circle cx="25" cy="20" r="10" fill="#FFD700"/>
+                <path d="M 35 70 Q 40 75 45 70" stroke="#4169E1" stroke-width="2" fill="none"/>
+                <path d="M 50 75 Q 55 80 60 75" stroke="#4169E1" stroke-width="2" fill="none"/>
+                <circle cx="40" cy="73" r="2" fill="#4169E1"/>
+                <circle cx="55" cy="78" r="2" fill="#4169E1"/>
+            </svg>`,
+            'pole': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="80" rx="35" ry="12" fill="#E0FFFF" stroke="#B0E0E6" stroke-width="2"/>
+                <path d="M 45 20 L 45 80" stroke="#8B4513" stroke-width="4"/>
+                <path d="M 30 20 L 45 15 L 60 20 L 45 25 Z" fill="#FFFFFF" stroke="#B0C4DE" stroke-width="2"/>
+                <circle cx="50" cy="25" r="12" fill="#FFD700" opacity="0.5"/>
+                <path d="M 20 75 L 30 70 L 25 80" fill="#FFFFFF" opacity="0.7"/>
+                <path d="M 70 75 L 75 70 L 80 80" fill="#FFFFFF" opacity="0.7"/>
+            </svg>`,
+            'overall': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#4169E1" stroke-width="3"/>
+                <circle cx="50" cy="50" r="25" fill="none" stroke="#32CD32" stroke-width="2"/>
+                <circle cx="50" cy="50" r="15" fill="none" stroke="#FFD700" stroke-width="2"/>
+                <circle cx="50" cy="50" r="5" fill="#FF6347"/>
+                <path d="M 50 15 L 52 25 L 50 20 Z" fill="#4169E1"/>
+                <path d="M 85 50 L 75 48 L 80 50 Z" fill="#4169E1"/>
+                <path d="M 50 85 L 52 75 L 50 80 Z" fill="#4169E1"/>
+                <path d="M 15 50 L 25 52 L 20 50 Z" fill="#4169E1"/>
+            </svg>`,
+            'confirm': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="30" fill="#D1FAE5" stroke="#10B981" stroke-width="3"/>
+                <path d="M 35 50 L 45 60 L 70 35" stroke="#10B981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <circle cx="50" cy="50" r="35" stroke="#10B981" stroke-width="2" fill="none" opacity="0.3"/>
+            </svg>`,
+            'incidence': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="30" cy="40" r="6" fill="#FF6347"/>
+                <circle cx="50" cy="35" r="6" fill="#FF6347"/>
+                <circle cx="45" cy="55" r="6" fill="#FF6347"/>
+                <circle cx="65" cy="45" r="6" fill="#FF6347"/>
+                <circle cx="55" cy="70" r="6" fill="#FF6347"/>
+                <circle cx="75" cy="60" r="6" fill="#FF6347"/>
+                <path d="M 20 80 L 80 80" stroke="#333" stroke-width="2"/>
+                <path d="M 20 80 L 20 20" stroke="#333" stroke-width="2"/>
+            </svg>`,
+            'sweep': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="60" y="30" width="8" height="50" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+                <path d="M 40 70 L 45 75 L 50 70 L 55 78 L 60 70 L 65 75 L 70 72" stroke="#FFD700" stroke-width="2" fill="none"/>
+                <path d="M 40 75 L 45 80 L 50 75 L 55 82 L 60 75 L 65 80 L 70 77" stroke="#FFD700" stroke-width="2" fill="none"/>
+                <path d="M 25 35 Q 30 30 35 35" stroke="#87CEEB" stroke-width="2" fill="none"/>
+                <path d="M 30 45 Q 35 40 40 45" stroke="#87CEEB" stroke-width="2" fill="none"/>
+            </svg>`,
+            'extraordinary': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 50 20 L 40 48 L 10 48 L 35 65 L 25 93 L 50 76 L 75 93 L 65 65 L 90 48 L 60 48 Z" fill="#FFD700" stroke="#FFA500" stroke-width="3"/>
+                <circle cx="50" cy="55" r="12" fill="#FF6347"/>
+                <path d="M 42 50 L 58 50" stroke="#FFF" stroke-width="2"/>
+                <path d="M 50 42 L 50 58" stroke="#FFF" stroke-width="2"/>
+                <circle cx="35" cy="35" r="4" fill="#FFD700" opacity="0.6"/>
+                <circle cx="65" cy="35" r="4" fill="#FFD700" opacity="0.6"/>
+            </svg>`,
+            'cease': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="30" fill="#FFE4E1" stroke="#DC143C" stroke-width="3"/>
+                <line x1="30" y1="30" x2="70" y2="70" stroke="#DC143C" stroke-width="5" stroke-linecap="round"/>
+                <line x1="70" y1="30" x2="30" y2="70" stroke="#DC143C" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="35" stroke="#DC143C" stroke-width="2" fill="none" opacity="0.3"/>
+            </svg>`,
+            'outlook': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="45" r="20" fill="#87CEEB" opacity="0.3"/>
+                <circle cx="45" cy="42" r="3" fill="#333"/>
+                <circle cx="55" cy="42" r="3" fill="#333"/>
+                <path d="M 30 50 Q 25 55 30 60" stroke="#FFD700" stroke-width="2" fill="none"/>
+                <path d="M 70 50 Q 75 55 70 60" stroke="#FFD700" stroke-width="2" fill="none"/>
+                <path d="M 45 48 Q 50 50 55 48" stroke="#333" stroke-width="2" fill="none"/>
+                <path d="M 35 70 L 65 70" stroke="#8B4513" stroke-width="2"/>
+                <circle cx="35" cy="20" r="8" fill="#FFD700"/>
+            </svg>`,
+            'grim': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="25" fill="#696969" opacity="0.3"/>
+                <circle cx="43" cy="45" r="3" fill="#333"/>
+                <circle cx="57" cy="45" r="3" fill="#333"/>
+                <path d="M 40 58 Q 50 54 60 58" stroke="#333" stroke-width="2" fill="none"/>
+                <path d="M 35 42 Q 38 38 43 40" stroke="#333" stroke-width="2" fill="none"/>
+                <path d="M 65 42 Q 62 38 57 40" stroke="#333" stroke-width="2" fill="none"/>
+                <path d="M 30 35 Q 35 25 40 30" stroke="#696969" stroke-width="2" fill="none"/>
+                <path d="M 70 35 Q 65 25 60 30" stroke="#696969" stroke-width="2" fill="none"/>
+            </svg>`,
+            'joint': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="8" fill="#FF6347" stroke="#DC143C" stroke-width="2"/>
+                <line x1="50" y1="20" x2="50" y2="42" stroke="#4169E1" stroke-width="4"/>
+                <line x1="50" y1="58" x2="50" y2="80" stroke="#4169E1" stroke-width="4"/>
+                <line x1="20" y1="50" x2="42" y2="50" stroke="#4169E1" stroke-width="4"/>
+                <line x1="58" y1="50" x2="80" y2="50" stroke="#4169E1" stroke-width="4"/>
+                <path d="M 48 42 L 50 38 L 52 42" fill="#4169E1"/>
+                <path d="M 42 48 L 38 50 L 42 52" fill="#4169E1"/>
+            </svg>`,
+            'curb': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="55" width="60" height="15" fill="#696969" stroke="#333" stroke-width="2"/>
+                <path d="M 30 45 L 70 45 L 75 55 L 15 55 Z" fill="#A9A9A9" stroke="#333" stroke-width="2"/>
+                <circle cx="50" cy="30" r="8" fill="#DC143C" stroke="#8B0000" stroke-width="2"/>
+                <line x1="42" y1="30" x2="58" y2="30" stroke="#FFF" stroke-width="2"/>
+                <path d="M 45 38 L 50 45" stroke="#DC143C" stroke-width="2"/>
+            </svg>`,
+            'acknowledge': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="35" cy="40" r="12" fill="#FFE4B5"/>
+                <circle cx="65" cy="40" r="12" fill="#FFE4B5"/>
+                <ellipse cx="35" cy="65" rx="10" ry="15" fill="#4169E1"/>
+                <ellipse cx="65" cy="65" rx="10" ry="15" fill="#4169E1"/>
+                <circle cx="32" cy="38" r="2" fill="#333"/>
+                <circle cx="68" cy="38" r="2" fill="#333"/>
+                <path d="M 30 43 Q 35 46 40 43" stroke="#333" stroke-width="1.5" fill="none"/>
+                <path d="M 60 43 Q 65 46 70 43" stroke="#333" stroke-width="1.5" fill="none"/>
+                <path d="M 45 55 L 55 55" stroke="#22c55e" stroke-width="3"/>
+            </svg>`,
+            'generation': `<svg class="word-illustration" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="25" r="8" fill="#FFE4B5"/>
+                <ellipse cx="50" cy="42" rx="8" ry="10" fill="#4169E1"/>
+                <circle cx="35" cy="55" r="6" fill="#FFE4B5"/>
+                <circle cx="65" cy="55" r="6" fill="#FFE4B5"/>
+                <ellipse cx="35" cy="68" rx="6" ry="8" fill="#32CD32"/>
+                <ellipse cx="65" cy="68" rx="6" ry="8" fill="#32CD32"/>
+                <circle cx="50" cy="85" r="5" fill="#FFE4B5"/>
+                <line x1="50" y1="33" x2="35" y2="49" stroke="#999" stroke-width="2"/>
+                <line x1="50" y1="33" x2="65" y2="49" stroke="#999" stroke-width="2"/>
+                <line x1="35" y1="61" x2="50" y2="80" stroke="#999" stroke-width="1.5"/>
+                <line x1="65" y1="61" x2="50" y2="80" stroke="#999" stroke-width="1.5"/>
+            </svg>`
+        };
+
+        const vocabulary = [
+            { chinese: '顯著的；傑出的', english: 'prominent' },
+            { chinese: '商業；貿易', english: 'commerce' },
+            { chinese: '寧靜的；平靜的', english: 'tranquil' },
+            { chinese: '廣大的；遼闊的', english: 'vast' },
+            { chinese: '字面上地；確實地', english: 'literally' },
+            { chinese: '潮汐；潮流', english: 'tide' },
+            { chinese: '體積；容量；音量', english: 'volume' },
+            { chinese: '湧浪；激增', english: 'surge' },
+            { chinese: '可能性', english: 'likelihood' },
+            { chinese: '固體的；堅固的', english: 'solid' },
+            { chinese: '轉移；改變', english: 'shift' },
+            { chinese: '高度；海拔', english: 'elevation' },
+            { chinese: '維持；支撐', english: 'sustain' },
+            { chinese: '加速', english: 'accelerate' },
+            { chinese: '主張；競爭', english: 'contend' },
+            { chinese: '燃料；刺激', english: 'fuel' },
+            { chinese: '過度的；過分的', english: 'excessive' },
+            { chinese: '融化', english: 'melt' },
+            { chinese: '極地；柱子', english: 'pole' },
+            { chinese: '全面的；總體的', english: 'overall' },
+            { chinese: '確認；證實', english: 'confirm' },
+            { chinese: '發生率；影響範圍', english: 'incidence' },
+            { chinese: '席捲；掃除', english: 'sweep' },
+            { chinese: '非凡的；特別的', english: 'extraordinary' },
+            { chinese: '停止；終止', english: 'cease' },
+            { chinese: '展望；前景', english: 'outlook' },
+            { chinese: '嚴峻的；冷酷的', english: 'grim' },
+            { chinese: '聯合的；共同的', english: 'joint' },
+            { chinese: '抑制；限制', english: 'curb' },
+            { chinese: '承認；認可', english: 'acknowledge' },
+            { chinese: '世代；一代', english: 'generation' }
+        ];
+        
+        const previewContainer = document.getElementById('preview-container');
+        const wordList = document.getElementById('word-list');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        const questionCounter = document.getElementById('question-counter');
+        const scoreCounter = document.getElementById('score-counter');
+        const questionText = document.getElementById('question-text');
+        const questionIllustrationContainer = document.getElementById('question-illustration-container');
+        const optionsContainer = document.getElementById('options-container');
+        const checkAnswerBtn = document.getElementById('check-answer-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const speakQuestionBtn = document.getElementById('speak-question-btn');
+        const finalScore = document.getElementById('final-score');
+        const progressBar = document.getElementById('progress-bar');
+        const resultButtonsContainer = document.getElementById('result-buttons');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const exportStatus = document.getElementById('export-status');
+
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let attempts = 0;
+        let selectedButton = null;
+        let synth = window.speechSynthesis;
+        let incorrectlyAnswered = [];
+        let quizWords = [];
+
+        function speak(text, lang) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 0.9;
+            synth.speak(utterance);
+        }
+
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function showPreview() {
+            previewContainer.classList.remove('hidden');
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            wordList.innerHTML = '';
+            quizWords = [...vocabulary];
+
+            quizWords.forEach(word => {
+                const item = document.createElement('div');
+                item.className = 'word-preview-item';
+                const illustration = wordIllustrations[word.english] || '';
+                item.innerHTML = `
+                    ${illustration}
+                    <p class="font-bold text-xl text-green-800 mb-1">${word.english}</p>
+                    <p class="text-gray-600 text-sm">${word.chinese}</p>
+                `;
+                item.addEventListener('click', () => {
+                    const utteranceEn = new SpeechSynthesisUtterance(word.english);
+                    utteranceEn.lang = 'en-US';
+                    utteranceEn.rate = 0.9;
+                    const utteranceZh = new SpeechSynthesisUtterance(word.chinese);
+                    utteranceZh.lang = 'zh-TW';
+                    utteranceZh.rate = 0.9;
+                    utteranceEn.onend = () => { setTimeout(() => synth.speak(utteranceZh), 200); };
+                    synth.cancel();
+                    synth.speak(utteranceEn);
+                });
+                wordList.appendChild(item);
+            });
+        }
+
+        function startQuiz(mode = 'all') {
+            previewContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            resultContainer.classList.add('hidden');
+            if (mode === 'incorrect' && incorrectlyAnswered.length > 0) {
+                shuffledQuestions = shuffleArray([...incorrectlyAnswered]);
+            } else {
+                shuffledQuestions = shuffleArray([...quizWords]);
+                score = 0;
+            }
+            incorrectlyAnswered = [];
+            currentQuestionIndex = 0;
+            scoreCounter.textContent = `⭐ ${score} 分`;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            attempts = 0;
+            selectedButton = null;
+            optionsContainer.innerHTML = '';
+            checkAnswerBtn.classList.remove('hidden');
+            nextQuestionBtn.classList.add('hidden');
+
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const progressPercentage = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            questionCounter.textContent = `第 ${currentQuestionIndex + 1} 題 / 共 ${shuffledQuestions.length} 題`;
+            questionText.textContent = currentQuestion.chinese;
+            
+            const illustration = wordIllustrations[currentQuestion.english];
+            if (illustration) {
+                questionIllustrationContainer.innerHTML = illustration.replace('word-illustration', 'question-illustration');
+            } else {
+                questionIllustrationContainer.innerHTML = '';
+            }
+            
+            speak(currentQuestion.chinese, 'zh-TW');
+
+            let options = [{...currentQuestion}];
+            let tempVocab = [...vocabulary].filter(v => v.english !== currentQuestion.english);
+            while (options.length < 4) {
+                const randomIndex = Math.floor(Math.random() * tempVocab.length);
+                options.push(tempVocab[randomIndex]);
+                tempVocab.splice(randomIndex, 1);
+            }
+            
+            shuffleArray(options).forEach(optionData => {
+                const button = document.createElement('button');
+                button.classList.add('option-btn', 'rounded-2xl');
+                button.textContent = optionData.english;
+                button.addEventListener('mouseenter', () => speak(optionData.english, 'en-US'));
+                button.addEventListener('click', () => {
+                    if (button.disabled) return;
+                    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                    selectedButton = button;
+                });
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer() {
+            if (!selectedButton) return;
+            
+            attempts++;
+            const allButtons = Array.from(optionsContainer.children);
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const correctAnswer = currentQuestion.english;
+            const selectedAnswer = selectedButton.textContent;
+            
+            const correctFeedbacks = ['Good', 'Nice', 'Awesome', 'Excellent', 'Great job', 'Well done'];
+            const incorrectFeedbacks = ['No worries', 'Almost there', 'Keep trying', 'Not quite'];
+
+            if (selectedAnswer === correctAnswer) {
+                if (attempts === 1) {
+                    score++;
+                    scoreCounter.textContent = `⭐ ${score} 分`;
+                }
+                selectedButton.classList.add('correct');
+                speak(correctFeedbacks[Math.floor(Math.random() * correctFeedbacks.length)], 'en-US');
+                allButtons.forEach(btn => btn.disabled = true);
+                checkAnswerBtn.classList.add('hidden');
+                nextQuestionBtn.classList.remove('hidden');
+            } else {
+                if (attempts === 1) {
+                    selectedButton.style.visibility = 'hidden';
+                    if (!incorrectlyAnswered.some(q => q.english === currentQuestion.english)) {
+                       incorrectlyAnswered.push(currentQuestion);
+                    }
+                    speak(incorrectFeedbacks[Math.floor(Math.random() * incorrectFeedbacks.length)], 'en-US');
+                    selectedButton = null;
+                } else {
+                    selectedButton.classList.add('incorrect-reveal');
+                    allButtons.forEach(btn => {
+                        btn.disabled = true;
+                        if (btn.textContent === correctAnswer) {
+                            btn.classList.add('correct');
+                            speak(correctAnswer, 'en-US');
+                        }
+                    });
+                    checkAnswerBtn.classList.add('hidden');
+                    nextQuestionBtn.classList.remove('hidden');
+                }
+            }
+        }
+
+        function showResults() {
+            const totalQuestions = shuffledQuestions.length;
+            const finalScoreValue = score;
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            finalScore.textContent = `${finalScoreValue} / ${totalQuestions}`;
+            resultButtonsContainer.innerHTML = '';
+
+            if (incorrectlyAnswered.length > 0) {
+                const redoIncorrectBtn = document.createElement('button');
+                redoIncorrectBtn.className = 'big-button bg-gradient-to-r from-orange-500 to-orange-700 text-white w-full sm:w-auto';
+                redoIncorrectBtn.textContent = `🔄 重做錯題 (${incorrectlyAnswered.length} 題)`;
+                redoIncorrectBtn.addEventListener('click', () => startQuiz('incorrect'));
+                resultButtonsContainer.appendChild(redoIncorrectBtn);
+            }
+
+            const restartAllBtn = document.createElement('button');
+            restartAllBtn.className = 'big-button bg-gradient-to-r from-green-500 to-green-700 text-white w-full sm:w-auto';
+            restartAllBtn.textContent = '🔁 全部重測';
+            restartAllBtn.addEventListener('click', () => startQuiz('all'));
+            resultButtonsContainer.appendChild(restartAllBtn);
+            
+            speak(`Quiz finished! Your final score is ${finalScoreValue} out of ${totalQuestions}.`, 'en-US');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function createQuestionElementForPdf(question, options, questionNumber) {
+            const container = document.createElement('div');
+            container.style.fontFamily = "'Noto Sans TC', sans-serif";
+            container.style.border = "1px solid #333";
+            container.style.padding = '8px';
+            container.style.width = '350px';
+            container.style.backgroundColor = 'white';
+            container.style.color = 'black';
+            
+            const chineseText = document.createElement('p');
+            chineseText.textContent = `(${questionNumber}) ${question.chinese}`;
+            chineseText.style.fontSize = '18px';
+            chineseText.style.fontWeight = 'bold';
+            chineseText.style.margin = '0 0 8px 0';
+            container.appendChild(chineseText);
+
+            options.forEach((opt, index) => {
+                const optionLabel = `(${String.fromCharCode(65 + index)})`;
+                const optionText = document.createElement('p');
+                optionText.textContent = `${optionLabel} ${opt.english}`;
+                optionText.style.fontSize = '16px';
+                optionText.style.margin = '4px 0';
+                container.appendChild(optionText);
+            });
+
+            return container;
+        }
+
+        async function exportPdf() {
+            const renderContainer = document.getElementById('export-render-container');
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            const MARGIN = 10;
+            const PAGE_WIDTH = doc.internal.pageSize.getWidth();
+            const USABLE_WIDTH = PAGE_WIDTH - (MARGIN * 2);
+            
+            const ITEM_WIDTH_MM = (USABLE_WIDTH - 5) / 2;
+            let ITEM_HEIGHT_MM = 0;
+            const GAP_V = 5;
+
+            let yPos = MARGIN + 15;
+
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Longteng Senior High - Book 5, Lesson 5', PAGE_WIDTH / 2, MARGIN + 5, { align: 'center' });
+
+            const allQuestions = [];
+            quizWords.forEach(word => {
+                let options = [{...word}];
+                let tempVocab = [...vocabulary].filter(v => v.english !== word.english);
+                while (options.length < 4) {
+                    const randomIndex = Math.floor(Math.random() * tempVocab.length);
+                    options.push(tempVocab[randomIndex]);
+                    tempVocab.splice(randomIndex, 1);
+                }
+                allQuestions.push({
+                    chinese: word.chinese,
+                    options: shuffleArray(options)
+                });
+            });
+
+            for (let i = 0; i < allQuestions.length; i++) {
+                exportStatus.textContent = `正在處理第 ${i + 1} / ${allQuestions.length} 題...`;
+                
+                const question = allQuestions[i];
+                const element = createQuestionElementForPdf(question, question.options, i + 1);
+                renderContainer.appendChild(element);
+
+                const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+                const imgData = canvas.toDataURL('image/png');
+                
+                if (ITEM_HEIGHT_MM === 0) {
+                    const aspectRatio = canvas.height / canvas.width;
+                    ITEM_HEIGHT_MM = ITEM_WIDTH_MM * aspectRatio;
+                }
+
+                const col = i % 2;
+                const xPos = MARGIN + (col * (ITEM_WIDTH_MM + 5));
+                const currentY = yPos + Math.floor(i / 2) * (ITEM_HEIGHT_MM + GAP_V);
+                
+                if (currentY + ITEM_HEIGHT_MM > doc.internal.pageSize.getHeight() - MARGIN) {
+                    doc.addPage();
+                    doc.setFontSize(16);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('Longteng Senior High - Book 5, Lesson 5', PAGE_WIDTH / 2, MARGIN + 5, { align: 'center' });
+                    yPos = MARGIN + 15 - (Math.floor(i / 2) * (ITEM_HEIGHT_MM + GAP_V));
+                }
+                
+                const finalYPos = yPos + Math.floor(i / 2) * (ITEM_HEIGHT_MM + GAP_V);
+                doc.addImage(imgData, 'PNG', xPos, finalYPos, ITEM_WIDTH_MM, ITEM_HEIGHT_MM);
+
+                renderContainer.innerHTML = '';
+            }
+
+            doc.save('Longteng_B5_L5_Quiz.pdf');
+        }
+
+        async function handleDownload() {
+            loadingOverlay.classList.remove('hidden');
+            
+            setTimeout(async () => {
+                 try {
+                    await exportPdf();
+                } catch (error) {
+                    console.error("PDF generation failed:", error);
+                    exportStatus.textContent = '產生失敗!';
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                } finally {
+                    loadingOverlay.classList.add('hidden');
+                }
+            }, 100);
+        }
+
+        startQuizBtn.addEventListener('click', () => startQuiz('all'));
+        downloadBtn.addEventListener('click', handleDownload);
+        checkAnswerBtn.addEventListener('click', checkAnswer);
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        
+        speakQuestionBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                speak(shuffledQuestions[currentQuestionIndex].chinese, 'zh-TW');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', showPreview);
+
+    </script>
+</body>
+</html>
